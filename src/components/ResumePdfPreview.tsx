@@ -7,6 +7,7 @@ import { useAppStore } from "@/lib/store";
 import type { ResumeTemplateId } from "@/lib/types";
 import { SectionCoPilot } from "./SectionCoPilot";
 import { KeywordGapMatrix } from "./KeywordGapMatrix";
+import BulletBankModal from "./BulletBankModal";
 
 type PreviewMode = "preview" | "pdf" | "source";
 type PdfSource = "server" | "client" | null;
@@ -43,6 +44,7 @@ export function ResumePdfPreview({
     setEditableLatex,
     pageFitSettings,
     setPageFitSettings,
+    jd,
   } = useAppStore();
 
   const [mode, setMode] = useState<PreviewMode>("preview");
@@ -58,6 +60,29 @@ export function ResumePdfPreview({
   const [showCoPilot, setShowCoPilot] = useState(false);
   const [showKeywordMatrix, setShowKeywordMatrix] = useState(false);
   const [showSpacingTuner, setShowSpacingTuner] = useState(false);
+  const [showBulletBank, setShowBulletBank] = useState(false);
+
+  const handleInsertBullet = (bulletText: string) => {
+    const escaped = bulletText
+      .replace(/%/g, "\\%")
+      .replace(/\$/g, "\\$")
+      .replace(/&/g, "\\&")
+      .replace(/#/g, "\\#")
+      .replace(/_/g, "\\_");
+    const latexItem = `    \\item ${escaped}`;
+
+    let newLatex = activeLatex;
+    const itemizeIdx = newLatex.indexOf("\\begin{itemize}");
+    if (itemizeIdx !== -1) {
+      const insertPos = itemizeIdx + "\\begin{itemize}".length;
+      newLatex = newLatex.slice(0, insertPos) + "\n" + latexItem + newLatex.slice(insertPos);
+    } else {
+      newLatex = newLatex + "\n" + latexItem;
+    }
+
+    setActiveLatex(newLatex);
+    setEditableLatex(newLatex);
+  };
 
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
@@ -290,6 +315,14 @@ export function ResumePdfPreview({
             }`}
           >
             📏 1-Page Length Tuner
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowBulletBank(true)}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 shadow-2xs"
+          >
+            💎 60-Bullet Bank (Excel)
           </button>
         </div>
 
@@ -526,6 +559,14 @@ export function ResumePdfPreview({
           />
         </div>
       )}
+
+      {/* Curated 60-Bullet Bank Modal */}
+      <BulletBankModal
+        isOpen={showBulletBank}
+        onClose={() => setShowBulletBank(false)}
+        jdText={jd.jobDescription}
+        onInsertBullet={handleInsertBullet}
+      />
     </div>
   );
 }

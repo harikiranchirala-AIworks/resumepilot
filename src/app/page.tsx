@@ -7,10 +7,14 @@ import { JDTab } from "@/components/JDTab";
 import { ResumeTab } from "@/components/ResumeTab";
 import { ApplicationTrackerTab } from "@/components/ApplicationTrackerTab";
 import { WorkspaceBackupModal } from "@/components/WorkspaceBackupModal";
+import BulletBankModal from "@/components/BulletBankModal";
+import { useAppStore } from "@/lib/store";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabId>("profile");
   const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showBulletBankModal, setShowBulletBankModal] = useState(false);
+  const { jd } = useAppStore();
 
   return (
     <main className="min-h-screen bg-page-gradient">
@@ -31,13 +35,20 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="hidden sm:flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-xs">
+              <button
+                type="button"
+                onClick={() => setShowBulletBankModal(true)}
+                className="px-3 py-1.5 rounded-lg bg-indigo-500/30 hover:bg-indigo-500/50 text-white font-semibold transition-colors border border-indigo-400/30 flex items-center gap-1.5 shadow-2xs"
+              >
+                💎 60-Bullet Bank
+              </button>
               <button
                 type="button"
                 onClick={() => setShowBackupModal(true)}
-                className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white font-semibold transition-colors border border-white/20"
+                className="hidden sm:inline-flex px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white font-semibold transition-colors border border-white/20"
               >
-                💾 Backup Workspace
+                💾 Backup
               </button>
             </div>
           </div>
@@ -82,6 +93,12 @@ export default function Home() {
       <WorkspaceBackupModal
         isOpen={showBackupModal}
         onClose={() => setShowBackupModal(false)}
+      />
+
+      <BulletBankModal
+        isOpen={showBulletBankModal}
+        onClose={() => setShowBulletBankModal(false)}
+        jdText={jd.jobDescription}
       />
     </main>
   );
