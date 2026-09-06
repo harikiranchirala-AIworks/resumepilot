@@ -109,8 +109,8 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
           isDragging
-            ? "border-indigo-500 bg-indigo-950/40 shadow-glow-indigo scale-[0.99]"
-            : "border-slate-800 hover:border-indigo-500/70 hover:bg-slate-950/80 bg-slate-950/40"
+            ? "border-indigo-400 bg-indigo-950/60 shadow-glow-indigo scale-[0.99]"
+            : "border-slate-600 hover:border-indigo-400 hover:bg-slate-850 bg-slate-900/90 shadow-md"
         }`}
       >
         <input
@@ -126,7 +126,7 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         />
 
         <div className="flex flex-col items-center justify-center gap-2.5">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl shadow-inner">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-xl shadow-inner">
             {isParsing ? (
               <span className="animate-spin text-sm">⏳</span>
             ) : (
@@ -139,7 +139,7 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
                 ? "Extracting resume text with multi-tier parser..."
                 : "Drop your resume file here or click to browse"}
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-300 mt-1 font-medium">
               Supports PDF, DOCX, DOC, TXT, MD, TeX, RTF, HTML & JSON
             </p>
           </div>
@@ -150,12 +150,12 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         <div
           className={`text-xs rounded-xl p-3.5 border space-y-2 ${
             statusMessage.type === "success"
-              ? "text-emerald-300 bg-emerald-950/40 border-emerald-800/50 shadow-sm"
-              : "text-rose-300 bg-rose-950/40 border-rose-800/50 shadow-sm"
+              ? "text-emerald-200 bg-emerald-950/60 border-emerald-700/70 shadow-sm"
+              : "text-rose-200 bg-rose-950/60 border-rose-700/70 shadow-sm"
           }`}
         >
           <div className="flex items-start justify-between gap-2">
-            <span>
+            <span className="font-medium">
               {statusMessage.type === "success" ? "✓ " : "⚠️ "}
               {statusMessage.text}
             </span>
@@ -184,7 +184,7 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
                     textarea.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-indigo-300 border border-indigo-500/30 hover:bg-slate-850 transition-colors"
+                className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-indigo-300 border border-indigo-500/40 hover:bg-slate-800 transition-colors"
               >
                 📋 Paste text directly below
               </button>

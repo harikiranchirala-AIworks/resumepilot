@@ -123,20 +123,20 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
               Step 1
             </span>
-            <span className="text-xs text-slate-400">Baseline Context</span>
+            <span className="text-xs text-slate-300 font-semibold">Baseline Context</span>
           </div>
-          <h2 className="text-xl font-bold text-white">Your Candidate Profile</h2>
-          <p className="mt-1 text-xs text-slate-400">
+          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Your Candidate Profile</h2>
+          <p className="mt-1 text-xs sm:text-sm text-slate-300">
             Upload your existing resume, select from your multi-profile library, or paste raw text.
           </p>
         </div>
 
         {/* Quick sample loader */}
         <div className="flex flex-wrap items-center gap-1.5 self-start pt-1">
-          <span className="text-[11px] text-slate-500 font-medium">Load sample:</span>
+          <span className="text-xs text-slate-300 font-semibold">Load sample:</span>
           {SAMPLE_PROFILES.map((samp, idx) => (
             <button
               key={idx}
@@ -146,7 +146,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
                 setResumeText(samp.text);
                 setSaveAsName(samp.name);
               }}
-              className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-300 font-medium transition-all border border-slate-750 hover:border-indigo-500/50 hover:text-white"
+              className="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold transition-all border border-slate-600 hover:border-cyan-400 shadow-sm"
             >
               {samp.name.split(" ")[0]} {samp.name.split(" ")[1] || ""}
             </button>
@@ -154,40 +154,40 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
         </div>
       </div>
 
-      <fieldset className="grid sm:grid-cols-2 gap-3">
-        <label className="flex items-start gap-3 p-4 rounded-xl border border-slate-800 bg-slate-950/40 cursor-pointer hover:border-slate-700 hover:bg-slate-950/70 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/30 has-[:checked]:shadow-glow-indigo">
+      <fieldset className="grid sm:grid-cols-2 gap-3.5">
+        <label className="flex items-start gap-3 p-4 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-slate-500 hover:bg-slate-850 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/40 has-[:checked]:shadow-glow-indigo shadow-md">
           <input
             type="radio"
             name="profileMode"
             value="resumeText"
             checked={profile.mode === "resumeText"}
             onChange={() => setProfileMode("resumeText")}
-            className="mt-1 text-indigo-600 focus:ring-indigo-500 accent-indigo-500"
+            className="mt-1 text-indigo-500 focus:ring-indigo-500 accent-indigo-500 w-4 h-4"
           />
           <div>
             <span className="block text-sm font-bold text-white">
               Upload / Paste Resume
             </span>
-            <span className="block text-xs text-slate-400 mt-0.5">
+            <span className="block text-xs text-slate-300 mt-0.5 font-medium">
               Drag-and-drop a file or paste text directly.
             </span>
           </div>
         </label>
 
-        <label className="flex items-start gap-3 p-4 rounded-xl border border-slate-800 bg-slate-950/40 cursor-pointer hover:border-slate-700 hover:bg-slate-950/70 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/30 has-[:checked]:shadow-glow-indigo">
+        <label className="flex items-start gap-3 p-4 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-slate-500 hover:bg-slate-850 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/40 has-[:checked]:shadow-glow-indigo shadow-md">
           <input
             type="radio"
             name="profileMode"
             value="library"
             checked={profile.mode === "library"}
             onChange={() => setProfileMode("library")}
-            className="mt-1 text-indigo-600 focus:ring-indigo-500 accent-indigo-500"
+            className="mt-1 text-indigo-500 focus:ring-indigo-500 accent-indigo-500 w-4 h-4"
           />
           <div>
             <span className="block text-sm font-bold text-white">
               Saved Resume Library ({library.length})
             </span>
-            <span className="block text-xs text-slate-400 mt-0.5">
+            <span className="block text-xs text-slate-300 mt-0.5 font-medium">
               Choose from your saved profile versions.
             </span>
           </div>
@@ -197,7 +197,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
       {profile.mode === "library" ? (
         <div className="space-y-3">
           {library.length === 0 && !showAddForm && (
-            <div className="text-center py-8 text-xs text-slate-400 bg-slate-950/40 rounded-xl border border-dashed border-slate-800">
+            <div className="text-center py-8 text-xs text-slate-300 bg-slate-950/80 rounded-xl border border-dashed border-slate-700">
               No saved resumes in library yet. Click below or switch to Upload/Paste.
             </div>
           )}
@@ -205,7 +205,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
           {library.map((entry) => (
             <label
               key={entry.id}
-              className="flex items-start justify-between gap-3 p-4 rounded-xl border border-slate-800 bg-slate-950/40 cursor-pointer hover:border-slate-700 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/25 transition-all"
+              className="flex items-start justify-between gap-3 p-4 rounded-xl border border-slate-700 bg-slate-900 cursor-pointer hover:border-slate-500 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-950/30 transition-all shadow-md"
             >
               <div className="flex items-start gap-3">
                 <input
@@ -213,13 +213,13 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
                   name="selectedResume"
                   checked={selectedResumeId === entry.id}
                   onChange={() => selectResume(entry.id)}
-                  className="mt-1 text-indigo-600 focus:ring-indigo-500 accent-indigo-500"
+                  className="mt-1 text-indigo-500 focus:ring-indigo-500 accent-indigo-500 w-4 h-4"
                 />
                 <div>
                   <span className="block text-sm font-bold text-white">
                     {entry.name}
                   </span>
-                  <span className="block text-xs text-slate-400 mt-0.5">
+                  <span className="block text-xs text-slate-300 mt-0.5">
                     Updated {new Date(entry.updatedAt).toLocaleDateString()} —{" "}
                     {entry.text.slice(0, 90)}…
                   </span>
@@ -228,7 +228,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
               <button
                 type="button"
                 onClick={() => removeResume(entry.id)}
-                className="text-xs text-rose-400 hover:text-rose-300 shrink-0 font-semibold px-2 py-1 rounded hover:bg-rose-950/50 transition-colors"
+                className="text-xs text-rose-400 hover:text-rose-300 shrink-0 font-semibold px-2 py-1 rounded bg-rose-950/40 hover:bg-rose-950/70 border border-rose-800/50 transition-colors"
               >
                 Remove
               </button>
@@ -236,7 +236,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
           ))}
 
           {showAddForm ? (
-            <div className="p-5 rounded-xl border border-indigo-500/30 bg-indigo-950/20 space-y-3">
+            <div className="p-5 rounded-xl border border-indigo-500/40 bg-indigo-950/30 space-y-3 shadow-lg">
               <h4 className="text-xs font-bold text-indigo-300 uppercase tracking-wider">
                 Add New Resume Version
               </h4>
@@ -271,7 +271,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
           ) : (
             <button
               type="button"
-              className="text-xs font-semibold text-indigo-300 hover:text-white bg-indigo-950/40 border border-indigo-500/30 hover:bg-indigo-900/50 px-3.5 py-2 rounded-xl transition-colors"
+              className="text-xs font-bold text-indigo-300 hover:text-white bg-indigo-950/60 border border-indigo-500/40 hover:bg-indigo-900/60 px-4 py-2.5 rounded-xl transition-all shadow-sm"
               onClick={() => setShowAddForm(true)}
             >
               + Add New Resume to Library
@@ -286,7 +286,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
             <div className="flex items-center justify-between mb-1.5">
               <label
                 htmlFor="resumeText"
-                className="text-xs font-semibold text-slate-200"
+                className="text-xs font-bold text-slate-100"
               >
                 Resume Content
               </label>
@@ -294,9 +294,9 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
                 <button
                   type="button"
                   onClick={() => setResumeText("")}
-                  className="text-[11px] text-slate-500 hover:text-rose-400"
+                  className="text-[11px] font-semibold text-slate-400 hover:text-rose-400"
                 >
-                  Clear
+                  Clear Text
                 </button>
               )}
             </div>
@@ -309,18 +309,17 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
               value={profile.resumeText}
               onChange={(e) => setResumeText(e.target.value)}
             />
-            <p className="mt-1 text-[11px] text-slate-500">
+            <p className="mt-1.5 text-[11px] text-slate-300 font-medium">
               {profile.resumeText.length} characters
               {profile.resumeText.length < 50 && profile.resumeText.length > 0 && (
-                <span className="text-amber-400 font-medium">
-                  {" "}
+                <span className="text-amber-400 font-bold ml-2">
                   — include more background for optimal tailoring
                 </span>
               )}
             </p>
 
             {profile.resumeText.trim().length > 50 && (
-              <div className="mt-3 flex items-center gap-2 p-3 bg-slate-950/60 rounded-xl border border-slate-800">
+              <div className="mt-3 flex items-center gap-2 p-3 bg-slate-950/90 rounded-xl border border-slate-700 shadow-md">
                 <input
                   type="text"
                   className="input-field flex-1 text-xs"
@@ -346,4 +345,3 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
     </div>
   );
 }
-

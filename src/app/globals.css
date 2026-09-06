@@ -8,7 +8,7 @@
 }
 
 body {
-  color: #f1f5f9;
+  color: #f8fafc;
   background: var(--background);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
@@ -23,49 +23,49 @@ body {
   background: #0b0f17;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #334155;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #475569;
 }
 
 @layer components {
   .tab-btn {
-    @apply px-4 py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200;
+    @apply px-4 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all duration-200;
   }
   .tab-btn-active {
-    @apply bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40;
+    @apply bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 text-white shadow-glow-indigo border border-indigo-400/50;
   }
   .tab-btn-inactive {
-    @apply text-slate-400 hover:bg-slate-800/60 hover:text-slate-200;
+    @apply bg-slate-900 text-slate-200 border border-slate-700/80 hover:bg-slate-800 hover:text-white hover:border-slate-500;
   }
   .tab-btn-done {
-    @apply text-emerald-400 bg-emerald-950/30 border border-emerald-800/40;
+    @apply text-emerald-300 bg-emerald-950/60 border border-emerald-700/60 font-bold;
   }
   .card {
-    @apply bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 shadow-2xl p-6 md:p-8 transition-all;
+    @apply bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-slate-700/80 shadow-2xl p-6 md:p-8 transition-all;
   }
   .card-accent {
-    @apply border-l-4 border-l-indigo-500;
+    @apply border-l-4 border-l-indigo-500 border-y border-r border-slate-700/80;
   }
   .input-field {
-    @apply w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-sm text-slate-100
-      placeholder:text-slate-500
-      focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+    @apply w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100
+      placeholder:text-slate-400
+      focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400
       transition-all;
   }
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600
-      px-5 py-2.5 text-sm font-semibold text-white shadow-glow-indigo
-      hover:from-indigo-500 hover:to-purple-500 hover:shadow-lg
+      px-5 py-2.5 text-sm font-bold text-white shadow-glow-indigo
+      hover:from-indigo-500 hover:to-purple-500 hover:shadow-lg border border-indigo-400/40
       disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
       transition-all duration-200 active:scale-[0.98];
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-slate-700/80 bg-slate-800/80
-      px-5 py-2.5 text-sm font-semibold text-slate-200
-      hover:bg-slate-700/80 hover:border-slate-600 transition-all;
+    @apply inline-flex items-center justify-center rounded-xl border border-slate-600 bg-slate-800/90
+      px-5 py-2.5 text-sm font-semibold text-slate-100
+      hover:bg-slate-700 hover:border-slate-500 transition-all;
   }
   .score-ring {
     @apply flex h-20 w-20 items-center justify-center rounded-full border-4 text-xl font-bold;
@@ -75,7 +75,7 @@ body {
       bg-indigo-600 text-white shadow-sm;
   }
   .tip-box {
-    @apply rounded-xl bg-gradient-to-br from-indigo-950/30 via-slate-900/40 to-purple-950/20 border border-indigo-500/20 p-4 text-slate-300;
+    @apply rounded-xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-purple-950/40 border border-indigo-500/40 p-4 text-slate-200;
   }
   .latex-preview {
     @apply text-slate-900;
@@ -98,23 +98,11 @@ body {
     display: none !important;
   }
 
-  .print-only {
-    display: block !important;
-  }
-
-  .card, .resume-document {
-    border: none !important;
+  .print-page {
     box-shadow: none !important;
-    padding: 0 !important;
     margin: 0 !important;
-    max-width: 100% !important;
+    padding: 0 !important;
     width: 100% !important;
-    background: #ffffff !important;
-    color: #000000 !important;
-  }
-
-  @page {
-    margin: 1.2cm;
-    size: auto;
+    border: none !important;
   }
 }
