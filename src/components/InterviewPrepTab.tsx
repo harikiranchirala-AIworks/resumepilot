@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import type { InterviewPrepResult } from "@/lib/types";
@@ -41,26 +41,26 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
   const getCategoryBadge = (category: string) => {
     switch (category) {
       case "behavioral":
-        return "bg-purple-100 text-purple-800 border-purple-200";
+        return "bg-purple-950/60 text-purple-300 border-purple-800/60";
       case "technical":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-cyan-950/60 text-cyan-300 border-cyan-800/60";
       case "gap":
-        return "bg-amber-100 text-amber-800 border-amber-200";
+        return "bg-amber-950/60 text-amber-300 border-amber-800/60";
       case "situational":
       default:
-        return "bg-emerald-100 text-emerald-800 border-emerald-200";
+        return "bg-emerald-950/60 text-emerald-300 border-emerald-800/60";
     }
   };
 
   if (!prep && !isGenerating) {
     return (
       <div className="card text-center py-12 space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-700 flex items-center justify-center mx-auto text-2xl">
+        <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mx-auto text-2xl shadow-glow-indigo">
           🎯
         </div>
         <div>
-          <h3 className="text-base font-bold text-brand-900">AI Interview Prep Kit</h3>
-          <p className="text-xs text-slate-600 max-w-md mx-auto mt-1">
+          <h3 className="text-base font-bold text-white">AI Interview Prep Kit</h3>
+          <p className="text-xs text-slate-400 max-w-md mx-auto mt-1">
             Generate predicted interview questions and structured STAR responses tailored to this role and your experience.
           </p>
         </div>
@@ -77,15 +77,15 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
 
   return (
     <div className="card space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-brand-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-lg">🎯</span>
-            <h3 className="text-base font-bold text-brand-900">
+            <h3 className="text-base font-bold text-white">
               Role Interview Prep Kit
             </h3>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">{prep?.matchOverview}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{prep?.matchOverview}</p>
         </div>
 
         <button
@@ -99,14 +99,14 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
       </div>
 
       {prep?.keyTalkingPoints && prep.keyTalkingPoints.length > 0 && (
-        <div className="p-4 rounded-xl bg-brand-50 border border-brand-100">
-          <h4 className="text-xs font-bold text-brand-900 uppercase tracking-wider mb-2">
+        <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-900/50">
+          <h4 className="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-2">
             Core Value Propositions / Talking Points
           </h4>
-          <ul className="space-y-1.5 text-xs text-brand-800">
+          <ul className="space-y-1.5 text-xs text-slate-200">
             {prep.keyTalkingPoints.map((point, i) => (
               <li key={i} className="flex items-start gap-2">
-                <span className="text-brand-600 font-bold">✓</span>
+                <span className="text-cyan-400 font-bold">✓</span>
                 <span>{point}</span>
               </li>
             ))}
@@ -115,7 +115,7 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
       )}
 
       <div className="space-y-3">
-        <h4 className="text-xs font-bold text-brand-900 uppercase tracking-wider">
+        <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
           Targeted Questions & STAR Answer Frameworks
         </h4>
 
@@ -124,16 +124,16 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
           return (
             <div
               key={idx}
-              className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs transition-all"
+              className="rounded-xl border border-slate-800 bg-slate-900/90 overflow-hidden shadow-sm transition-all"
             >
               <button
                 type="button"
                 onClick={() => setExpandedIndex(isExpanded ? null : idx)}
-                className="w-full text-left p-4 flex items-start justify-between gap-3 hover:bg-slate-50/80 transition-colors"
+                className="w-full text-left p-4 flex items-start justify-between gap-3 hover:bg-slate-800/40 transition-colors"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-400">Q{idx + 1}</span>
+                    <span className="text-xs font-bold text-slate-500">Q{idx + 1}</span>
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getCategoryBadge(
                         q.category
@@ -142,7 +142,7 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
                       {q.category}
                     </span>
                   </div>
-                  <p className="text-xs font-bold text-slate-900">{q.question}</p>
+                  <p className="text-xs font-bold text-white">{q.question}</p>
                 </div>
                 <span className="text-slate-400 text-xs mt-1">
                   {isExpanded ? "▲" : "▼"}
@@ -150,34 +150,34 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
               </button>
 
               {isExpanded && (
-                <div className="p-4 pt-0 border-t border-slate-100 bg-slate-50/40 space-y-3 text-xs">
+                <div className="p-4 pt-0 border-t border-slate-800 bg-slate-950/60 space-y-3 text-xs">
                   {q.intent && (
-                    <div className="text-[11px] text-slate-600 pt-3">
-                      <strong className="text-slate-800">Interviewer Intent: </strong>
+                    <div className="text-[11px] text-slate-400 pt-3">
+                      <strong className="text-slate-200">Interviewer Intent: </strong>
                       {q.intent}
                     </div>
                   )}
 
                   {q.suggestedStarResponse && (
-                    <div className="space-y-2 p-3 rounded-lg bg-white border border-slate-200">
-                      <p className="text-[10px] font-bold text-brand-700 uppercase tracking-wider">
+                    <div className="space-y-2 p-3 rounded-lg bg-slate-900/90 border border-slate-800">
+                      <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">
                         STAR Method Response Blueprint:
                       </p>
-                      <div className="space-y-1.5 pl-2 border-l-2 border-brand-200 text-slate-700">
+                      <div className="space-y-1.5 pl-2 border-l-2 border-cyan-500/60 text-slate-300">
                         <p>
-                          <strong className="text-brand-900">S (Situation):</strong>{" "}
+                          <strong className="text-white">S (Situation):</strong>{" "}
                           {q.suggestedStarResponse.situation}
                         </p>
                         <p>
-                          <strong className="text-brand-900">T (Task):</strong>{" "}
+                          <strong className="text-white">T (Task):</strong>{" "}
                           {q.suggestedStarResponse.task}
                         </p>
                         <p>
-                          <strong className="text-brand-900">A (Action):</strong>{" "}
+                          <strong className="text-white">A (Action):</strong>{" "}
                           {q.suggestedStarResponse.action}
                         </p>
                         <p>
-                          <strong className="text-brand-900">R (Result):</strong>{" "}
+                          <strong className="text-white">R (Result):</strong>{" "}
                           {q.suggestedStarResponse.result}
                         </p>
                       </div>
@@ -185,7 +185,7 @@ export function InterviewPrepTab({ interviewPrep: initialPrep }: InterviewPrepTa
                   )}
 
                   {q.tip && (
-                    <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-100 text-[11px] text-emerald-900 flex items-start gap-1.5">
+                    <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/60 text-[11px] text-emerald-300 flex items-start gap-1.5">
                       <span>💡</span>
                       <span>
                         <strong>Pro Tip: </strong>

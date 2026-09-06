@@ -16,7 +16,7 @@ export function TabActions({
   showBack = false,
 }: TabActionsProps) {
   return (
-    <div className="flex items-center justify-between gap-3 pt-2 border-t border-brand-100">
+    <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-800">
       {showBack && onBack ? (
         <button type="button" onClick={onBack} className="btn-secondary">
           ← Back

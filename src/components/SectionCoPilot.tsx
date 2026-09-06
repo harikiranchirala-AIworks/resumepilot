@@ -73,15 +73,15 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
   };
 
   return (
-    <div className="card space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-brand-100 pb-3">
+    <div className="card space-y-4 bg-slate-950/90 border border-slate-800 shadow-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">⚡</span>
           <div>
-            <h3 className="text-sm font-bold text-brand-900">
+            <h3 className="text-sm font-bold text-white">
               Interactive Section AI Co-Pilot
             </h3>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-400">
               Refine, quantify, and inject keywords into specific resume sentences in real-time.
             </p>
           </div>
@@ -90,7 +90,7 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
 
       {/* Input Snippet */}
       <div>
-        <label className="text-[11px] font-semibold text-slate-700 block mb-1">
+        <label className="text-[11px] font-semibold text-slate-300 block mb-1">
           Resume Sentence / Bullet to Optimize:
         </label>
         <textarea
@@ -98,7 +98,7 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder="Paste or type any resume bullet point here..."
-          className="input-field text-xs font-sans leading-relaxed"
+          className="input-field text-xs font-sans leading-relaxed font-mono"
         />
       </div>
 
@@ -110,8 +110,8 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
           disabled={isProcessing}
           className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             activeAction === "quantify" && suggestions.length > 0
-              ? "bg-brand-600 text-white shadow-2xs"
-              : "bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200"
+              ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+              : "bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800"
           }`}
         >
           📊 Quantify (Google XYZ)
@@ -123,8 +123,8 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
           disabled={isProcessing}
           className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             activeAction === "shorten" && suggestions.length > 0
-              ? "bg-brand-600 text-white shadow-2xs"
-              : "bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200"
+              ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+              : "bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800"
           }`}
         >
           ✂️ Shorten (1-Page Fit)
@@ -136,8 +136,8 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
           disabled={isProcessing}
           className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             activeAction === "elevate_tone" && suggestions.length > 0
-              ? "bg-brand-600 text-white shadow-2xs"
-              : "bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200"
+              ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+              : "bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800"
           }`}
         >
           👔 Elevate Executive Tone
@@ -164,7 +164,7 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
 
       {/* Loading state */}
       {isProcessing && (
-        <div className="py-6 text-center text-xs text-brand-700 flex items-center justify-center gap-2">
+        <div className="py-6 text-center text-xs text-indigo-400 flex items-center justify-center gap-2">
           <span className="animate-spin text-base">⏳</span>
           <span>Co-Pilot is optimizing bullet with {preferredProvider} engine...</span>
         </div>
@@ -173,7 +173,7 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
       {/* Generated Suggestions */}
       {!isProcessing && suggestions.length > 0 && (
         <div className="space-y-3 pt-2">
-          <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">
+          <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
             AI Suggestions ({suggestions.length}):
           </span>
 
@@ -184,23 +184,23 @@ export function SectionCoPilot({ initialText = "", onApply }: SectionCoPilotProp
                 onClick={() => setSelectedSuggestion(sug)}
                 className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                   selectedSuggestion?.text === sug.text
-                    ? "border-brand-500 bg-brand-50/60 ring-2 ring-brand-400/30"
-                    : "border-brand-200 bg-white hover:border-brand-300"
+                    ? "border-indigo-500 bg-indigo-950/40 shadow-glow-indigo"
+                    : "border-slate-800 bg-slate-950/60 hover:border-slate-700"
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                   <div className="space-y-1">
-                    <p className="text-xs text-slate-900 font-sans leading-relaxed">
+                    <p className="text-xs text-slate-200 font-sans leading-relaxed">
                       • {sug.text}
                     </p>
-                    <p className="text-[11px] text-slate-500 italic">
+                    <p className="text-[11px] text-slate-400 italic">
                       💡 {sug.rationale}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
                     {sug.metricsEstimated && (
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-950/60 text-emerald-300 border border-emerald-700/50 text-[10px] font-bold">
                         {sug.metricsEstimated}
                       </span>
                     )}

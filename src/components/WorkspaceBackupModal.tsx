@@ -49,36 +49,36 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
-      <div className="card max-w-md w-full space-y-5 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-brand-100 pb-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+      <div className="card max-w-md w-full space-y-5 shadow-2xl border border-slate-800 bg-slate-900/95">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <span className="text-xl">💾</span>
-            <h3 className="text-base font-bold text-brand-900">
+            <h3 className="text-base font-bold text-white">
               Workspace Backup & Restore
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 font-bold"
+            className="text-slate-400 hover:text-white font-bold transition-colors"
           >
             ✕
           </button>
         </div>
 
-        <div className="text-xs text-slate-600 space-y-2">
+        <div className="text-xs text-slate-400 space-y-2 leading-relaxed">
           <p>
-            Export and save your entire ResumePilot workspace including your saved profiles ({library.length}), application tracker records ({applications.length}), and settings.
+            Export and save your entire ResumePilot workspace including your saved profiles (<strong className="text-cyan-400">{library.length}</strong>), application tracker records (<strong className="text-indigo-400">{applications.length}</strong>), and custom formulas.
           </p>
         </div>
 
         <div className="space-y-3 pt-2">
           {/* Export Box */}
-          <div className="p-4 rounded-xl border border-brand-200 bg-brand-50/40 flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl border border-cyan-900/40 bg-cyan-950/20 flex items-center justify-between gap-3">
             <div>
-              <h4 className="text-xs font-bold text-brand-900">Download Backup File</h4>
-              <p className="text-[11px] text-slate-500">JSON snapshot of all local data</p>
+              <h4 className="text-xs font-bold text-cyan-300">Download Backup File</h4>
+              <p className="text-[11px] text-slate-400">JSON snapshot of all local data</p>
             </div>
             <button
               type="button"
@@ -90,10 +90,10 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
           </div>
 
           {/* Import Box */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/60 flex items-center justify-between gap-3">
             <div>
-              <h4 className="text-xs font-bold text-slate-900">Restore from Backup</h4>
-              <p className="text-[11px] text-slate-500">Upload a previously saved JSON file</p>
+              <h4 className="text-xs font-bold text-slate-200">Restore from Backup</h4>
+              <p className="text-[11px] text-slate-400">Upload a previously saved JSON file</p>
             </div>
             <input
               type="file"
@@ -113,7 +113,7 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
         </div>
 
         {importStatus && (
-          <p className="text-xs text-center font-semibold text-brand-700 bg-brand-50 p-2 rounded-lg border border-brand-200">
+          <p className="text-xs text-center font-semibold text-emerald-300 bg-emerald-950/40 p-2 rounded-lg border border-emerald-800/60">
             {importStatus}
           </p>
         )}

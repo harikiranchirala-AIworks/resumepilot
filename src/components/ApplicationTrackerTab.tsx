@@ -9,13 +9,13 @@ interface ApplicationTrackerTabProps {
   onNavigateToTab?: (tab: string) => void;
 }
 
-const STAGES: { id: ApplicationStage; label: string; icon: string; color: string }[] = [
-  { id: "saved", label: "Saved / Target", icon: "📋", color: "border-slate-300 bg-slate-50" },
-  { id: "tailored", label: "Tailored & Ready", icon: "⚡", color: "border-blue-300 bg-blue-50/50" },
-  { id: "applied", label: "Applied", icon: "🚀", color: "border-indigo-300 bg-indigo-50/50" },
-  { id: "interviewing", label: "Interviewing", icon: "🎙️", color: "border-amber-300 bg-amber-50/50" },
-  { id: "offered", label: "Offer Received", icon: "🏆", color: "border-emerald-300 bg-emerald-50/50" },
-  { id: "archived", label: "Archived / Closed", icon: "📁", color: "border-slate-200 bg-slate-50/40" },
+const STAGES: { id: ApplicationStage; label: string; icon: string; border: string; bg: string; badge: string }[] = [
+  { id: "saved", label: "Saved / Target", icon: "📋", border: "border-slate-800", bg: "bg-slate-900/40", badge: "bg-slate-800 text-slate-300 border-slate-700" },
+  { id: "tailored", label: "Tailored & Ready", icon: "⚡", border: "border-cyan-900/50", bg: "bg-cyan-950/20", badge: "bg-cyan-950/60 text-cyan-300 border-cyan-800/60" },
+  { id: "applied", label: "Applied", icon: "🚀", border: "border-indigo-900/50", bg: "bg-indigo-950/20", badge: "bg-indigo-950/60 text-indigo-300 border-indigo-800/60" },
+  { id: "interviewing", label: "Interviewing", icon: "🎙️", border: "border-amber-900/50", bg: "bg-amber-950/20", badge: "bg-amber-950/60 text-amber-300 border-amber-800/60" },
+  { id: "offered", label: "Offer Received", icon: "🏆", border: "border-emerald-900/50", bg: "bg-emerald-950/20", badge: "bg-emerald-950/60 text-emerald-300 border-emerald-800/60" },
+  { id: "archived", label: "Archived / Closed", icon: "📁", border: "border-slate-800/60", bg: "bg-slate-950/30", badge: "bg-slate-900 text-slate-400 border-slate-800" },
 ];
 
 export function ApplicationTrackerTab({
@@ -106,11 +106,14 @@ export function ApplicationTrackerTab({
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xl">📊</span>
-            <h2 className="text-lg font-bold text-brand-900">
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
               Job Application Pipeline & Tracker
             </h2>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              Live Kanban
+            </span>
           </div>
-          <p className="text-xs text-slate-600 mt-1 max-w-xl">
+          <p className="text-xs text-slate-400 mt-1 max-w-xl">
             Track applications from target discovery through tailoring, submissions, and STAR interview prep.
           </p>
         </div>
@@ -138,8 +141,8 @@ export function ApplicationTrackerTab({
 
       {/* Filter / Search Bar */}
       <div className="flex items-center justify-between gap-3">
-        <div className="text-xs text-slate-500 font-medium">
-          Total Tracked: <strong className="text-brand-900">{applications.length}</strong> applications
+        <div className="text-xs text-slate-400 font-medium">
+          Total Tracked: <strong className="text-cyan-400">{applications.length}</strong> applications
         </div>
         <input
           type="text"
@@ -158,15 +161,15 @@ export function ApplicationTrackerTab({
           return (
             <div
               key={stage.id}
-              className={`rounded-2xl border ${stage.color} p-3.5 space-y-3 min-h-[360px] flex flex-col`}
+              className={`rounded-2xl border ${stage.border} ${stage.bg} backdrop-blur-md p-3.5 space-y-3 min-h-[360px] flex flex-col`}
             >
               {/* Column Header */}
-              <div className="flex items-center justify-between border-b border-brand-100/80 pb-2">
-                <div className="flex items-center gap-1.5 font-bold text-xs text-brand-900">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div className="flex items-center gap-1.5 font-bold text-xs text-slate-200">
                   <span>{stage.icon}</span>
                   <span>{stage.label}</span>
                 </div>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-white font-bold text-slate-600 shadow-2xs border border-brand-100">
+                <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold border shadow-xs ${stage.badge}`}>
                   {stageApps.length}
                 </span>
               </div>
@@ -174,7 +177,7 @@ export function ApplicationTrackerTab({
               {/* Cards Container */}
               <div className="space-y-2.5 flex-1">
                 {stageApps.length === 0 && (
-                  <div className="text-center py-8 text-[11px] text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                  <div className="text-center py-8 text-[11px] text-slate-500 border border-dashed border-slate-800 rounded-xl">
                     No applications in this stage.
                   </div>
                 )}
@@ -182,53 +185,53 @@ export function ApplicationTrackerTab({
                 {stageApps.map((app) => (
                   <div
                     key={app.id}
-                    className="p-3 bg-white rounded-xl border border-brand-200 shadow-sm hover:shadow-md transition-all space-y-2 group"
+                    className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 shadow-md hover:border-slate-700 hover:shadow-cyan-950/20 transition-all space-y-2 group"
                   >
                     <div className="flex items-start justify-between gap-1.5">
                       <div>
-                        <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                        <h4 className="text-xs font-bold text-slate-100 leading-snug">
                           {app.roleTitle}
                         </h4>
-                        <p className="text-[11px] font-semibold text-brand-700 mt-0.5">
+                        <p className="text-[11px] font-semibold text-cyan-400 mt-0.5">
                           {app.companyName}
                         </p>
                       </div>
 
                       {app.matchScore && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold shrink-0">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-950/60 text-emerald-300 border border-emerald-800/60 font-bold shrink-0">
                           {app.matchScore}%
                         </span>
                       )}
                     </div>
 
                     {(app.location || app.salaryEstimate) && (
-                      <div className="flex flex-wrap gap-1 text-[10px] text-slate-500">
+                      <div className="flex flex-wrap gap-1 text-[10px] text-slate-400">
                         {app.location && <span>📍 {app.location}</span>}
                         {app.salaryEstimate && <span>💰 {app.salaryEstimate}</span>}
                       </div>
                     )}
 
                     {app.appliedDate && (
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-slate-500">
                         Applied: {app.appliedDate}
                       </p>
                     )}
 
                     {app.notes && (
-                      <p className="text-[11px] text-slate-600 line-clamp-2 italic bg-slate-50 p-1.5 rounded-md border border-slate-100">
+                      <p className="text-[11px] text-slate-300 line-clamp-2 italic bg-slate-950/60 p-1.5 rounded-md border border-slate-800/80">
                         &quot;{app.notes}&quot;
                       </p>
                     )}
 
                     {/* Stage Switcher & Studio Button */}
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-1">
                       <select
                         value={app.stage}
                         onChange={(e) => setApplicationStage(app.id, e.target.value as ApplicationStage)}
-                        className="text-[10px] rounded-lg border border-slate-200 bg-slate-50 px-1.5 py-1 text-slate-700 focus:outline-none"
+                        className="text-[10px] rounded-lg border border-slate-800 bg-slate-950 px-1.5 py-1 text-slate-300 focus:outline-none focus:border-cyan-500"
                       >
                         {STAGES.map((s) => (
-                          <option key={s.id} value={s.id}>
+                          <option key={s.id} value={s.id} className="bg-slate-900 text-slate-200">
                             {s.label}
                           </option>
                         ))}
@@ -238,7 +241,7 @@ export function ApplicationTrackerTab({
                         <button
                           type="button"
                           onClick={() => handleOpenStudio(app)}
-                          className="px-2 py-0.5 rounded bg-brand-50 hover:bg-brand-100 text-brand-700 text-[10px] font-semibold border border-brand-200 transition-colors"
+                          className="px-2 py-0.5 rounded bg-indigo-950/60 hover:bg-indigo-900/60 text-indigo-300 text-[10px] font-semibold border border-indigo-800/60 transition-colors"
                           title="Open tailored resume & cover letter"
                         >
                           ⚡ Open
@@ -246,7 +249,7 @@ export function ApplicationTrackerTab({
                         <button
                           type="button"
                           onClick={() => deleteApplication(app.id)}
-                          className="text-slate-300 hover:text-rose-600 text-xs px-1"
+                          className="text-slate-500 hover:text-rose-400 text-xs px-1 transition-colors"
                           title="Delete card"
                         >
                           ✕
@@ -263,16 +266,16 @@ export function ApplicationTrackerTab({
 
       {/* Add Application Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
-          <div className="card max-w-lg w-full space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-brand-100 pb-3">
-              <h3 className="text-base font-bold text-brand-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+          <div className="card max-w-lg w-full space-y-4 shadow-2xl border border-slate-800 bg-slate-900/95">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-base font-bold text-white">
                 + Track New Job Application
               </h3>
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-slate-700 font-bold"
+                className="text-slate-400 hover:text-white font-bold transition-colors"
               >
                 ✕
               </button>
@@ -281,7 +284,7 @@ export function ApplicationTrackerTab({
             <form onSubmit={handleCreateNew} className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Company *</label>
+                  <label className="font-semibold text-slate-300 block mb-1">Company *</label>
                   <input
                     type="text"
                     required
@@ -292,7 +295,7 @@ export function ApplicationTrackerTab({
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Role Title *</label>
+                  <label className="font-semibold text-slate-300 block mb-1">Role Title *</label>
                   <input
                     type="text"
                     required
@@ -306,7 +309,7 @@ export function ApplicationTrackerTab({
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Salary Range</label>
+                  <label className="font-semibold text-slate-300 block mb-1">Salary Range</label>
                   <input
                     type="text"
                     placeholder="e.g. $180k - $220k"
@@ -316,7 +319,7 @@ export function ApplicationTrackerTab({
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Location</label>
+                  <label className="font-semibold text-slate-300 block mb-1">Location</label>
                   <input
                     type="text"
                     placeholder="e.g. Remote / San Francisco"
@@ -328,7 +331,7 @@ export function ApplicationTrackerTab({
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Job Description (Optional)</label>
+                <label className="font-semibold text-slate-300 block mb-1">Job Description (Optional)</label>
                 <textarea
                   rows={4}
                   placeholder="Paste the target job posting text to enable keyword matching..."
@@ -339,7 +342,7 @@ export function ApplicationTrackerTab({
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Notes</label>
+                <label className="font-semibold text-slate-300 block mb-1">Notes</label>
                 <input
                   type="text"
                   placeholder="e.g. Referred by Alex; hiring manager is Sarah"
@@ -349,7 +352,7 @@ export function ApplicationTrackerTab({
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-brand-100">
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}

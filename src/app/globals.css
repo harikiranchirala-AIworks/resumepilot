@@ -3,63 +3,79 @@
 @tailwind utilities;
 
 :root {
-  --background: #eff6ff;
-  --foreground: #1e3a8a;
+  --background: #080c14;
+  --foreground: #f8fafc;
 }
 
 body {
-  color: #1e293b;
+  color: #f1f5f9;
   background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Sleek Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f17;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 @layer components {
   .tab-btn {
-    @apply px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200;
+    @apply px-4 py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200;
   }
   .tab-btn-active {
-    @apply bg-white text-brand-700 shadow-card ring-2 ring-brand-400/40;
+    @apply bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40;
   }
   .tab-btn-inactive {
-    @apply text-brand-700/70 hover:bg-white/60 hover:text-brand-800;
+    @apply text-slate-400 hover:bg-slate-800/60 hover:text-slate-200;
   }
   .tab-btn-done {
-    @apply text-brand-600 bg-brand-50/80;
+    @apply text-emerald-400 bg-emerald-950/30 border border-emerald-800/40;
   }
   .card {
-    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-brand-100 shadow-card p-6 md:p-8;
+    @apply bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800/80 shadow-2xl p-6 md:p-8 transition-all;
   }
   .card-accent {
-    @apply border-l-4 border-l-brand-500;
+    @apply border-l-4 border-l-indigo-500;
   }
   .input-field {
-    @apply w-full rounded-xl border border-brand-200 bg-white px-4 py-2.5 text-sm text-slate-800
-      placeholder:text-slate-400
-      focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-brand-400
-      transition-shadow;
+    @apply w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-sm text-slate-100
+      placeholder:text-slate-500
+      focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+      transition-all;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand-600 to-brand-500
-      px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30
-      hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/40
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600
+      px-5 py-2.5 text-sm font-semibold text-white shadow-glow-indigo
+      hover:from-indigo-500 hover:to-purple-500 hover:shadow-lg
       disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
-      transition-all duration-200;
+      transition-all duration-200 active:scale-[0.98];
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-xl border border-brand-200 bg-white
-      px-5 py-2.5 text-sm font-semibold text-brand-700
-      hover:bg-brand-50 hover:border-brand-300 transition-colors;
+    @apply inline-flex items-center justify-center rounded-xl border border-slate-700/80 bg-slate-800/80
+      px-5 py-2.5 text-sm font-semibold text-slate-200
+      hover:bg-slate-700/80 hover:border-slate-600 transition-all;
   }
   .score-ring {
     @apply flex h-20 w-20 items-center justify-center rounded-full border-4 text-xl font-bold;
   }
   .step-pill {
-    @apply inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold
-      bg-brand-600 text-white shadow-sm;
+    @apply inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold
+      bg-indigo-600 text-white shadow-sm;
   }
   .tip-box {
-    @apply rounded-xl bg-gradient-to-br from-brand-50 to-blue-50 border border-brand-100 p-4;
+    @apply rounded-xl bg-gradient-to-br from-indigo-950/30 via-slate-900/40 to-purple-950/20 border border-indigo-500/20 p-4 text-slate-300;
   }
   .latex-preview {
     @apply text-slate-900;
@@ -93,6 +109,8 @@ body {
     margin: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
   }
 
   @page {

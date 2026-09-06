@@ -107,10 +107,10 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all duration-200 ${
+        className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
           isDragging
-            ? "border-brand-500 bg-brand-50/80 scale-[0.99]"
-            : "border-brand-200 hover:border-brand-400 hover:bg-brand-50/30 bg-white"
+            ? "border-indigo-500 bg-indigo-950/40 shadow-glow-indigo scale-[0.99]"
+            : "border-slate-800 hover:border-indigo-500/70 hover:bg-slate-950/80 bg-slate-950/40"
         }`}
       >
         <input
@@ -125,8 +125,8 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
           }}
         />
 
-        <div className="flex flex-col items-center justify-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 text-lg">
+        <div className="flex flex-col items-center justify-center gap-2.5">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl shadow-inner">
             {isParsing ? (
               <span className="animate-spin text-sm">⏳</span>
             ) : (
@@ -134,12 +134,12 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
             )}
           </div>
           <div>
-            <p className="text-sm font-semibold text-brand-900">
+            <p className="text-sm font-bold text-white">
               {isParsing
                 ? "Extracting resume text with multi-tier parser..."
                 : "Drop your resume file here or click to browse"}
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               Supports PDF, DOCX, DOC, TXT, MD, TeX, RTF, HTML & JSON
             </p>
           </div>
@@ -148,10 +148,10 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
 
       {statusMessage && (
         <div
-          className={`text-xs rounded-xl p-3 border space-y-2 ${
+          className={`text-xs rounded-xl p-3.5 border space-y-2 ${
             statusMessage.type === "success"
-              ? "text-emerald-800 bg-emerald-50 border-emerald-200"
-              : "text-rose-800 bg-rose-50 border-rose-200"
+              ? "text-emerald-300 bg-emerald-950/40 border-emerald-800/50 shadow-sm"
+              : "text-rose-300 bg-rose-950/40 border-rose-800/50 shadow-sm"
           }`}
         >
           <div className="flex items-start justify-between gap-2">
@@ -162,15 +162,15 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
             <button
               type="button"
               onClick={() => setStatusMessage(null)}
-              className="text-slate-400 hover:text-slate-700 font-bold ml-2"
+              className="text-slate-400 hover:text-white font-bold ml-2"
             >
               ✕
             </button>
           </div>
 
           {statusMessage.showSamples && (
-            <div className="pt-1.5 border-t border-rose-200/70 flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-semibold text-rose-900">
+            <div className="pt-2 border-t border-rose-800/40 flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold text-rose-300">
                 Quick options:
               </span>
               <button
@@ -184,7 +184,7 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
                     textarea.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="text-[11px] font-medium px-2 py-1 rounded bg-white text-brand-700 border border-brand-300 hover:bg-brand-50"
+                className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-indigo-300 border border-indigo-500/30 hover:bg-slate-850 transition-colors"
               >
                 📋 Paste text directly below
               </button>

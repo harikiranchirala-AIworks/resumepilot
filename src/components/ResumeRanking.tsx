@@ -33,16 +33,19 @@ export function ResumeRanking() {
   if (library.length < 2) return null;
 
   return (
-    <div className="card">
-      <h3 className="text-sm font-bold text-brand-900 mb-1">Best-fit resume</h3>
-      <p className="text-xs text-slate-500 mb-4">
-        Ranked by match to this job description. Pick a different one to tailor instead.
-      </p>
+    <div className="card space-y-3">
+      <div>
+        <h3 className="text-sm font-bold text-white mb-0.5">Best-Fit Candidate Resume</h3>
+        <p className="text-xs text-slate-400">
+          Ranked automatically by ATS match to this job description. Select any profile below to tailor.
+        </p>
+      </div>
+
       <div className="space-y-2">
         {ranked.map(({ entry, match }, i) => (
           <label
             key={entry.id}
-            className="flex items-center justify-between gap-3 p-3 rounded-xl border-2 border-brand-100 cursor-pointer hover:border-brand-200 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50"
+            className="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/50 cursor-pointer hover:border-slate-700 has-[:checked]:border-cyan-500/60 has-[:checked]:bg-cyan-950/20 transition-all"
           >
             <div className="flex items-center gap-3">
               <input
@@ -50,14 +53,14 @@ export function ResumeRanking() {
                 name="rankedResume"
                 checked={selectedResumeId === entry.id}
                 onChange={() => selectResume(entry.id)}
-                className="text-brand-600 focus:ring-brand-500"
+                className="text-cyan-500 focus:ring-cyan-500 bg-slate-900 border-slate-700"
               />
               <div>
-                <span className="block text-sm font-semibold text-brand-900">
+                <span className="block text-xs font-semibold text-slate-200">
                   {entry.name}
                   {i === 0 && (
-                    <span className="ml-2 text-xs font-medium text-brand-600">
-                      Recommended
+                    <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-800/60">
+                      Top Match
                     </span>
                   )}
                 </span>

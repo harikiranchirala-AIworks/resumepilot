@@ -102,14 +102,17 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
       <div className="card card-accent space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 mb-1">
-              Step 3
-            </p>
-            <h2 className="text-xl font-bold text-brand-900">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                Step 3
+              </span>
+              <span className="text-xs text-slate-400">AI Tailoring & Generation Engine</span>
+            </div>
+            <h2 className="text-xl font-bold text-white">
               AI Resume Tailoring & ATS Suite
             </h2>
-            <p className="mt-0.5 text-xs text-slate-600">
-              Generate a high-match ATS resume, cover letter, and interview prep kit.
+            <p className="mt-0.5 text-xs text-slate-400">
+              Generate a high-match ATS resume, matching cover letter, and interview prep kit.
             </p>
           </div>
 
@@ -121,7 +124,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
             type="button"
             onClick={handleGenerate}
             disabled={!ready || isGenerating}
-            className="btn-primary w-full sm:w-auto text-xs py-3 px-6"
+            className="btn-primary w-full sm:w-auto text-xs py-3 px-6 shadow-glow-indigo font-bold"
           >
             {isGenerating ? (
               <span className="flex items-center gap-2">
@@ -136,8 +139,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
           </button>
 
           {result?.providerUsed && !isGenerating && (
-            <span className="text-[11px] text-slate-500 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-lg">
-              Engine: <strong className="text-brand-900">{result.providerUsed}</strong>
+            <span className="text-[11px] text-indigo-300 bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-xl">
+              Engine: <strong className="text-white">{result.providerUsed}</strong>
             </span>
           )}
         </div>
@@ -145,29 +148,29 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
         <TabActions showBack onBack={onBack} />
 
         {!ready && (
-          <p className="mt-4 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <p className="mt-4 text-xs text-amber-300 bg-amber-950/40 border border-amber-800/40 rounded-xl px-4 py-3">
             ⚠️ Please provide both Candidate Profile and Job Description to enable tailoring.
           </p>
         )}
 
         {error && (
-          <p className="mt-4 text-xs text-rose-800 bg-rose-50 border border-rose-200 rounded-xl px-4 py-3">
+          <p className="mt-4 text-xs text-rose-300 bg-rose-950/40 border border-rose-800/40 rounded-xl px-4 py-3">
             {error}
           </p>
         )}
       </div>
 
       {result && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-in fade-in duration-300">
           {/* Sub-tab navigation */}
-          <div className="flex flex-wrap gap-1.5 p-1.5 bg-white/80 backdrop-blur rounded-2xl border border-brand-100 shadow-sm">
+          <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800/80 shadow-2xl">
             <button
               type="button"
               onClick={() => setActiveSubTab("resume")}
               className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
                 activeSubTab === "resume"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-brand-800 hover:bg-brand-50"
+                  ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               📄 Tailored Resume
@@ -177,13 +180,13 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
               onClick={() => setActiveSubTab("diff")}
               className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
                 activeSubTab === "diff"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-brand-800 hover:bg-brand-50"
+                  ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               🔍 Diff & Changes
               {result.resume.diffItems && result.resume.diffItems.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-brand-100 text-brand-900 text-[10px] flex items-center justify-center font-bold">
+                <span className="w-4 h-4 rounded-full bg-indigo-950 text-indigo-300 text-[10px] flex items-center justify-center font-bold border border-indigo-500/40">
                   {result.resume.diffItems.length}
                 </span>
               )}
@@ -193,8 +196,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
               onClick={() => setActiveSubTab("cover-letter")}
               className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
                 activeSubTab === "cover-letter"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-brand-800 hover:bg-brand-50"
+                  ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               ✉️ Cover Letter
@@ -204,8 +207,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
               onClick={() => setActiveSubTab("interview-prep")}
               className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
                 activeSubTab === "interview-prep"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-brand-800 hover:bg-brand-50"
+                  ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               🎯 Interview Prep
@@ -215,8 +218,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
               onClick={() => setActiveSubTab("bullet-optimizer")}
               className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
                 activeSubTab === "bullet-optimizer"
-                  ? "bg-brand-600 text-white shadow-sm"
-                  : "text-brand-800 hover:bg-brand-50"
+                  ? "bg-indigo-600 text-white shadow-glow-indigo border border-indigo-400/40"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               ✨ Bullet Optimizer
@@ -227,7 +230,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
           {activeSubTab === "resume" && (
             <>
               <div className="card space-y-4">
-                <h3 className="text-sm font-bold text-brand-900">
+                <h3 className="text-sm font-bold text-white">
                   Profile ↔ Job Description Alignment Breakdown
                 </h3>
                 <div className="flex flex-wrap justify-around gap-4 py-2">
@@ -239,8 +242,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 text-xs pt-2">
-                  <div className="rounded-xl bg-brand-50/60 border border-brand-100 p-4 space-y-2">
-                    <h4 className="font-semibold text-brand-900">
+                  <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-4 space-y-2">
+                    <h4 className="font-bold text-emerald-400">
                       ✓ Matched Target Keywords ({result.match.matchedKeywords.length})
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
@@ -248,7 +251,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                         result.match.matchedKeywords.map((kw) => (
                           <span
                             key={kw}
-                            className="px-2.5 py-0.5 rounded-full bg-brand-100 text-brand-800 font-medium"
+                            className="px-2.5 py-0.5 rounded-full bg-emerald-950/40 text-emerald-300 font-medium border border-emerald-800/40"
                           >
                             {kw}
                           </span>
@@ -259,8 +262,8 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                     </div>
                   </div>
 
-                  <div className="rounded-xl bg-amber-50/80 border border-amber-100 p-4 space-y-2">
-                    <h4 className="font-semibold text-amber-900">
+                  <div className="rounded-xl bg-slate-950/60 border border-slate-800 p-4 space-y-2">
+                    <h4 className="font-bold text-amber-400">
                       ⚠️ Missing / Recommended Keywords ({result.match.missingKeywords.length})
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
@@ -268,7 +271,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                         result.match.missingKeywords.map((kw) => (
                           <span
                             key={kw}
-                            className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-medium"
+                            className="px-2.5 py-0.5 rounded-full bg-amber-950/40 text-amber-300 font-medium border border-amber-800/40"
                           >
                             {kw}
                           </span>
@@ -281,17 +284,17 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-3 text-xs pt-2">
-                  <div className="rounded-xl bg-emerald-50/50 p-3 border border-emerald-100">
-                    <h4 className="font-semibold text-emerald-900 mb-1.5">ATS Strengths</h4>
-                    <ul className="text-slate-600 space-y-1 list-disc list-inside">
+                  <div className="rounded-xl bg-emerald-950/20 p-3 border border-emerald-800/40">
+                    <h4 className="font-semibold text-emerald-300 mb-1.5">ATS Strengths</h4>
+                    <ul className="text-slate-300 space-y-1 list-disc list-inside">
                       {result.ats.strengths.map((s, i) => (
                         <li key={i}>{s}</li>
                       ))}
                     </ul>
                   </div>
-                  <div className="rounded-xl bg-rose-50/50 p-3 border border-rose-100">
-                    <h4 className="font-semibold text-rose-900 mb-1.5">Potential Issues</h4>
-                    <ul className="text-slate-600 space-y-1 list-disc list-inside">
+                  <div className="rounded-xl bg-rose-950/20 p-3 border border-rose-800/40">
+                    <h4 className="font-semibold text-rose-300 mb-1.5">Potential Issues</h4>
+                    <ul className="text-slate-300 space-y-1 list-disc list-inside">
                       {result.ats.issues.length ? (
                         result.ats.issues.map((s, i) => <li key={i}>{s}</li>)
                       ) : (
@@ -299,9 +302,9 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
                       )}
                     </ul>
                   </div>
-                  <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
-                    <h4 className="font-semibold text-slate-900 mb-1.5">Recommendations</h4>
-                    <ul className="text-slate-600 space-y-1 list-disc list-inside">
+                  <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
+                    <h4 className="font-semibold text-indigo-300 mb-1.5">Recommendations</h4>
+                    <ul className="text-slate-300 space-y-1 list-disc list-inside">
                       {result.match.recommendations.slice(0, 3).map((s, i) => (
                         <li key={i}>{s}</li>
                       ))}
