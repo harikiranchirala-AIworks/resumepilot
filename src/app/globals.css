@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #eff6ff;
+  --foreground: #1e3a8a;
+}
+
+body {
+  color: #1e293b;
+  background: var(--background);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+}
+
+@layer components {
+  .tab-btn {
+    @apply px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200;
+  }
+  .tab-btn-active {
+    @apply bg-white text-brand-700 shadow-card ring-2 ring-brand-400/40;
+  }
+  .tab-btn-inactive {
+    @apply text-brand-700/70 hover:bg-white/60 hover:text-brand-800;
+  }
+  .tab-btn-done {
+    @apply text-brand-600 bg-brand-50/80;
+  }
+  .card {
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-brand-100 shadow-card p-6 md:p-8;
+  }
+  .card-accent {
+    @apply border-l-4 border-l-brand-500;
+  }
+  .input-field {
+    @apply w-full rounded-xl border border-brand-200 bg-white px-4 py-2.5 text-sm text-slate-800
+      placeholder:text-slate-400
+      focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-brand-400
+      transition-shadow;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand-600 to-brand-500
+      px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/30
+      hover:from-brand-700 hover:to-brand-600 hover:shadow-lg hover:shadow-brand-500/40
+      disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
+      transition-all duration-200;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-brand-200 bg-white
+      px-5 py-2.5 text-sm font-semibold text-brand-700
+      hover:bg-brand-50 hover:border-brand-300 transition-colors;
+  }
+  .score-ring {
+    @apply flex h-20 w-20 items-center justify-center rounded-full border-4 text-xl font-bold;
+  }
+  .step-pill {
+    @apply inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold
+      bg-brand-600 text-white shadow-sm;
+  }
+  .tip-box {
+    @apply rounded-xl bg-gradient-to-br from-brand-50 to-blue-50 border border-brand-100 p-4;
+  }
+  .latex-preview {
+    @apply text-slate-900;
+  }
+  .latex-preview .body {
+    max-width: none;
+  }
+}
+
+/* Print Stylesheet for 100% Vector PDF Printing */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header, nav, footer, button, .no-print, [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .card, .resume-document {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  @page {
+    margin: 1.2cm;
+    size: auto;
+  }
+}
