@@ -5,6 +5,8 @@ import { RESUME_TEMPLATES } from "@/lib/latex";
 import { latexToHtml } from "@/lib/latexToHtml";
 import { useAppStore } from "@/lib/store";
 import type { ResumeTemplateId } from "@/lib/types";
+import { SectionCoPilot } from "./SectionCoPilot";
+import { KeywordGapMatrix } from "./KeywordGapMatrix";
 
 type PreviewMode = "preview" | "pdf" | "source";
 type PdfSource = "server" | "client" | null;
@@ -34,7 +36,15 @@ export function ResumePdfPreview({
   summary,
   highlights,
 }: ResumePdfPreviewProps) {
-  const { selectedTemplate, changeTemplate, editableLatex, setEditableLatex } = useAppStore();
+  const {
+    selectedTemplate,
+    changeTemplate,
+    editableLatex,
+    setEditableLatex,
+    pageFitSettings,
+    setPageFitSettings,
+  } = useAppStore();
+
   const [mode, setMode] = useState<PreviewMode>("preview");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
@@ -43,6 +53,11 @@ export function ResumePdfPreview({
   const [error, setError] = useState<string | null>(null);
   const [activeLatex, setActiveLatex] = useState(editableLatex || latex);
   const [copiedLatex, setCopiedLatex] = useState(false);
+
+  // Drawer toggles
+  const [showCoPilot, setShowCoPilot] = useState(false);
+  const [showKeywordMatrix, setShowKeywordMatrix] = useState(false);
+  const [showSpacingTuner, setShowSpacingTuner] = useState(false);
 
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
@@ -169,11 +184,19 @@ export function ResumePdfPreview({
   };
 
   const tabClass = (active: boolean) =>
-    `px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+    `px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
       active
         ? "bg-brand-600 text-white shadow-sm"
         : "text-brand-700 hover:bg-brand-50"
     }`;
+
+  // Apply page fit margin classes
+  let marginPaddingClass = "p-8";
+  if (pageFitSettings.margin === "tight") {
+    marginPaddingClass = "p-5";
+  } else if (pageFitSettings.margin === "relaxed") {
+    marginPaddingClass = "p-10";
+  }
 
   return (
     <div className="card space-y-4">
@@ -230,6 +253,141 @@ export function ResumePdfPreview({
         </div>
       </div>
 
+      {/* Auxiliary Co-Pilot & Spacing Tool Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-gradient-to-r from-brand-50/70 to-blue-50/70 border border-brand-100 rounded-xl no-print">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowCoPilot(!showCoPilot)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              showCoPilot
+                ? "bg-brand-600 text-white shadow-2xs"
+                : "bg-white text-brand-700 hover:bg-brand-50 border border-brand-200"
+            }`}
+          >
+            ⚡ Section AI Co-Pilot
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowKeywordMatrix(!showKeywordMatrix)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              showKeywordMatrix
+                ? "bg-brand-600 text-white shadow-2xs"
+                : "bg-white text-brand-700 hover:bg-brand-50 border border-brand-200"
+            }`}
+          >
+            🎯 Keyword Gap Matrix
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowSpacingTuner(!showSpacingTuner)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              showSpacingTuner
+                ? "bg-brand-600 text-white shadow-2xs"
+                : "bg-white text-brand-700 hover:bg-brand-50 border border-brand-200"
+            }`}
+          >
+            📏 1-Page Length Tuner
+          </button>
+        </div>
+
+        <span className="text-[11px] text-slate-500 font-medium hidden md:inline">
+          Template: <strong className="text-brand-900 capitalize">{selectedTemplate.replace("-", " ")}</strong>
+        </span>
+      </div>
+
+      {/* Drawer 1: Section AI Co-Pilot */}
+      {showCoPilot && (
+        <div className="animate-fadeIn">
+          <SectionCoPilot />
+        </div>
+      )}
+
+      {/* Drawer 2: Keyword Gap Matrix */}
+      {showKeywordMatrix && (
+        <div className="animate-fadeIn">
+          <KeywordGapMatrix />
+        </div>
+      )}
+
+      {/* Drawer 3: 1-Page Length Optimizer & Spacing Tuner */}
+      {showSpacingTuner && (
+        <div className="p-4 bg-white border border-brand-200 rounded-xl space-y-3 animate-fadeIn no-print shadow-xs">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-bold text-brand-900">
+              📏 1-Page Strict Length & Spacing Tuner
+            </h4>
+            <span className="text-[11px] text-slate-500">
+              Adjust spacing parameters to fit perfectly on 1 page without 2-line spills.
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label className="text-[11px] font-semibold text-slate-700 block mb-1">
+                Margin Padding:
+              </label>
+              <div className="flex gap-1">
+                {(["tight", "standard", "relaxed"] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setPageFitSettings({ margin: m })}
+                    className={`flex-1 py-1 text-[11px] font-semibold rounded-lg capitalize border ${
+                      pageFitSettings.margin === m
+                        ? "bg-brand-600 text-white border-brand-600"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-semibold text-slate-700 block mb-1">
+                Item Spacing:
+              </label>
+              <div className="flex gap-1">
+                {(["tight", "normal", "relaxed"] as const).map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setPageFitSettings({ itemSpacing: s })}
+                    className={`flex-1 py-1 text-[11px] font-semibold rounded-lg capitalize border ${
+                      pageFitSettings.itemSpacing === s
+                        ? "bg-brand-600 text-white border-brand-600"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={() =>
+                  setPageFitSettings({
+                    margin: "tight",
+                    itemSpacing: "tight",
+                    lineSpacing: "tight",
+                  })
+                }
+                className="w-full py-1.5 px-3 rounded-lg text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-2xs transition-colors"
+              >
+                ⚡ Auto-Fit to Exactly 1 Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Template selector & preview mode bar */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2 border-t border-brand-100 no-print">
         <div className="flex items-center gap-2">
@@ -277,11 +435,17 @@ export function ResumePdfPreview({
 
       {/* Mode 1: Live Formatted Resume Preview */}
       {mode === "preview" && (
-        <div className="rounded-xl border border-brand-200 bg-slate-100/60 p-4 sm:p-8 overflow-auto max-h-[min(85vh,900px)] shadow-inner">
+        <div className="relative rounded-xl border border-brand-200 bg-slate-100/60 p-4 sm:p-8 overflow-auto max-h-[min(85vh,900px)] shadow-inner">
           <div
             ref={previewContainerRef}
+            className={`${marginPaddingClass} bg-white shadow-sm rounded-lg relative`}
             dangerouslySetInnerHTML={{ __html: renderedHtml }}
           />
+
+          {/* Visual Page 1 cutoff indicator */}
+          <div className="mt-8 border-t-2 border-dashed border-amber-400/80 pt-1 text-center text-[11px] font-bold text-amber-700 bg-amber-50/70 p-1.5 rounded-lg no-print">
+            ✂️ Approximate Page 1 Cutoff Boundary (A4 Standard Height)
+          </div>
         </div>
       )}
 

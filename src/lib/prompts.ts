@@ -1,4 +1,4 @@
-import type { ProfileInputMode } from "./types";
+import type { CoPilotRequest, ProfileInputMode } from "./types";
 
 export const TAILOR_JSON_SCHEMA = `{
   "latexBody": "LaTeX body only (sections, headings, itemize blocks - no \\\\documentclass or \\\\begin{document}). Escape LaTeX special chars like %, &, $, _, #.",
@@ -180,3 +180,57 @@ Reply with ONLY valid JSON:
 }`;
 }
 
+export function buildCoPilotPrompt(request: CoPilotRequest): string {
+  let actionInstruction = "";
+
+  switch (request.action) {
+    case "quantify":
+      actionInstruction = `Convert the selected text into Google's XYZ formula (Accomplished [X] as measured by [Y], by doing [Z]).
+Provide 3 variations with plausible, high-impact numerical metrics, latency reductions, or business outcomes.`;
+      break;
+
+    case "inject_keyword":
+      actionInstruction = `Rewrite the selected text to seamlessly and authentically integrate the target keyword: "${request.targetKeyword || "High-Priority Skill"}".
+Ensure the keyword feels natural, demonstrated through real execution rather than superficial mention.`;
+      break;
+
+    case "shorten":
+      actionInstruction = `Condense the selected text by 20-35% to optimize for strict single-page resume layout.
+Cut filler words, preserve strong active verbs, and keep the most impactful metric or achievement.`;
+      break;
+
+    case "elevate_tone":
+      actionInstruction = `Elevate the tone of the selected text to reflect senior/staff-level ownership, system-level impact, and strategic engineering governance.`;
+      break;
+  }
+
+  return `You are an expert AI Resume Co-Pilot.
+Your task is to rewrite the provided resume snippet based on the specific optimization goal.
+
+Action: ${request.action.toUpperCase()}
+Optimization Goal:
+${actionInstruction}
+
+Original Snippet:
+"${request.selectedText}"
+
+${request.jobDescription ? `Target Job Description Context:\n"${request.jobDescription.slice(0, 1000)}"\n` : ""}
+
+INSTRUCTIONS:
+- Generate 3 distinct, high-quality suggestions.
+- For each suggestion, provide:
+  1. "text": The complete polished bullet point / sentence.
+  2. "rationale": 1 concise sentence explaining the improvement.
+  3. "metricsEstimated": Optional metric badge (e.g. "+35% efficiency", "40ms latency", "$1.2M saved").
+
+Reply with ONLY valid JSON in this shape (no markdown fences, no extra commentary):
+{
+  "suggestions": [
+    {
+      "text": "Architected high-throughput event processing platform reducing p99 latency by 42% across 50M daily transactions.",
+      "rationale": "Emphasizes scale and quantifies performance gains using Google XYZ formula.",
+      "metricsEstimated": "-42% latency"
+    }
+  ]
+}`;
+}

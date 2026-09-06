@@ -2,6 +2,7 @@
 
 import { useAppStore, canProceedFromJD } from "@/lib/store";
 import { TabActions } from "./TabActions";
+import { KeywordGapMatrix } from "./KeywordGapMatrix";
 
 interface JDTabProps {
   onBack: () => void;
@@ -58,89 +59,94 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
   const canNext = canProceedFromJD(jd);
 
   return (
-    <div className="card card-accent space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+    <div className="space-y-6">
+      <div className="card card-accent space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 mb-1">
+              Step 2
+            </p>
+            <h2 className="text-xl font-bold text-brand-900">Target Job Description</h2>
+            <p className="mt-1 text-xs text-slate-600">
+              Paste the job posting you want to tailor your resume for.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 self-start pt-1">
+            <span className="text-[11px] text-slate-400 font-medium">Load sample JD:</span>
+            {SAMPLE_JDS.map((sample, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setJobDescription(sample.text)}
+                className="text-[11px] px-2 py-1 rounded-md bg-brand-50 hover:bg-brand-100 text-brand-700 font-medium transition-colors border border-brand-200"
+              >
+                {sample.title.split(" ")[0]} {sample.title.split(" ")[1]}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-brand-600 mb-1">
-            Step 2
-          </p>
-          <h2 className="text-xl font-bold text-brand-900">Target Job Description</h2>
-          <p className="mt-1 text-xs text-slate-600">
-            Paste the job posting you want to tailor your resume for.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-1.5 self-start pt-1">
-          <span className="text-[11px] text-slate-400 font-medium">Load sample JD:</span>
-          {SAMPLE_JDS.map((sample, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setJobDescription(sample.text)}
-              className="text-[11px] px-2 py-1 rounded-md bg-brand-50 hover:bg-brand-100 text-brand-700 font-medium transition-colors border border-brand-200"
+          <div className="flex items-center justify-between mb-1.5">
+            <label
+              htmlFor="jobDescription"
+              className="text-xs font-semibold text-brand-900"
             >
-              {sample.title.split(" ")[0]} {sample.title.split(" ")[1]}
-            </button>
-          ))}
-        </div>
-      </div>
+              Job Description Content
+            </label>
+            {jd.jobDescription.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setJobDescription("")}
+                className="text-[11px] text-slate-400 hover:text-rose-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
 
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <label
-            htmlFor="jobDescription"
-            className="text-xs font-semibold text-brand-900"
-          >
-            Job Description Content
-          </label>
-          {jd.jobDescription.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setJobDescription("")}
-              className="text-[11px] text-slate-400 hover:text-rose-600"
-            >
-              Clear
-            </button>
-          )}
+          <textarea
+            id="jobDescription"
+            rows={12}
+            className="input-field text-xs leading-relaxed"
+            placeholder="Paste the complete job description — responsibilities, requirements, qualifications, tech stack..."
+            value={jd.jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
+          <p className="mt-1 text-[11px] text-slate-500">
+            {jd.jobDescription.length} characters
+            {jd.jobDescription.length < 50 && jd.jobDescription.length > 0 && (
+              <span className="text-amber-600 font-medium">
+                {" "}
+                — paste the full JD for accurate matching and ATS scoring
+              </span>
+            )}
+          </p>
         </div>
 
-        <textarea
-          id="jobDescription"
-          rows={14}
-          className="input-field text-xs leading-relaxed"
-          placeholder="Paste the complete job description — responsibilities, requirements, qualifications, tech stack..."
-          value={jd.jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
+        <div className="tip-box">
+          <h3 className="text-xs font-bold text-brand-900 uppercase tracking-wider">
+            Pro-Tips for Maximum Match Score
+          </h3>
+          <ul className="mt-1.5 text-xs text-slate-600 space-y-1 list-disc list-inside">
+            <li>Include the full posting including requirements and qualifications</li>
+            <li>Our engine extracts and prioritizes high-frequency keywords across 5 technical and domain categories</li>
+            <li>We will also generate matching interview questions and cover letters</li>
+          </ul>
+        </div>
+
+        <TabActions
+          showBack
+          onBack={onBack}
+          onNext={onNext}
+          nextDisabled={!canNext}
         />
-        <p className="mt-1 text-[11px] text-slate-500">
-          {jd.jobDescription.length} characters
-          {jd.jobDescription.length < 50 && jd.jobDescription.length > 0 && (
-            <span className="text-amber-600 font-medium">
-              {" "}
-              — paste the full JD for accurate matching and ATS scoring
-            </span>
-          )}
-        </p>
       </div>
 
-      <div className="tip-box">
-        <h3 className="text-xs font-bold text-brand-900 uppercase tracking-wider">
-          Pro-Tips for Maximum Match Score
-        </h3>
-        <ul className="mt-1.5 text-xs text-slate-600 space-y-1 list-disc list-inside">
-          <li>Include the full posting including requirements and qualifications</li>
-          <li>Our engine will extract and weave target keywords into your authentic accomplishments</li>
-          <li>We will also generate matching interview questions and cover letters</li>
-        </ul>
-      </div>
-
-      <TabActions
-        showBack
-        onBack={onBack}
-        onNext={onNext}
-        nextDisabled={!canNext}
-      />
+      {jd.jobDescription.trim().length > 30 && (
+        <KeywordGapMatrix />
+      )}
     </div>
   );
 }
-

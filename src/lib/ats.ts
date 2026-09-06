@@ -1,4 +1,4 @@
-import type { ATSAnalysis } from "./types";
+import type { ATSAnalysis, KeywordGapCategory, KeywordGapItem, MatchAnalysis } from "./types";
 
 const ATS_POSITIVE_PATTERNS = [
   /\b(experience|skills|education|summary|projects|certifications)\b/i,
@@ -11,6 +11,79 @@ const ATS_NEGATIVE_PATTERNS = [
   /[^\x00-\x7F]/,
   /\b(see attached|click here)\b/i,
 ];
+
+const CATEGORY_MAP: Record<string, KeywordGapCategory> = {
+  // Core Tech
+  typescript: "core-tech",
+  javascript: "core-tech",
+  python: "core-tech",
+  java: "core-tech",
+  golang: "core-tech",
+  go: "core-tech",
+  rust: "core-tech",
+  csharp: "core-tech",
+  "c++": "core-tech",
+  react: "core-tech",
+  "next.js": "core-tech",
+  nextjs: "core-tech",
+  vue: "core-tech",
+  angular: "core-tech",
+  "node.js": "core-tech",
+  nodejs: "core-tech",
+  sql: "core-tech",
+  postgresql: "core-tech",
+  postgres: "core-tech",
+  mongodb: "core-tech",
+  redis: "core-tech",
+  graphql: "core-tech",
+  "rest api": "core-tech",
+  "restful apis": "core-tech",
+
+  // Cloud & DevOps
+  aws: "cloud-devops",
+  azure: "cloud-devops",
+  gcp: "cloud-devops",
+  docker: "cloud-devops",
+  kubernetes: "cloud-devops",
+  k8s: "cloud-devops",
+  terraform: "cloud-devops",
+  "ci/cd": "cloud-devops",
+  cicd: "cloud-devops",
+  "github actions": "cloud-devops",
+  jenkins: "cloud-devops",
+  linux: "cloud-devops",
+  kafka: "cloud-devops",
+  rabbitmq: "cloud-devops",
+
+  // Architecture & Methods
+  microservices: "architecture",
+  "system design": "architecture",
+  "distributed systems": "architecture",
+  "event-driven": "architecture",
+  "high availability": "architecture",
+  scalability: "architecture",
+  performance: "architecture",
+  security: "architecture",
+  testing: "architecture",
+
+  // Soft Skills & Governance
+  agile: "soft-skills",
+  scrum: "soft-skills",
+  leadership: "soft-skills",
+  mentorship: "soft-skills",
+  communication: "soft-skills",
+  "stakeholder management": "soft-skills",
+  "cross-functional": "soft-skills",
+  "project management": "soft-skills",
+
+  // Certifications & Education
+  pmp: "certifications",
+  cspo: "certifications",
+  csm: "certifications",
+  "solutions architect": "certifications",
+  bachelor: "certifications",
+  master: "certifications",
+};
 
 export function analyzeATSHeuristic(
   latex: string,
@@ -115,7 +188,7 @@ export function extractKeywords(text: string): string[] {
 export function analyzeMatchHeuristic(
   profileText: string,
   jobDescription: string
-): import("./types").MatchAnalysis {
+): MatchAnalysis {
   const keywords = extractKeywords(jobDescription);
   const profileLower = profileText.toLowerCase();
   const matchedKeywords = keywords.filter((kw) => profileLower.includes(kw));
@@ -168,4 +241,86 @@ export function analyzeMatchHeuristic(
     missingKeywords: missingKeywords.slice(0, 15),
     recommendations,
   };
+}
+
+/**
+ * Detailed Keyword Gap Analysis categorizing terms and frequencies.
+ */
+export function analyzeKeywordGapsDetailed(
+  jobDescription: string,
+  resumeText: string
+): KeywordGapItem[] {
+  if (!jobDescription || !jobDescription.trim()) return [];
+
+  const jdLower = jobDescription.toLowerCase();
+  const resumeLower = resumeText.toLowerCase();
+
+  const extracted = extractKeywords(jobDescription);
+  const items: KeywordGapItem[] = [];
+  const seen = new Set<string>();
+
+  for (const rawKw of extracted) {
+    const kw = rawKw.toLowerCase().trim();
+    if (seen.has(kw) || kw.length < 3) continue;
+    seen.add(kw);
+
+    // Count JD frequency
+    const jdRegex = new RegExp(`\\b${escapeRegExp(kw)}\\b`, "gi");
+    const jdCount = (jdLower.match(jdRegex) || []).length || 1;
+
+    // Count Resume frequency
+    const resRegex = new RegExp(`\\b${escapeRegExp(kw)}\\b`, "gi");
+    const resCount = (resumeLower.match(resRegex) || []).length;
+
+    // Determine category
+    const category: KeywordGapCategory = CATEGORY_MAP[kw] || categorizeKeywordGeneric(kw);
+
+    // Status
+    const status: KeywordGapItem["status"] =
+      resCount > 0 ? "matched" : jdCount >= 3 ? "missing" : "partial";
+
+    // Relevance
+    const relevance: KeywordGapItem["relevance"] =
+      jdCount >= 3 || category === "core-tech" || category === "cloud-devops"
+        ? "critical"
+        : jdCount >= 2
+        ? "recommended"
+        : "nice-to-have";
+
+    items.push({
+      keyword: rawKw.charAt(0).toUpperCase() + rawKw.slice(1),
+      category,
+      jdFrequency: jdCount,
+      resumeFrequency: resCount,
+      status,
+      relevance,
+    });
+  }
+
+  // Sort: Critical missing first, then critical matched, then by JD frequency
+  return items.sort((a, b) => {
+    if (a.status === "missing" && b.status !== "missing") return -1;
+    if (b.status === "missing" && a.status !== "missing") return 1;
+    return b.jdFrequency - a.jdFrequency;
+  });
+}
+
+function categorizeKeywordGeneric(kw: string): KeywordGapCategory {
+  if (/(engineer|developer|code|api|database|data|backend|frontend|fullstack)/i.test(kw)) {
+    return "core-tech";
+  }
+  if (/(cloud|server|deploy|pipeline|infrastructure|devops|security)/i.test(kw)) {
+    return "cloud-devops";
+  }
+  if (/(design|architecture|system|scalability|performance|scale)/i.test(kw)) {
+    return "architecture";
+  }
+  if (/(lead|manage|agile|scrum|team|communicate|collaborate|product)/i.test(kw)) {
+    return "soft-skills";
+  }
+  return "core-tech";
+}
+
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

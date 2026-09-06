@@ -1,14 +1,67 @@
 import { create } from "zustand";
 import type {
   AIProvider,
+  ApplicationStage,
   GenerateResult,
   JDState,
+  JobApplication,
+  PageFitSettings,
   ProfileInputMode,
   ProfileState,
   ResumeEntry,
   ResumeTemplateId,
+  WorkspaceExportData,
 } from "./types";
 import { buildLatexDocument, extractLatexBody } from "./latex";
+
+const LOCAL_STORAGE_APPS_KEY = "resumepilot_applications_v1";
+const LOCAL_STORAGE_PAGE_FIT_KEY = "resumepilot_page_fit_v1";
+
+const DEFAULT_PAGE_FIT: PageFitSettings = {
+  margin: "standard",
+  fontSize: "standard",
+  lineSpacing: "normal",
+  itemSpacing: "normal",
+  targetPages: 1,
+};
+
+function loadStoredApplications(): JobApplication[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_APPS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredApplications(apps: JobApplication[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_APPS_KEY, JSON.stringify(apps));
+  } catch {
+    /* ignore */
+  }
+}
+
+function loadStoredPageFit(): PageFitSettings {
+  if (typeof window === "undefined") return DEFAULT_PAGE_FIT;
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_PAGE_FIT_KEY);
+    return raw ? { ...DEFAULT_PAGE_FIT, ...JSON.parse(raw) } : DEFAULT_PAGE_FIT;
+  } catch {
+    return DEFAULT_PAGE_FIT;
+  }
+}
+
+function saveStoredPageFit(fit: PageFitSettings) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_PAGE_FIT_KEY, JSON.stringify(fit));
+  } catch {
+    /* ignore */
+  }
+}
 
 interface AppStore {
   profile: ProfileState;
@@ -21,6 +74,11 @@ interface AppStore {
   preferredProvider: AIProvider;
   selectedTemplate: ResumeTemplateId;
   editableLatex: string;
+
+  // Phase 2: Applications Kanban Tracker & Page Fit
+  applications: JobApplication[];
+  activeApplicationId: string | null;
+  pageFitSettings: PageFitSettings;
 
   setProfileMode: (mode: ProfileInputMode) => void;
   setResumeText: (text: string) => void;
@@ -36,6 +94,28 @@ interface AppStore {
   selectResume: (id: string) => void;
   upsertResume: (entry: { id?: string; name: string; text: string }) => Promise<void>;
   removeResume: (id: string) => Promise<void>;
+
+  // Applications Tracker Actions
+  initApplications: () => void;
+  addApplication: (app: Omit<JobApplication, "id" | "createdAt" | "updatedAt">) => JobApplication;
+  updateApplication: (id: string, updates: Partial<JobApplication>) => void;
+  deleteApplication: (id: string) => void;
+  setApplicationStage: (id: string, stage: ApplicationStage) => void;
+  saveCurrentWorkspaceAsApplication: (meta: {
+    companyName: string;
+    roleTitle: string;
+    salaryEstimate?: string;
+    location?: string;
+    notes?: string;
+  }) => JobApplication;
+  loadApplicationIntoWorkspace: (id: string) => void;
+
+  // Page Fit Actions
+  setPageFitSettings: (settings: Partial<PageFitSettings>) => void;
+
+  // Workspace Backup & Restore
+  exportWorkspaceJson: () => string;
+  importWorkspaceJson: (jsonString: string) => boolean;
 }
 
 export const useAppStore = create<AppStore>((set, get) => ({
@@ -54,6 +134,10 @@ export const useAppStore = create<AppStore>((set, get) => ({
   preferredProvider: "auto",
   selectedTemplate: "tech-standard",
   editableLatex: "",
+
+  applications: [],
+  activeApplicationId: null,
+  pageFitSettings: DEFAULT_PAGE_FIT,
 
   setProfileMode: (mode) =>
     set((state) => ({
@@ -144,6 +228,136 @@ export const useAppStore = create<AppStore>((set, get) => ({
       selectedResumeId: state.selectedResumeId === id ? null : state.selectedResumeId,
     }));
   },
+
+  // Applications Actions
+  initApplications: () => {
+    const apps = loadStoredApplications();
+    const fit = loadStoredPageFit();
+    set({ applications: apps, pageFitSettings: fit });
+  },
+
+  addApplication: (appData) => {
+    const now = new Date().toISOString();
+    const newApp: JobApplication = {
+      ...appData,
+      id: "app_" + Math.random().toString(36).substring(2, 9) + "_" + Date.now(),
+      createdAt: now,
+      updatedAt: now,
+    };
+    const nextApps = [newApp, ...get().applications];
+    set({ applications: nextApps, activeApplicationId: newApp.id });
+    saveStoredApplications(nextApps);
+    return newApp;
+  },
+
+  updateApplication: (id, updates) => {
+    const nextApps = get().applications.map((app) =>
+      app.id === id
+        ? { ...app, ...updates, updatedAt: new Date().toISOString() }
+        : app
+    );
+    set({ applications: nextApps });
+    saveStoredApplications(nextApps);
+  },
+
+  deleteApplication: (id) => {
+    const nextApps = get().applications.filter((app) => app.id !== id);
+    set({
+      applications: nextApps,
+      activeApplicationId: get().activeApplicationId === id ? null : get().activeApplicationId,
+    });
+    saveStoredApplications(nextApps);
+  },
+
+  setApplicationStage: (id, stage) => {
+    const app = get().applications.find((a) => a.id === id);
+    if (!app) return;
+    const updates: Partial<JobApplication> = { stage };
+    if (stage === "applied" && !app.appliedDate) {
+      updates.appliedDate = new Date().toISOString().split("T")[0];
+    }
+    get().updateApplication(id, updates);
+  },
+
+  saveCurrentWorkspaceAsApplication: (meta) => {
+    const current = get();
+    const now = new Date().toISOString();
+    const newApp: JobApplication = {
+      id: "app_" + Math.random().toString(36).substring(2, 9) + "_" + Date.now(),
+      companyName: meta.companyName.trim() || "Target Company",
+      roleTitle: meta.roleTitle.trim() || "Target Position",
+      jobDescription: current.jd.jobDescription,
+      stage: current.result ? "tailored" : "saved",
+      salaryEstimate: meta.salaryEstimate,
+      location: meta.location,
+      notes: meta.notes,
+      matchScore: current.result?.match.overallScore,
+      resumeLatex: current.editableLatex || current.result?.resume.latex,
+      templateId: current.selectedTemplate,
+      coverLetterText: current.result?.coverLetter?.text,
+      interviewPrep: current.result?.interviewPrep,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const nextApps = [newApp, ...current.applications];
+    set({ applications: nextApps, activeApplicationId: newApp.id });
+    saveStoredApplications(nextApps);
+    return newApp;
+  },
+
+  loadApplicationIntoWorkspace: (id) => {
+    const app = get().applications.find((a) => a.id === id);
+    if (!app) return;
+
+    set({
+      activeApplicationId: app.id,
+      jd: { jobDescription: app.jobDescription || "" },
+      selectedTemplate: app.templateId || "tech-standard",
+      editableLatex: app.resumeLatex || "",
+    });
+  },
+
+  // Page Fit Actions
+  setPageFitSettings: (settings) => {
+    const updated = { ...get().pageFitSettings, ...settings };
+    set({ pageFitSettings: updated });
+    saveStoredPageFit(updated);
+  },
+
+  // Workspace Backup & Restore
+  exportWorkspaceJson: () => {
+    const state = get();
+    const data: WorkspaceExportData = {
+      version: "1.2.0",
+      exportedAt: new Date().toISOString(),
+      profile: state.profile,
+      library: state.library,
+      applications: state.applications,
+      selectedTemplate: state.selectedTemplate,
+      preferredProvider: state.preferredProvider,
+    };
+    return JSON.stringify(data, null, 2);
+  },
+
+  importWorkspaceJson: (jsonString) => {
+    try {
+      const parsed = JSON.parse(jsonString) as WorkspaceExportData;
+      if (!parsed || typeof parsed !== "object") return false;
+
+      if (parsed.profile) set({ profile: parsed.profile });
+      if (Array.isArray(parsed.library)) set({ library: parsed.library });
+      if (Array.isArray(parsed.applications)) {
+        set({ applications: parsed.applications });
+        saveStoredApplications(parsed.applications);
+      }
+      if (parsed.selectedTemplate) set({ selectedTemplate: parsed.selectedTemplate });
+      if (parsed.preferredProvider) set({ preferredProvider: parsed.preferredProvider });
+      return true;
+    } catch {
+      return false;
+    }
+  },
 }));
 
 function selectedResumeText(
@@ -191,4 +405,3 @@ export function canGenerate(
   const hasJD = jd.jobDescription.trim().length > 20;
   return hasProfile && hasJD;
 }
-

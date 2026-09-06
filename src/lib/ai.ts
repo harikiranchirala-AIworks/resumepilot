@@ -1,6 +1,9 @@
 import type {
   AIProvider,
   BulletRewriteOption,
+  CoPilotRequest,
+  CoPilotResponse,
+  CoPilotSuggestion,
   CoverLetterResult,
   DiffItem,
   GenerateResult,
@@ -23,6 +26,7 @@ import { callAnthropicApi, hasAnthropic } from "./providers/anthropic";
 import { generateWithCursorSdk, hasCursorSdk } from "./cursor-agent";
 import {
   buildBulletRewritePrompt,
+  buildCoPilotPrompt,
   buildCoverLetterPrompt,
   buildInterviewPrepPrompt,
   buildTailorPrompt,
@@ -252,6 +256,109 @@ export async function rewriteBulletPoint(
       },
     ];
   }
+}
+
+export async function executeCoPilotAction(
+  request: CoPilotRequest
+): Promise<CoPilotResponse> {
+  const prompt = buildCoPilotPrompt(request);
+
+  try {
+    const { data, providerName } = await callProviderJson<{ suggestions: CoPilotSuggestion[] }>(
+      prompt,
+      request.preferredProvider
+    );
+
+    if (data.suggestions && data.suggestions.length > 0) {
+      return {
+        action: request.action,
+        originalText: request.selectedText,
+        suggestions: data.suggestions,
+        providerUsed: providerName,
+      };
+    }
+  } catch (err) {
+    console.warn("AI CoPilot call failed, using heuristic fallback:", err);
+  }
+
+  // Heuristic fallbacks
+  const clean = request.selectedText.trim();
+  const kw = request.targetKeyword || "Target Architecture";
+
+  let fallbackSuggestions: CoPilotSuggestion[] = [];
+
+  switch (request.action) {
+    case "quantify":
+      fallbackSuggestions = [
+        {
+          text: `Optimized performance by 38% while executing ${clean.slice(0, 70)}, saving 15+ engineering hours weekly.`,
+          rationale: "Adds measurable time and efficiency outcomes using Google's XYZ formula.",
+          metricsEstimated: "+38% efficiency",
+        },
+        {
+          text: `Scaled throughput by 3.5x across production systems by implementing ${clean.slice(0, 60)}.`,
+          rationale: "Highlights scalability and high-load impact.",
+          metricsEstimated: "3.5x throughput",
+        },
+        {
+          text: `Reduced release defect rates from 14% to 1.8% by standardizing ${clean.slice(0, 65)}.`,
+          rationale: "Demonstrates reliability and quality assurance metrics.",
+          metricsEstimated: "-85% defects",
+        },
+      ];
+      break;
+
+    case "inject_keyword":
+      fallbackSuggestions = [
+        {
+          text: `Architected and deployed solutions leveraging ${kw}, accelerating delivery by 30% across key workflows.`,
+          rationale: `Seamlessly weaves in ${kw} with architectural leadership context.`,
+        },
+        {
+          text: `Spearheaded cross-functional integration of ${kw}, resolving legacy bottlenecks and boosting system uptime.`,
+          rationale: `Emphasizes proactive adoption and modernization with ${kw}.`,
+        },
+        {
+          text: `Standardized ${kw} best practices, reducing team onboarding cycle times by 40%.`,
+          rationale: `Positions ${kw} in governance and team velocity impact.`,
+        },
+      ];
+      break;
+
+    case "shorten":
+      fallbackSuggestions = [
+        {
+          text: clean.split(/\s+/).slice(0, Math.max(8, Math.round(clean.split(/\s+/).length * 0.7))).join(" ") + ".",
+          rationale: "Trimmed filler phrasing for strict single-page resume layout.",
+        },
+        {
+          text: `Led ${clean.slice(0, 60).replace(/^(responsible for|worked on|helped with)\s+/i, "")}.`,
+          rationale: "Replaces passive verbs with direct action verbs.",
+        },
+      ];
+      break;
+
+    case "elevate_tone":
+    default:
+      fallbackSuggestions = [
+        {
+          text: `Spearheaded strategic delivery of ${clean.slice(0, 70)}, driving alignment across engineering and executive leadership.`,
+          rationale: "Elevates cross-functional governance and high-level ownership.",
+        },
+        {
+          text: `Championed technical architecture for ${clean.slice(0, 65)}, establishing scalable foundations for high-growth initiatives.`,
+          rationale: "Frames contribution as scalable foundation engineering.",
+        },
+      ];
+      break;
+  }
+
+  return {
+    action: request.action,
+    originalText: request.selectedText,
+    suggestions: fallbackSuggestions,
+    providerUsed: "Offline Heuristic Co-Pilot",
+  };
 }
 
 function fallbackResult(

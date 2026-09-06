@@ -106,3 +106,98 @@ export interface GenerateResult {
   coverLetter?: CoverLetterResult;
   interviewPrep?: InterviewPrepResult;
 }
+
+/* ==========================================================================
+   Phase 2 Interfaces: Applications Kanban, Keyword Matrix, Co-Pilot & Page Fit
+   ========================================================================== */
+
+export type ApplicationStage =
+  | "saved"
+  | "tailored"
+  | "applied"
+  | "interviewing"
+  | "offered"
+  | "rejected"
+  | "archived";
+
+export interface JobApplication {
+  id: string;
+  companyName: string;
+  roleTitle: string;
+  jobDescription: string;
+  stage: ApplicationStage;
+  salaryEstimate?: string;
+  location?: string;
+  notes?: string;
+  appliedDate?: string;
+  interviewDate?: string;
+  matchScore?: number;
+  resumeLatex?: string;
+  templateId?: ResumeTemplateId;
+  coverLetterText?: string;
+  interviewPrep?: InterviewPrepResult;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type KeywordGapCategory =
+  | "core-tech"
+  | "cloud-devops"
+  | "architecture"
+  | "soft-skills"
+  | "certifications";
+
+export interface KeywordGapItem {
+  keyword: string;
+  category: KeywordGapCategory;
+  jdFrequency: number;
+  resumeFrequency: number;
+  status: "matched" | "missing" | "partial";
+  relevance: "critical" | "recommended" | "nice-to-have";
+}
+
+export interface PageFitSettings {
+  margin: "tight" | "standard" | "relaxed";
+  fontSize: "small" | "medium" | "standard";
+  lineSpacing: "tight" | "normal" | "relaxed";
+  itemSpacing: "tight" | "normal" | "relaxed";
+  targetPages: 1 | 2 | "auto";
+}
+
+export type CoPilotActionType =
+  | "quantify"
+  | "inject_keyword"
+  | "shorten"
+  | "elevate_tone";
+
+export interface CoPilotSuggestion {
+  text: string;
+  rationale: string;
+  metricsEstimated?: string;
+}
+
+export interface CoPilotRequest {
+  action: CoPilotActionType;
+  selectedText: string;
+  contextRole?: string;
+  targetKeyword?: string;
+  jobDescription?: string;
+  preferredProvider?: AIProvider;
+}
+
+export interface CoPilotResponse {
+  action: CoPilotActionType;
+  originalText: string;
+  suggestions: CoPilotSuggestion[];
+  providerUsed?: string;
+}
+
+export interface WorkspaceExportData {
+  version: string;
+  exportedAt: string;
+  profile: ProfileState;
+  library: ResumeEntry[];
+  applications: JobApplication[];
+  selectedTemplate: ResumeTemplateId;
+  preferredProvider: AIProvider;
+}
