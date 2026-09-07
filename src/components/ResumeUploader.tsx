@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { UploadCloud, CheckCircle2, AlertCircle, X } from "lucide-react";
 
 interface ResumeUploaderProps {
   onTextExtracted: (text: string, suggestedName?: string) => void;
@@ -109,8 +110,8 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
           isDragging
-            ? "border-indigo-400 bg-indigo-950/60 shadow-glow-indigo scale-[0.99]"
-            : "border-slate-600 hover:border-indigo-400 hover:bg-slate-850 bg-slate-900/90 shadow-md"
+            ? "border-indigo-500 bg-indigo-50/80 shadow-md scale-[0.99]"
+            : "border-slate-300 hover:border-indigo-400 hover:bg-slate-50/80 bg-slate-50/40 shadow-xs"
         }`}
       >
         <input
@@ -126,20 +127,20 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         />
 
         <div className="flex flex-col items-center justify-center gap-2.5">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-xl shadow-inner">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 text-xl shadow-xs">
             {isParsing ? (
               <span className="animate-spin text-sm">⏳</span>
             ) : (
-              <span>📄</span>
+              <UploadCloud className="w-6 h-6 text-indigo-600" />
             )}
           </div>
           <div>
-            <p className="text-sm font-bold text-white">
+            <p className="text-sm font-bold text-slate-900">
               {isParsing
                 ? "Extracting resume text with multi-tier parser..."
                 : "Drop your resume file here or click to browse"}
             </p>
-            <p className="text-xs text-slate-300 mt-1 font-medium">
+            <p className="text-xs text-slate-600 mt-1 font-medium">
               Supports PDF, DOCX, DOC, TXT, MD, TeX, RTF, HTML & JSON
             </p>
           </div>
@@ -150,27 +151,31 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
         <div
           className={`text-xs rounded-xl p-3.5 border space-y-2 ${
             statusMessage.type === "success"
-              ? "text-emerald-200 bg-emerald-950/60 border-emerald-700/70 shadow-sm"
-              : "text-rose-200 bg-rose-950/60 border-rose-700/70 shadow-sm"
+              ? "text-emerald-900 bg-emerald-50 border-emerald-200 shadow-xs"
+              : "text-rose-900 bg-rose-50 border-rose-200 shadow-xs"
           }`}
         >
           <div className="flex items-start justify-between gap-2">
-            <span className="font-medium">
-              {statusMessage.type === "success" ? "✓ " : "⚠️ "}
+            <span className="font-semibold flex items-center gap-1.5">
+              {statusMessage.type === "success" ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              )}
               {statusMessage.text}
             </span>
             <button
               type="button"
               onClick={() => setStatusMessage(null)}
-              className="text-slate-400 hover:text-white font-bold ml-2"
+              className="text-slate-400 hover:text-slate-700 font-bold ml-2"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {statusMessage.showSamples && (
-            <div className="pt-2 border-t border-rose-800/40 flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-semibold text-rose-300">
+            <div className="pt-2 border-t border-rose-200 flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold text-rose-800">
                 Quick options:
               </span>
               <button
@@ -184,7 +189,7 @@ export function ResumeUploader({ onTextExtracted }: ResumeUploaderProps) {
                     textarea.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-indigo-300 border border-indigo-500/40 hover:bg-slate-800 transition-colors"
+                className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50 transition-colors shadow-xs"
               >
                 📋 Paste text directly below
               </button>
