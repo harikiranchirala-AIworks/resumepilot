@@ -144,15 +144,15 @@ export function InteractiveDocumentSheet({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Top Bar Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex items-center gap-2.5">
           <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-          <h3 className="text-sm font-bold text-slate-900">
+          <h3 className="text-sm sm:text-base font-black text-slate-900">
             Live A4 Interactive Document Sheet
           </h3>
-          <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-semibold border border-indigo-200">
+          <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold border border-indigo-200">
             Inline AI Micro-Toolbar Active
           </span>
         </div>
@@ -160,7 +160,7 @@ export function InteractiveDocumentSheet({
         <button
           type="button"
           onClick={handleCopyDocument}
-          className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
+          className="btn-secondary text-xs sm:text-sm py-2 px-4 flex items-center gap-1.5 font-bold"
         >
           {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
           <span>{copied ? "Copied to Clipboard!" : "Copy Paper Text"}</span>
@@ -168,33 +168,33 @@ export function InteractiveDocumentSheet({
       </div>
 
       {/* Legend Badges */}
-      <div className="flex flex-wrap items-center gap-2 px-1 text-xs font-semibold">
-        <span className="text-slate-500 font-bold">Inline Highlights:</span>
-        <span className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1">
+      <div className="flex flex-wrap items-center gap-2 px-1 text-xs sm:text-sm font-semibold">
+        <span className="text-slate-600 font-bold">Inline Highlights:</span>
+        <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-950 border border-emerald-300 flex items-center gap-1.5 font-bold">
           <span className="w-2 h-2 rounded-full bg-emerald-500" /> 🟢 Quantified (Google XYZ)
         </span>
-        <span className="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+        <span className="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-950 border border-amber-300 flex items-center gap-1.5 font-bold">
           <span className="w-2 h-2 rounded-full bg-amber-500" /> 🟡 Missing Metric
         </span>
-        <span className="px-2.5 py-1 rounded-md bg-cyan-100 text-cyan-900 border border-cyan-300 flex items-center gap-1">
+        <span className="px-2.5 py-1 rounded-lg bg-cyan-100 text-cyan-950 border border-cyan-300 flex items-center gap-1.5 font-bold">
           <span className="w-2 h-2 rounded-full bg-cyan-500" /> 🔵 JD Keyword Match
         </span>
-        <span className="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 border border-rose-300 flex items-center gap-1">
+        <span className="px-2.5 py-1 rounded-lg bg-rose-100 text-rose-950 border border-rose-300 flex items-center gap-1.5 font-bold">
           <span className="w-2 h-2 rounded-full bg-rose-500" /> 🔴 Passive / Fluff Phrasing
         </span>
       </div>
 
       {/* Realistic Paper Sheet Canvas */}
-      <div className="relative bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/80 p-8 sm:p-12 transition-all">
+      <div className="relative bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/70 p-8 sm:p-12 lg:p-14 transition-all w-full">
         {/* Document Paper Header */}
-        <div className="border-b-2 border-slate-900 pb-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase">
+        <div className="border-b-2 border-slate-900 pb-5 mb-6">
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight uppercase">
             {headerName}
           </h1>
-          <p className="text-sm font-bold text-indigo-700 tracking-wide mt-1">
+          <p className="text-base sm:text-lg font-bold text-indigo-700 tracking-wide mt-1.5">
             {headerTitle}
           </p>
-          <div className="flex flex-wrap gap-4 text-xs font-medium text-slate-600 mt-2">
+          <div className="flex flex-wrap gap-4 text-xs sm:text-sm font-semibold text-slate-600 mt-2.5">
             <span>📧 alex.morgan@example.com</span>
             <span>📱 (555) 019-2834</span>
             <span>🌐 linkedin.com/in/alexmorgan</span>
@@ -203,43 +203,43 @@ export function InteractiveDocumentSheet({
         </div>
 
         {/* Section: Professional Summary */}
-        <div className="mb-6 space-y-2">
-          <h2 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
+        <div className="mb-8 space-y-2.5">
+          <h2 className="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-900 pb-1.5">
             Professional Summary
           </h2>
-          <p className="text-xs text-slate-800 leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-slate-800 leading-relaxed font-normal">
             Results-driven Cloud & Full Stack Solutions Engineer with 7+ years of experience designing high-throughput microservices, optimizing AWS cloud infrastructure, and automating CI/CD pipelines. Proven track record of reducing latency, cutting enterprise cloud costs, and scaling applications to millions of daily active users.
           </p>
         </div>
 
         {/* Section: Professional Experience */}
-        <div className="space-y-4">
-          <h2 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
+        <div className="space-y-6">
+          <h2 className="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-900 pb-1.5">
             Professional Experience & Key Accomplishments
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div className="flex justify-between items-baseline">
-              <span className="text-sm font-bold text-slate-900">Lead Cloud Systems Architect</span>
-              <span className="text-xs font-bold text-slate-500">2021 — Present</span>
+              <span className="text-base sm:text-lg font-black text-slate-900">Lead Cloud Systems Architect</span>
+              <span className="text-xs sm:text-sm font-bold text-slate-500">2021 — Present</span>
             </div>
-            <p className="text-xs font-semibold text-slate-700">TechCorp Solutions Inc. | San Francisco, CA</p>
+            <p className="text-xs sm:text-sm font-bold text-indigo-900">TechCorp Solutions Inc. | San Francisco, CA</p>
 
             {/* Interactive Bullets List */}
-            <div className="space-y-3 pt-1">
+            <div className="space-y-3.5 pt-1.5">
               {bullets.map((bullet) => {
                 const isActive = activeBulletId === bullet.id;
                 const isRewriting = isRewritingId === bullet.id;
 
                 let categoryStyle = "bg-slate-50 border-slate-200 text-slate-900";
                 if (bullet.category === "quantified") {
-                  categoryStyle = "bg-emerald-50/70 border-emerald-300 text-emerald-950 font-medium";
+                  categoryStyle = "bg-emerald-50/80 border-emerald-300 text-emerald-950 font-medium";
                 } else if (bullet.category === "needs-metric") {
-                  categoryStyle = "bg-amber-50/70 border-amber-300 text-amber-950";
+                  categoryStyle = "bg-amber-50/80 border-amber-300 text-amber-950";
                 } else if (bullet.category === "matched-keyword") {
-                  categoryStyle = "bg-cyan-50/70 border-cyan-300 text-cyan-950 font-medium";
+                  categoryStyle = "bg-cyan-50/80 border-cyan-300 text-cyan-950 font-medium";
                 } else if (bullet.category === "passive") {
-                  categoryStyle = "bg-rose-50/70 border-rose-300 text-rose-950";
+                  categoryStyle = "bg-rose-50/80 border-rose-300 text-rose-950";
                 }
 
                 return (
@@ -247,27 +247,27 @@ export function InteractiveDocumentSheet({
                     key={bullet.id}
                     onMouseEnter={() => setActiveBulletId(bullet.id)}
                     onClick={() => setActiveBulletId(bullet.id)}
-                    className={`relative p-3.5 rounded-xl border transition-all cursor-pointer group ${categoryStyle} ${
-                      isActive ? "ring-2 ring-indigo-500/80 shadow-md scale-[1.005]" : "hover:border-slate-400"
+                    className={`relative p-4 rounded-xl border transition-all cursor-pointer group ${categoryStyle} ${
+                      isActive ? "ring-2 ring-indigo-500/80 shadow-md scale-[1.003]" : "hover:border-slate-400"
                     }`}
                   >
                     {/* Bullet bullet icon */}
-                    <div className="flex items-start gap-2.5">
-                      <span className="text-indigo-600 font-bold mt-0.5">•</span>
-                      <div className="flex-1 text-xs leading-relaxed">
+                    <div className="flex items-start gap-3">
+                      <span className="text-indigo-600 font-black text-base mt-0.5">•</span>
+                      <div className="flex-1 text-sm sm:text-base leading-relaxed">
                         <span>{bullet.currentText}</span>
                       </div>
                     </div>
 
                     {/* Inline Suggestion Badge */}
-                    <div className="mt-2 flex items-center justify-between gap-2 text-[11px]">
-                      <span className="text-slate-500 italic font-medium">
+                    <div className="mt-2.5 flex items-center justify-between gap-2 text-xs sm:text-sm">
+                      <span className="text-slate-600 italic font-medium">
                         💡 {bullet.suggestion}
                       </span>
                       {bullet.matchedKeywords && (
                         <div className="flex flex-wrap gap-1">
                           {bullet.matchedKeywords.map((kw) => (
-                            <span key={kw} className="px-1.5 py-0.5 rounded text-[10px] bg-indigo-100 text-indigo-800 font-bold">
+                            <span key={kw} className="px-2 py-0.5 rounded-md text-xs bg-indigo-100 text-indigo-900 font-bold">
                               #{kw}
                             </span>
                           ))}
@@ -277,9 +277,9 @@ export function InteractiveDocumentSheet({
 
                     {/* Floating Micro-Toolbar on Hover / Active */}
                     {isActive && (
-                      <div className="mt-3 pt-2.5 border-t border-slate-200/80 flex flex-wrap items-center gap-1.5 animate-fadeIn">
-                        <span className="text-[10px] font-bold uppercase text-slate-500 mr-1">
-                          ⚡ AI Micro-Actions:
+                      <div className="mt-3.5 pt-3 border-t border-slate-200/80 flex flex-wrap items-center gap-2 animate-fadeIn">
+                        <span className="text-xs font-black uppercase text-slate-600 mr-1">
+                          ⚡ AI Actions:
                         </span>
 
                         <button
@@ -289,9 +289,9 @@ export function InteractiveDocumentSheet({
                             e.stopPropagation();
                             handleApplyAction(bullet.id, "quantify");
                           }}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs flex items-center gap-1 transition-all"
+                          className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs flex items-center gap-1.5 transition-all"
                         >
-                          <Zap className="w-3.5 h-3.5 text-amber-300" />
+                          <Zap className="w-4 h-4 text-amber-300" />
                           <span>Quantify (Google XYZ)</span>
                         </button>
 
@@ -302,9 +302,9 @@ export function InteractiveDocumentSheet({
                             e.stopPropagation();
                             handleApplyAction(bullet.id, "verb");
                           }}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs flex items-center gap-1 transition-all"
+                          className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs flex items-center gap-1.5 transition-all"
                         >
-                          <Wand2 className="w-3.5 h-3.5 text-white" />
+                          <Wand2 className="w-4 h-4 text-white" />
                           <span>Action Verb Boost</span>
                         </button>
 
@@ -315,9 +315,9 @@ export function InteractiveDocumentSheet({
                             e.stopPropagation();
                             handleApplyAction(bullet.id, "keyword");
                           }}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-700 hover:bg-cyan-800 text-white shadow-xs flex items-center gap-1 transition-all"
+                          className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-700 hover:bg-cyan-800 text-white shadow-xs flex items-center gap-1.5 transition-all"
                         >
-                          <Target className="w-3.5 h-3.5 text-cyan-200" />
+                          <Target className="w-4 h-4 text-cyan-200" />
                           <span>Inject JD Keyword</span>
                         </button>
 
@@ -328,15 +328,15 @@ export function InteractiveDocumentSheet({
                             e.stopPropagation();
                             handleApplyAction(bullet.id, "shorten");
                           }}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-700 hover:bg-slate-800 text-white shadow-xs flex items-center gap-1 transition-all"
+                          className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-700 hover:bg-slate-800 text-white shadow-xs flex items-center gap-1.5 transition-all"
                         >
-                          <Scissors className="w-3.5 h-3.5" />
+                          <Scissors className="w-4 h-4" />
                           <span>Shorten</span>
                         </button>
 
                         {isRewriting && (
-                          <span className="text-xs text-indigo-700 font-bold animate-pulse ml-2 flex items-center gap-1">
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Rewriting...
+                          <span className="text-xs sm:text-sm text-indigo-700 font-bold animate-pulse ml-2 flex items-center gap-1.5">
+                            <RefreshCw className="w-4 h-4 animate-spin" /> Rewriting...
                           </span>
                         )}
                       </div>
@@ -349,22 +349,22 @@ export function InteractiveDocumentSheet({
         </div>
 
         {/* Section: Technical Skills */}
-        <div className="mt-6 space-y-2">
-          <h2 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-1">
+        <div className="mt-8 space-y-3">
+          <h2 className="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-900 pb-1.5">
             Core Technical Skills & Stack Alignment
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-              <strong className="text-slate-900 block font-bold">Languages & Web:</strong>
-              <span className="text-slate-700">TypeScript, Python, React, Next.js, Node.js</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong className="text-slate-900 block font-bold mb-1">Languages & Web:</strong>
+              <span className="text-slate-800 font-medium">TypeScript, Python, React, Next.js, Node.js</span>
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-              <strong className="text-slate-900 block font-bold">Cloud & DevOps:</strong>
-              <span className="text-slate-700">AWS (Lambda, S3, EC2), Docker, Kubernetes, Terraform</span>
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong className="text-slate-900 block font-bold mb-1">Cloud & DevOps:</strong>
+              <span className="text-slate-800 font-medium">AWS (Lambda, S3, EC2), Docker, Kubernetes, Terraform</span>
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-              <strong className="text-slate-900 block font-bold">Database & Architecture:</strong>
-              <span className="text-slate-700">PostgreSQL, Redis, GraphQL, REST APIs, Microservices</span>
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+              <strong className="text-slate-900 block font-bold mb-1">Database & Architecture:</strong>
+              <span className="text-slate-800 font-medium">PostgreSQL, Redis, GraphQL, REST APIs, Microservices</span>
             </div>
           </div>
         </div>

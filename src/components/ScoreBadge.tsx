@@ -49,7 +49,7 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
   const theme = scoreTheme(score);
 
   if (size === "radial") {
-    const radius = 36;
+    const radius = 40;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
@@ -61,26 +61,26 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
     ];
 
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-md p-6 space-y-5">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
         <div className="flex items-center gap-5">
           {/* Radial Circular SVG Score Meter */}
           <div className="relative flex items-center justify-center shrink-0">
-            <svg className="w-24 h-24 transform -rotate-90">
+            <svg className="w-28 h-28 transform -rotate-90">
               <circle
-                cx="48"
-                cy="48"
+                cx="56"
+                cy="56"
                 r={radius}
                 className="text-slate-100"
-                strokeWidth="8"
+                strokeWidth="10"
                 stroke="currentColor"
                 fill="transparent"
               />
               <circle
-                cx="48"
-                cy="48"
+                cx="56"
+                cy="56"
                 r={radius}
                 stroke={theme.stroke}
-                strokeWidth="8"
+                strokeWidth="10"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
@@ -89,17 +89,17 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center">
-              <span className={`text-2xl font-black ${theme.text}`}>{score}</span>
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">/100</span>
+              <span className={`text-3xl font-black ${theme.text}`}>{score}</span>
+              <span className="text-xs font-black text-slate-500 uppercase tracking-wider">/100</span>
             </div>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
               Resume Audit Gauge
             </span>
-            <h3 className="text-lg font-bold text-slate-900 leading-tight">{label}</h3>
-            <p className="text-xs text-slate-600 font-medium">
+            <h3 className="text-xl font-black text-slate-900 leading-tight">{label}</h3>
+            <p className="text-xs sm:text-sm text-slate-600 font-medium">
               {score >= 80
                 ? "Top 5% candidate match. High interview callback potential!"
                 : "Good base. Use 1-click AI auto-fixes to boost score to 90+."}
@@ -108,14 +108,14 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
         </div>
 
         {/* 4 Sub-Category Progress Bars */}
-        <div className="space-y-3 pt-2 border-t border-slate-100 text-xs">
+        <div className="space-y-3.5 pt-3 border-t border-slate-100 text-xs sm:text-sm">
           {categories.map((cat, idx) => (
-            <div key={idx} className="space-y-1">
-              <div className="flex justify-between font-semibold text-slate-700">
+            <div key={idx} className="space-y-1.5">
+              <div className="flex justify-between font-bold text-slate-800">
                 <span>{cat.name}</span>
-                <span className="font-bold text-slate-900">{cat.val}%</span>
+                <span className="font-black text-slate-900">{cat.val}%</span>
               </div>
-              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden p-0.5 shadow-inner">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
                     cat.val >= 80

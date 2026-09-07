@@ -109,7 +109,7 @@ export default function Home() {
         />
 
         {/* Active Module Canvas */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 space-y-6">
           {currentScreen === "studio" && (
             <ResumeTab onBack={() => setCurrentScreen("profile")} />
           )}
