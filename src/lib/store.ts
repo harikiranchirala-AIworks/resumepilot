@@ -80,6 +80,11 @@ interface AppStore {
   activeApplicationId: string | null;
   pageFitSettings: PageFitSettings;
 
+  // Option 4: SaaS Monetization & Pro Plan
+  isPro: boolean;
+  proPlan: "free" | "pro-monthly" | "pro-annual" | "executive-lifetime";
+  setProPlan: (plan: "free" | "pro-monthly" | "pro-annual" | "executive-lifetime") => void;
+
   setProfileMode: (mode: ProfileInputMode) => void;
   setResumeText: (text: string) => void;
   setJobDescription: (text: string) => void;
@@ -138,6 +143,24 @@ export const useAppStore = create<AppStore>((set, get) => ({
   applications: [],
   activeApplicationId: null,
   pageFitSettings: DEFAULT_PAGE_FIT,
+
+  isPro: typeof window !== "undefined" && localStorage.getItem("resumepilot_is_pro") === "true",
+  proPlan:
+    (typeof window !== "undefined" &&
+      (localStorage.getItem("resumepilot_pro_plan") as
+        | "free"
+        | "pro-monthly"
+        | "pro-annual"
+        | "executive-lifetime")) ||
+    "free",
+  setProPlan: (plan) => {
+    const isPro = plan !== "free";
+    if (typeof window !== "undefined") {
+      localStorage.setItem("resumepilot_is_pro", isPro ? "true" : "false");
+      localStorage.setItem("resumepilot_pro_plan", plan);
+    }
+    set({ isPro, proPlan: plan });
+  },
 
   setProfileMode: (mode) =>
     set((state) => ({

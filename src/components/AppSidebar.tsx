@@ -15,6 +15,7 @@ import {
   ChevronRight,
   TrendingUp,
   X,
+  Crown,
 } from "lucide-react";
 
 export type NavScreenId =
@@ -33,6 +34,7 @@ interface AppSidebarProps {
   onOpenUserProfile: () => void;
   onOpenBackup: () => void;
   onOpenCopilot?: () => void;
+  onOpenProModal?: () => void;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
@@ -44,10 +46,11 @@ export function AppSidebar({
   onOpenUserProfile,
   onOpenBackup,
   onOpenCopilot,
+  onOpenProModal,
   isMobileOpen = false,
   onCloseMobile,
 }: AppSidebarProps) {
-  const { jd, result } = useAppStore();
+  const { jd, result, isPro, proPlan } = useAppStore();
 
   const navItems = [
     {
@@ -185,6 +188,54 @@ export function AppSidebar({
               <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
             </div>
           </div>
+
+          {/* Pro Membership Banner */}
+          {onOpenProModal && (
+            <div>
+              {!isPro ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onOpenProModal();
+                    onCloseMobile?.();
+                  }}
+                  className="w-full p-3 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/25 to-indigo-500/15 dark:from-amber-950/50 dark:via-amber-900/40 dark:to-indigo-950/50 border border-amber-400/50 dark:border-amber-600/60 text-left hover:border-amber-500 transition-all group cursor-pointer shadow-2xs"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Crown className="w-4 h-4 text-amber-500 animate-pulse" />
+                      <span className="text-xs font-black text-slate-900 dark:text-white">Upgrade to Pro</span>
+                    </div>
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-xs">
+                      56% Off
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium mt-1 leading-snug">
+                    Unlimited AI tailorings, Google XYZ auto-fix & ZIP packets.
+                  </p>
+                </button>
+              ) : (
+                <div className="w-full p-2.5 rounded-2xl bg-gradient-to-r from-indigo-950/40 to-purple-950/40 border border-indigo-500/40 flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Crown className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="text-xs font-black text-indigo-700 dark:text-indigo-300 truncate">
+                      {proPlan === "executive-lifetime" ? "Executive Lifetime" : "Pro Member"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onOpenProModal();
+                      onCloseMobile?.();
+                    }}
+                    className="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline font-bold shrink-0 cursor-pointer"
+                  >
+                    Manage
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* 2. Middle Section: Vertical Navigation Menu */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
-import { PlayCircle, Target, Menu } from "lucide-react";
+import { PlayCircle, Target, Menu, Crown } from "lucide-react";
 import { ProviderSelector } from "./ProviderSelector";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -9,14 +9,16 @@ interface DynamicProgressHeaderProps {
   onRunDemo: () => void;
   activeScreenTitle: string;
   onToggleMobileSidebar?: () => void;
+  onOpenProModal?: () => void;
 }
 
 export function DynamicProgressHeader({
   onRunDemo,
   activeScreenTitle,
   onToggleMobileSidebar,
+  onOpenProModal,
 }: DynamicProgressHeaderProps) {
-  const { jd, profile, result } = useAppStore();
+  const { jd, profile, result, isPro } = useAppStore();
 
   const hasJd = jd.jobDescription.trim().length > 30;
   const hasProfile = profile.resumeText.trim().length > 30;
@@ -84,6 +86,23 @@ export function DynamicProgressHeader({
 
           {/* Theme Toggle (Dark / Light) */}
           <ThemeToggle />
+
+          {/* Pro Upgrade Trigger */}
+          {onOpenProModal && (
+            <button
+              type="button"
+              onClick={onOpenProModal}
+              className={`px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer ${
+                isPro
+                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                  : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs shadow-amber-200 dark:shadow-none"
+              }`}
+              title="View Pro Membership & Pricing"
+            >
+              <Crown className="w-3.5 h-3.5 text-amber-300" />
+              <span>{isPro ? "Pro Active" : "Upgrade"}</span>
+            </button>
+          )}
         </div>
       </div>
 

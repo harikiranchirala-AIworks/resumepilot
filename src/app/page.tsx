@@ -14,6 +14,7 @@ import { UserProfileModal } from "@/components/UserProfileModal";
 import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { CareerCopilotDrawer } from "@/components/CareerCopilotDrawer";
+import { ProUpgradeModal } from "@/components/ProUpgradeModal";
 import { Sparkles } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
@@ -66,6 +67,7 @@ export default function Home() {
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showCopilotDrawer, setShowCopilotDrawer] = useState(false);
+  const [showProModal, setShowProModal] = useState(false);
   const { jd, profile, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
   // Populate default demo data on first load so users immediately see the Enhancv/ResumeWorded split-screen UI
@@ -99,6 +101,7 @@ export default function Home() {
         onOpenUserProfile={() => setShowUserProfileModal(true)}
         onOpenBackup={() => setShowBackupModal(true)}
         onOpenCopilot={() => setShowCopilotDrawer(true)}
+        onOpenProModal={() => setShowProModal(true)}
         isMobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
@@ -110,6 +113,7 @@ export default function Home() {
           onRunDemo={handleRunDemo}
           activeScreenTitle={SCREEN_TITLES[currentScreen]}
           onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
+          onOpenProModal={() => setShowProModal(true)}
         />
 
         {/* Active Module Canvas */}
@@ -197,6 +201,12 @@ export default function Home() {
       <CareerCopilotDrawer
         isOpen={showCopilotDrawer}
         onClose={() => setShowCopilotDrawer(false)}
+      />
+
+      {/* SaaS Monetization: Pro Upgrade & Paywall Modal */}
+      <ProUpgradeModal
+        isOpen={showProModal}
+        onClose={() => setShowProModal(false)}
       />
     </div>
   );
