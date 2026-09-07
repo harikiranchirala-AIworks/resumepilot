@@ -25,6 +25,12 @@ export const RESUME_TEMPLATES: ResumeTemplateInfo[] = [
     description: "Tight margins and dense structure engineered to fit maximum experience on 1-2 pages.",
     bestFor: "Senior Executives, Directors & 10+ Years Experience",
   },
+  {
+    id: "creative-bold",
+    name: "Creative Bold",
+    description: "Bold header banners, vibrant accents, and high-impact visual section divides.",
+    bestFor: "Creative Tech, Product Designers & Growth Leads",
+  },
 ];
 
 /** Escape special LaTeX characters in user-provided text */
@@ -52,6 +58,26 @@ export function extractLatexBody(fullLatex: string): string {
 /** Preambles for each template style */
 function getTemplatePreamble(templateId: ResumeTemplateId = "tech-standard"): string {
   switch (templateId) {
+    case "creative-bold":
+      return `\\documentclass[11pt,a4paper]{article}
+\\usepackage[margin=0.6in]{geometry}
+\\usepackage[T1]{fontenc}
+\\usepackage[utf8]{inputenc}
+\\usepackage{lmodern}
+\\usepackage{enumitem}
+\\usepackage{titlesec}
+\\usepackage{hyperref}
+
+\\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\\pagestyle{empty}
+\\setlength{\\parindent}{0pt}
+\\setlength{\\parskip}{0pt}
+
+\\titleformat{\\section}{\\large\\bfseries\\uppercase}{}{0em}{}[\\titlerule]
+\\titlespacing*{\\section}{0pt}{10pt}{4pt}
+\\setlist[itemize]{leftmargin=*, nosep, topsep=2pt, itemsep=2.5pt}
+`;
+
     case "modern-clean":
       return `\\documentclass[10.5pt,letterpaper]{article}
 \\usepackage[margin=0.65in]{geometry}

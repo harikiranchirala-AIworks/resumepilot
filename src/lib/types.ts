@@ -6,7 +6,8 @@ export type ResumeTemplateId =
   | "tech-standard"
   | "modern-clean"
   | "classic-academic"
-  | "compact-executive";
+  | "compact-executive"
+  | "creative-bold";
 
 export interface ResumeTemplateInfo {
   id: ResumeTemplateId;
@@ -108,7 +109,7 @@ export interface GenerateResult {
 }
 
 /* ==========================================================================
-   Phase 2 Interfaces: Applications Kanban, Keyword Matrix, Co-Pilot & Page Fit
+   Phase 2 & 3 Interfaces: Applications Kanban, Keyword Matrix, Co-Pilot & Customizer
    ========================================================================== */
 
 export type ApplicationStage =
@@ -162,6 +163,8 @@ export interface PageFitSettings {
   lineSpacing: "tight" | "normal" | "relaxed";
   itemSpacing: "tight" | "normal" | "relaxed";
   targetPages: 1 | 2 | "auto";
+  primaryColor?: string;
+  fontFamily?: "sans" | "serif" | "mono";
 }
 
 export type CoPilotActionType =

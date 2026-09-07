@@ -12,10 +12,11 @@ import { ResumeDiffViewer } from "./ResumeDiffViewer";
 import { CoverLetterTab } from "./CoverLetterTab";
 import { InterviewPrepTab } from "./InterviewPrepTab";
 import { BulletPointRewriter } from "./BulletPointRewriter";
+import { LinkedInOptimizerTab } from "./LinkedInOptimizerTab";
 import type { GenerateResult } from "@/lib/types";
 import { Zap, CheckCircle2, AlertTriangle, Sparkles, RefreshCw, FileText, LayoutGrid } from "lucide-react";
 
-type ResultSubTab = "resume" | "diff" | "cover-letter" | "interview-prep" | "bullet-optimizer";
+type ResultSubTab = "resume" | "diff" | "cover-letter" | "interview-prep" | "bullet-optimizer" | "linkedin-optimizer";
 type ViewMode = "interactive" | "pdf-latex";
 
 interface ResumeTabProps {
@@ -237,6 +238,17 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
         </button>
         <button
           type="button"
+          onClick={() => setActiveSubTab("linkedin-optimizer")}
+          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
+            activeSubTab === "linkedin-optimizer"
+              ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
+              : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+          }`}
+        >
+          💼 LinkedIn Profile Optimizer
+        </button>
+        <button
+          type="button"
           onClick={() => setActiveSubTab("bullet-optimizer")}
           className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
             activeSubTab === "bullet-optimizer"
@@ -450,11 +462,14 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
       )}
 
       {/* Sub-tab 4: Interview Prep Kit */}
-      {activeSubTab === "interview-prep" && result && (
-        <InterviewPrepTab interviewPrep={result.interviewPrep} />
+      {activeSubTab === "interview-prep" && (
+        <InterviewPrepTab interviewPrep={result?.interviewPrep} />
       )}
 
-      {/* Sub-tab 5: Bullet Point Optimizer */}
+      {/* Sub-tab 5: LinkedIn Profile Auto-Optimizer */}
+      {activeSubTab === "linkedin-optimizer" && <LinkedInOptimizerTab />}
+
+      {/* Sub-tab 6: Bullet Point Optimizer */}
       {activeSubTab === "bullet-optimizer" && <BulletPointRewriter />}
     </div>
   );
