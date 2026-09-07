@@ -175,11 +175,11 @@ ${cleanBody}
 }
 
 /** Smart heuristic parser to extract structured information from raw text */
-function parseResumeInfo(text: string) {
+function parseResumeInfo(text: string, defaultName = "Candidate", defaultContact = "candidate@example.com $|$ (555) 019-2834") {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
 
-  let name = "Alex Morgan";
-  let contact = "alex.morgan@example.com $|$ (555) 234-5678 $|$ linkedin.com/in/alexmorgan";
+  let name = defaultName;
+  let contact = defaultContact;
 
   // First non-empty line is usually the candidate's name
   if (lines.length > 0) {

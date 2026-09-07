@@ -7,14 +7,15 @@ import { ResumeUploader } from "./ResumeUploader";
 import { HelpCircle, Info, FileText, Library } from "lucide-react";
 
 interface ProfileTabProps {
+  onBack?: () => void;
   onNext: () => void;
 }
 
 const SAMPLE_PROFILES = [
   {
     name: "Staff Software Engineer",
-    text: `Alex Morgan
-alex.morgan@example.com | (555) 234-5678 | San Francisco, CA | linkedin.com/in/alexmorgan
+    text: `Jordan Lee
+jordan.lee@example.com | (555) 234-5678 | San Francisco, CA | linkedin.com/in/jordanlee
 
 SUMMARY
 Results-driven Staff Software Engineer with 8+ years architecting high-throughput distributed systems, event-driven microservices, and modern web platforms. Proven track record leading multi-disciplinary engineering squads, optimizing cloud infrastructure costs by 40%, and maintaining 99.99% system uptime.
@@ -68,7 +69,7 @@ Tools & Analytics: Jira, Confluence, Figma, SQL, Tableau, PowerBI, Salesforce, M
   },
 ];
 
-export function ProfileTab({ onNext }: ProfileTabProps) {
+export function ProfileTab({ onBack, onNext }: ProfileTabProps) {
   const {
     profile,
     library,
@@ -121,7 +122,49 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
   };
 
   return (
-    <div className="card card-accent space-y-6">
+    <div className="space-y-6">
+      {/* First-time Candidate Onboarding Banner */}
+      {profile.resumeText.trim().length < 30 && (
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-cyan-500/10 border border-purple-200 dark:border-purple-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm animate-fadeIn">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-purple-500/25">
+              <FileText className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-purple-700 dark:text-purple-300">
+                  Step 2 of 3: Master Experience Bank
+                </span>
+                <span className="text-[10px] bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full font-bold">
+                  Next Step
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+                Upload your master resume or paste your career experience
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                OfferCraft AI will align your real career accomplishments with the requirements analyzed in Step 1 to generate high-impact, quantified bullets.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setProfileMode("resumeText");
+                setResumeText(SAMPLE_PROFILES[0].text);
+                setSaveAsName(SAMPLE_PROFILES[0].name);
+              }}
+              className="text-xs px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold shadow-2xs transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Try Sample Profile</span>
+              <span>⚡</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="card space-y-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -366,7 +409,14 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
         </div>
       )}
 
-      <TabActions onNext={onNext} nextDisabled={!canNext} />
+        <TabActions
+          onBack={onBack}
+          onNext={onNext}
+          showBack={Boolean(onBack)}
+          nextLabel="Proceed to Studio"
+          nextDisabled={!canNext}
+        />
+      </div>
     </div>
   );
 }

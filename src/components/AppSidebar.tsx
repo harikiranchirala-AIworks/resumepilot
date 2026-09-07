@@ -57,70 +57,73 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const { jd, result, isPro, proPlan, user } = useAppStore();
 
-  const navItems = [
-    {
-      id: "studio" as NavScreenId,
-      label: "Interactive AI Studio",
-      badge: "Split-Screen",
-      badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
-      icon: LayoutGrid,
-      description: "Live A4 sheet & inline AI toolbar",
-    },
+  const coreWorkflowItems = [
     {
       id: "jd" as NavScreenId,
       label: "Target Role & JD",
       badge: "Step 1",
-      badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
+      badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-950 dark:text-cyan-300",
       icon: Target,
-      description: "Archetypes, keywords & URL scraper",
+      description: "Archetypes, keywords & scraper",
     },
     {
       id: "profile" as NavScreenId,
       label: "Candidate Profile",
       badge: "Step 2",
-      badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+      badgeColor: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950 dark:text-purple-300",
       icon: User,
       description: "Master resume & experience bank",
     },
     {
-      id: "learning-hub" as NavScreenId,
-      label: "OfferCraft Academy",
-      badge: "Real AI",
-      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
-      icon: GraduationCap,
-      description: "The real AI learning & interview bible",
+      id: "studio" as NavScreenId,
+      label: "Interactive AI Studio",
+      badge: "Step 3",
+      badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-950 dark:text-indigo-300",
+      icon: LayoutGrid,
+      description: "Live A4 sheet & inline AI toolbar",
     },
+  ];
+
+  const accelerationTools = [
     {
-      id: "interview" as NavScreenId,
-      label: "STAR Interview Coach",
-      badge: "AI Practice",
-      badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
-      icon: MessageSquare,
-      description: "Role questions & STAR evaluator",
+      id: "general" as NavScreenId,
+      label: "ATS Resume Checker",
+      badge: "Audit",
+      badgeColor: "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-300",
+      icon: FileText,
+      description: "Google XYZ bullet scoring (No JD)",
     },
     {
       id: "linkedin" as NavScreenId,
       label: "LinkedIn Optimizer",
-      badge: "Recruiter SEO",
-      badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
+      badge: "SEO",
+      badgeColor: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300",
       icon: Share2,
       description: "5 headlines, bio & search tags",
+    },
+    {
+      id: "interview" as NavScreenId,
+      label: "STAR Interview Coach",
+      badge: "Coach",
+      badgeColor: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950 dark:text-amber-300",
+      icon: MessageSquare,
+      description: "Role questions & STAR evaluator",
     },
     {
       id: "tracker" as NavScreenId,
       label: "Application Pipeline",
       badge: "Kanban",
-      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300",
       icon: Kanban,
       description: "Job status, salaries & dates",
     },
     {
-      id: "general" as NavScreenId,
-      label: "General Resume Optimizer",
-      badge: "Standalone",
-      badgeColor: "bg-slate-100 text-slate-800 border-slate-200",
-      icon: FileText,
-      description: "Google XYZ bullet audit (No JD)",
+      id: "learning-hub" as NavScreenId,
+      label: "OfferCraft Academy",
+      badge: "GenAI",
+      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
+      icon: GraduationCap,
+      description: "Real AI learning & interview bible",
     },
   ];
 
@@ -300,57 +303,121 @@ export function AppSidebar({
         </div>
 
         {/* 2. Middle Section: Vertical Navigation Menu */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1.5">
-          <div className="px-3 pb-1">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-500">
-              Workspace Modules
-            </span>
-          </div>
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+          {/* Group 1: Core 3-Step Workflow */}
+          <div className="space-y-1">
+            <div className="px-3 pb-1 flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                Core Workflow (Steps 1–3)
+              </span>
+              <span className="text-[9px] font-bold text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-1.5 py-0.5 rounded">
+                Primary
+              </span>
+            </div>
 
-          {navItems.map((item) => {
-            const isActive = currentScreen === item.id;
-            const Icon = item.icon;
+            {coreWorkflowItems.map((item) => {
+              const isActive = currentScreen === item.id;
+              const Icon = item.icon;
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  onSelectScreen(item.id);
-                  onCloseMobile?.();
-                }}
-                className={`w-full p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 flex items-center justify-between group ${
-                  isActive
-                    ? "bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-md shadow-cyan-500/25 border border-cyan-400/30"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
-                }`}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                      isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/50"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-xs sm:text-sm font-bold block truncate">{item.label}</span>
-                    <span className={`text-xs block truncate font-medium ${isActive ? "text-cyan-100" : "text-slate-500 dark:text-slate-400"}`}>
-                      {item.description}
-                    </span>
-                  </div>
-                </div>
-
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-md border shrink-0 ${
-                    isActive ? "bg-white/20 text-white border-white/30" : item.badgeColor
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    onSelectScreen(item.id);
+                    onCloseMobile?.();
+                  }}
+                  className={`w-full p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                    isActive
+                      ? "bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-md shadow-cyan-500/25 border border-cyan-400/30"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
                   }`}
                 >
-                  {item.badge}
-                </span>
-              </button>
-            );
-          })}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/50"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-sm font-bold block truncate">{item.label}</span>
+                      <span className={`text-xs block truncate font-medium ${isActive ? "text-cyan-100" : "text-slate-500 dark:text-slate-400"}`}>
+                        {item.description}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-md border shrink-0 ${
+                      isActive ? "bg-white/20 text-white border-white/30" : item.badgeColor
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Group 2: AI Acceleration Suite */}
+          <div className="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="px-3 pb-1">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                AI Acceleration Suite
+              </span>
+            </div>
+
+            {accelerationTools.map((item) => {
+              const isActive = currentScreen === item.id;
+              const Icon = item.icon;
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    onSelectScreen(item.id);
+                    onCloseMobile?.();
+                  }}
+                  className={`w-full p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                    isActive
+                      ? "bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-md shadow-cyan-500/25 border border-cyan-400/30"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 group-hover:bg-cyan-50 dark:group-hover:bg-cyan-950/50"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs sm:text-sm font-bold block truncate">{item.label}</span>
+                      <span className={`text-xs block truncate font-medium ${isActive ? "text-cyan-100" : "text-slate-500 dark:text-slate-400"}`}>
+                        {item.description}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-md border shrink-0 ${
+                      isActive ? "bg-white/20 text-white border-white/30" : item.badgeColor
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* 3. Bottom Section: AI Copilot & Live ATS Readiness Dial */}

@@ -213,26 +213,26 @@ export function DynamicProgressHeader({
         </div>
 
         {/* 3 Step Milestones */}
-        <div className="grid grid-cols-3 gap-2 pt-1 text-[11px] font-semibold text-slate-600">
+        <div className="grid grid-cols-3 gap-2 pt-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
-            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasJd ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"}`}>
+            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasJd ? "bg-emerald-600 text-white shadow-xs" : "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300"}`}>
               {hasJd ? "✓" : "1"}
             </span>
-            <span className={hasJd ? "text-slate-900 font-bold" : ""}>Target JD Analyzed</span>
+            <span className={hasJd ? "text-slate-900 dark:text-white font-bold" : ""}>Step 1: Role & JD</span>
           </div>
 
           <div className="flex items-center gap-1.5 justify-center">
-            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasProfile ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"}`}>
+            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasProfile ? "bg-emerald-600 text-white shadow-xs" : "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300"}`}>
               {hasProfile ? "✓" : "2"}
             </span>
-            <span className={hasProfile ? "text-slate-900 font-bold" : ""}>Profile Matched</span>
+            <span className={hasProfile ? "text-slate-900 dark:text-white font-bold" : ""}>Step 2: Experience Bank</span>
           </div>
 
           <div className="flex items-center gap-1.5 justify-end">
-            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasResult ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"}`}>
+            <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${hasResult ? "bg-emerald-600 text-white shadow-xs" : "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300"}`}>
               {hasResult ? "✓" : "3"}
             </span>
-            <span className={hasResult ? "text-slate-900 font-bold" : ""}>Tailored & Verified</span>
+            <span className={hasResult ? "text-slate-900 dark:text-white font-bold" : ""}>Step 3: Studio & LaTeX</span>
           </div>
         </div>
       </div>

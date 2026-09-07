@@ -21,7 +21,7 @@ type ViewMode = "interactive" | "pdf-latex";
 interface ResumeTabProps {
   onBack: () => void;
   onOpenProModal?: () => void;
-  onNavigateScreen?: (screen: "jd" | "profile" | "studio" | "learning-hub") => void;
+  onNavigateScreen?: (screen: "jd" | "profile" | "studio" | "learning-hub" | "interview" | "linkedin" | "tracker" | "general") => void;
   onRunDemo?: () => void;
 }
 
@@ -315,35 +315,123 @@ export function ResumeTab({
               </button>
             </div>
 
-            {/* Card 3: OfferCraft Academy */}
-            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all shadow-xs hover:shadow-md flex flex-col justify-between space-y-4 group">
+            {/* Card 3: AI Tailoring & LaTeX Generation */}
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600 transition-all shadow-xs hover:shadow-md flex flex-col justify-between space-y-4 group">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-black text-lg border border-emerald-200 dark:border-emerald-800">
-                  <LayoutGrid className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-black text-lg border border-indigo-200 dark:border-indigo-800">
+                  <Sparkles className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                      OfferCraft Academy
+                      AI Studio & LaTeX
                     </h3>
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                      Real AI
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">
+                      Step 3
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
-                    12 real-world AI engineering curriculum modules, Leitner flashcards, and RAG playground to ace tech screens.
+                    Generate an ATS 90+ score resume, LaTeX code, formatted PDF, and matching cover letter in one click.
                   </p>
                 </div>
               </div>
 
               <button
                 type="button"
-                onClick={() => onNavigateScreen?.("learning-hub")}
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white dark:bg-slate-800 dark:hover:bg-emerald-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                onClick={handleGenerate}
+                disabled={!hasJd || !hasProfile || isGenerating}
+                className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  hasJd && hasProfile
+                    ? "bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white shadow-md cursor-pointer"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
+                }`}
               >
-                <span>Launch Academy</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>{hasJd && hasProfile ? "Tailor Resume Now 🚀" : "Complete Steps 1 & 2 First"}</span>
               </button>
+            </div>
+          </div>
+
+          {/* Resumatic-Style Acceleration Suite Discovery Grid */}
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                  AI Career Acceleration Suite
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Comprehensive tools inspired by Resumatic AI to supercharge your entire job search.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              <div
+                onClick={() => onNavigateScreen?.("learning-hub")}
+                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all cursor-pointer shadow-2xs group"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center font-bold text-xs">
+                    🎓
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
+                    OfferCraft Academy
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  12-module real-world AI roadmap, flashcards & architecture simulator.
+                </p>
+              </div>
+
+              <div
+                onClick={() => onNavigateScreen?.("general")}
+                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-cyan-600 transition-all cursor-pointer shadow-2xs group"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center font-bold text-xs">
+                    📊
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
+                    ATS Resume Checker
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  Audit bullets against Google XYZ formula without needing a JD.
+                </p>
+              </div>
+
+              <div
+                onClick={() => onNavigateScreen?.("interview")}
+                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-600 transition-all cursor-pointer shadow-2xs group"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center font-bold text-xs">
+                    🎙️
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
+                    STAR Interview Coach
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  Practice behavioral and system design questions with live AI scoring.
+                </p>
+              </div>
+
+              <div
+                onClick={() => onNavigateScreen?.("linkedin")}
+                className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-600 transition-all cursor-pointer shadow-2xs group"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center font-bold text-xs">
+                    💼
+                  </div>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                    LinkedIn Optimizer
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                  Generate recruiter-optimized headlines, About section, and search tags.
+                </p>
+              </div>
             </div>
           </div>
         </div>

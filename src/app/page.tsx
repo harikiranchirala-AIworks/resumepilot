@@ -144,7 +144,10 @@ export default function Home() {
           )}
 
           {currentScreen === "profile" && (
-            <ProfileTab onNext={() => setCurrentScreen("studio")} />
+            <ProfileTab
+              onBack={() => setCurrentScreen("jd")}
+              onNext={() => setCurrentScreen("studio")}
+            />
           )}
 
           {currentScreen === "learning-hub" && (

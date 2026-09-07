@@ -22,15 +22,15 @@ interface ApplicationBundleModalProps {
 }
 
 export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleModalProps) {
-  const { result } = useAppStore();
+  const { result, user, jd } = useAppStore();
   const [isZipping, setIsZipping] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   if (!isOpen) return null;
 
-  const candidateName = "Alex Morgan";
-  const roleTitle = "Lead Cloud Systems Architect";
-  const companyName = "TechCorp Solutions Inc.";
+  const candidateName = user?.name?.trim() || "Candidate";
+  const roleTitle = jd.jobDescription.match(/Job Title:\s*([^\n]+)/i)?.[1]?.trim() || user?.targetRole || "Target Role";
+  const companyName = jd.jobDescription.match(/Company:\s*([^\n|]+)/i)?.[1]?.trim() || "Target Enterprise";
 
   const bundleFiles = [
     {
