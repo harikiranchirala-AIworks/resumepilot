@@ -17,12 +17,14 @@ import {
   TrendingUp,
   X,
   Crown,
+  GraduationCap,
 } from "lucide-react";
 
 export type NavScreenId =
   | "studio"
   | "jd"
   | "profile"
+  | "learning-hub"
   | "interview"
   | "linkedin"
   | "tracker"
@@ -79,6 +81,14 @@ export function AppSidebar({
       badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
       icon: User,
       description: "Master resume & experience bank",
+    },
+    {
+      id: "learning-hub" as NavScreenId,
+      label: "OfferCraft Academy",
+      badge: "Real AI",
+      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
+      icon: GraduationCap,
+      description: "The real AI learning & interview bible",
     },
     {
       id: "interview" as NavScreenId,

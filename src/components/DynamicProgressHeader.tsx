@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppStore } from "@/lib/store";
-import { PlayCircle, Target, Menu, Crown } from "lucide-react";
+import { PlayCircle, Target, Menu, Crown, Sparkles } from "lucide-react";
 import { ProviderSelector } from "./ProviderSelector";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -12,6 +12,7 @@ interface DynamicProgressHeaderProps {
   onOpenProModal?: () => void;
   onOpenGoogleAuth?: () => void;
   onOpenUserProfile?: () => void;
+  onOpenTour?: () => void;
 }
 
 export function DynamicProgressHeader({
@@ -21,6 +22,7 @@ export function DynamicProgressHeader({
   onOpenProModal,
   onOpenGoogleAuth,
   onOpenUserProfile,
+  onOpenTour,
 }: DynamicProgressHeaderProps) {
   const { jd, profile, result, isPro, user } = useAppStore();
 
@@ -110,6 +112,19 @@ export function DynamicProgressHeader({
           )}
 
           <ProviderSelector />
+
+          {/* 20-Second Guided Tour */}
+          {onOpenTour && (
+            <button
+              type="button"
+              onClick={onOpenTour}
+              className="px-3 py-2 rounded-xl bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/40 dark:hover:bg-cyan-900/40 text-cyan-800 dark:text-cyan-200 border border-cyan-300 dark:border-cyan-800 flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 text-xs font-bold cursor-pointer"
+              title="Take the 20-second interactive guided tour"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>🚀 20s Tour</span>
+            </button>
+          )}
 
           {/* 1-Click Demo Trigger */}
           <button

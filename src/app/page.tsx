@@ -16,6 +16,8 @@ import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { CareerCopilotDrawer } from "@/components/CareerCopilotDrawer";
 import { ProUpgradeModal } from "@/components/ProUpgradeModal";
 import { GoogleAuthModal } from "@/components/GoogleAuthModal";
+import { GenAILearningHubTab } from "@/components/GenAILearningHubTab";
+import { GuidedTourModal } from "@/components/GuidedTourModal";
 import { Sparkles } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
@@ -55,6 +57,7 @@ const SCREEN_TITLES: Record<NavScreenId, string> = {
   studio: "Interactive AI Studio (Enhancv / Worded)",
   jd: "Target Role & Job Description Intelligence",
   profile: "Master Candidate Profile & Experience Bank",
+  "learning-hub": "OfferCraft Academy — The Real AI Learning & Interview Bible",
   interview: "AI STAR Interview Practice & Coach Studio",
   linkedin: "LinkedIn Profile Auto-Optimizer (Recruiter SEO)",
   tracker: "Application Pipeline & Offer Tracker",
@@ -62,7 +65,7 @@ const SCREEN_TITLES: Record<NavScreenId, string> = {
 };
 
 export default function Home() {
-  const [currentScreen, setCurrentScreen] = useState<NavScreenId>("studio");
+  const [currentScreen, setCurrentScreen] = useState<NavScreenId>("jd");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
@@ -70,18 +73,18 @@ export default function Home() {
   const [showGoogleAuthModal, setShowGoogleAuthModal] = useState(false);
   const [showCopilotDrawer, setShowCopilotDrawer] = useState(false);
   const [showProModal, setShowProModal] = useState(false);
-  const { jd, profile, setProfileMode, setResumeText, setJobDescription } = useAppStore();
+  const [showTourModal, setShowTourModal] = useState(false);
+  const { jd, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
-  // Populate default demo data on first load so users immediately see the Enhancv/ResumeWorded split-screen UI
+  // First-time clean onboarding: prompt 20s interactive guided tour if not yet completed
   useEffect(() => {
-    if (!profile.resumeText || profile.resumeText.trim().length < 20) {
-      setProfileMode("resumeText");
-      setResumeText(DEMO_RESUME);
-    }
-    if (!jd.jobDescription || jd.jobDescription.trim().length < 20) {
-      setJobDescription(DEMO_JD);
-    }
-  }, [profile.resumeText, jd.jobDescription, setProfileMode, setResumeText, setJobDescription]);
+    try {
+      const tourCompleted = localStorage.getItem("offercraft_tour_completed");
+      if (!tourCompleted) {
+        setShowTourModal(true);
+      }
+    } catch {}
+  }, []);
 
   const handleRunDemo = () => {
     setProfileMode("resumeText");
@@ -119,6 +122,7 @@ export default function Home() {
           onOpenProModal={() => setShowProModal(true)}
           onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
           onOpenUserProfile={() => setShowUserProfileModal(true)}
+          onOpenTour={() => setShowTourModal(true)}
         />
 
         {/* Active Module Canvas */}
@@ -136,6 +140,10 @@ export default function Home() {
 
           {currentScreen === "profile" && (
             <ProfileTab onNext={() => setCurrentScreen("studio")} />
+          )}
+
+          {currentScreen === "learning-hub" && (
+            <GenAILearningHubTab />
           )}
 
           {currentScreen === "interview" && (
@@ -218,6 +226,13 @@ export default function Home() {
       <ProUpgradeModal
         isOpen={showProModal}
         onClose={() => setShowProModal(false)}
+      />
+
+      {/* 20-Second Interactive Guided Onboarding Tour */}
+      <GuidedTourModal
+        isOpen={showTourModal}
+        onClose={() => setShowTourModal(false)}
+        onNavigateToScreen={(screen) => setCurrentScreen(screen)}
       />
     </div>
   );
