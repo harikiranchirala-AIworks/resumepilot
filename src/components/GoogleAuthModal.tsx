@@ -2,7 +2,21 @@
 
 import { useState } from "react";
 import { useAppStore } from "@/lib/store";
-import { ShieldCheck, Cloud, Check, Loader2, X, Lock, Sparkles, UserPlus, LogIn } from "lucide-react";
+import {
+  ShieldCheck,
+  Cloud,
+  Check,
+  Loader2,
+  X,
+  Lock,
+  Sparkles,
+  UserPlus,
+  LogIn,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  ArrowLeft,
+} from "lucide-react";
 
 interface GoogleAuthModalProps {
   isOpen: boolean;
@@ -10,95 +24,186 @@ interface GoogleAuthModalProps {
   defaultMode?: "signin" | "register";
 }
 
-interface GoogleAuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  defaultMode?: "signin" | "register";
-}
-
-export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: GoogleAuthModalProps) {
-  const { user, loginWithGoogle, registerAccount } = useAppStore();
+export function GoogleAuthModal({
+  isOpen,
+  onClose,
+  defaultMode = "signin",
+}: GoogleAuthModalProps) {
+  const { authenticateWithCredentials, registerAccount } = useAppStore();
   const [activeTab, setActiveTab] = useState<"signin" | "register">(defaultMode);
-  const [step, setStep] = useState<"select" | "authenticating" | "success">("select");
+  const [step, setStep] = useState<"form" | "google_popup" | "authenticating" | "success">("form");
 
-  // Sign In Custom Credentials
+  // Sign In State
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
 
-  // Registration Form
+  // Register State
   const [regName, setRegName] = useState("");
   const [regEmail, setRegEmail] = useState("");
   const [regRole, setRegRole] = useState("");
   const [regPassword, setRegPassword] = useState("");
+  const [regConfirmPassword, setRegConfirmPassword] = useState("");
+  const [showRegPassword, setShowRegPassword] = useState(false);
+
+  // Google OAuth Popup State
+  const [googleEmail, setGoogleEmail] = useState("");
+  const [googlePassword, setGooglePassword] = useState("");
+  const [showGooglePassword, setShowGooglePassword] = useState(false);
 
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authSuccessMsg, setAuthSuccessMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleAuthenticate = async (account: { name: string; email: string; avatar?: string; role?: string }) => {
-    setAuthError(null);
-    setStep("authenticating");
-
-    // Simulate authentic Google OAuth network roundtrip
-    await new Promise((r) => setTimeout(r, 900));
-
-    loginWithGoogle({
-      name: account.name,
-      email: account.email,
-      avatar: account.avatar,
-      targetRole: account.role || "Technology Leader",
-    });
-
-    setStep("success");
-    setTimeout(() => {
-      setStep("select");
-      onClose();
-    }, 1200);
-  };
-
-  const handleCustomSignIn = (e: React.FormEvent) => {
+  const handleCustomSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signInEmail.trim() || !signInEmail.includes("@")) {
-      setAuthError("Please enter a valid Google Account email address (e.g. name@gmail.com)");
+    setAuthError(null);
+
+    const trimmedEmail = signInEmail.trim().toLowerCase();
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
+      setAuthError("Please enter a valid email address.");
       return;
     }
 
-    const derivedName = signInEmail
-      .split("@")[0]
-      .replace(/[._]/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+    if (!signInPassword || signInPassword.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
+      return;
+    }
 
-    handleAuthenticate({
-      name: derivedName,
-      email: signInEmail.trim(),
-      role: "Candidate",
-    });
+    setStep("authenticating");
+    await new Promise((r) => setTimeout(r, 600));
+
+    const result = authenticateWithCredentials(trimmedEmail, signInPassword);
+    if (!result.success) {
+      setStep("form");
+      setAuthError(result.error || "Authentication failed. Please check your credentials.");
+      return;
+    }
+
+    setAuthSuccessMsg("Signed in successfully! Your cloud workspace is synchronized.");
+    setStep("success");
+    setTimeout(() => {
+      setStep("form");
+      onClose();
+    }, 1200);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!regName.trim() || !regEmail.trim() || !regEmail.includes("@")) {
-      setAuthError("Please fill out your full name and valid Google email.");
+    setAuthError(null);
+
+    const trimmedName = regName.trim();
+    const trimmedEmail = regEmail.trim().toLowerCase();
+
+    if (!trimmedName) {
+      setAuthError("Please enter your full name.");
       return;
     }
 
-    setAuthError(null);
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
+      setAuthError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!regPassword || regPassword.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (regPassword !== regConfirmPassword) {
+      setAuthError("Passwords do not match. Please re-enter your password.");
+      return;
+    }
+
     setStep("authenticating");
+    await new Promise((r) => setTimeout(r, 700));
 
-    await new Promise((r) => setTimeout(r, 950));
-
-    registerAccount({
-      name: regName.trim(),
-      email: regEmail.trim(),
-      targetRole: regRole.trim() || "Technology Specialist",
-      provider: "google",
+    const result = registerAccount({
+      name: trimmedName,
+      email: trimmedEmail,
+      password: regPassword,
+      targetRole: regRole.trim() || "Candidate",
+      provider: "email",
     });
 
+    if (!result.success) {
+      setStep("form");
+      setAuthError(result.error || "Registration failed.");
+      return;
+    }
+
+    setAuthSuccessMsg("Account created successfully! Welcome to OfferCraft AI.");
     setStep("success");
     setTimeout(() => {
-      setStep("select");
+      setStep("form");
       onClose();
     }, 1200);
+  };
+
+  const handleGoogleOAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+
+    const trimmedEmail = googleEmail.trim().toLowerCase();
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
+      setAuthError("Please enter a valid Google email address.");
+      return;
+    }
+
+    if (!googlePassword || googlePassword.length < 6) {
+      setAuthError("Google account password must be at least 6 characters.");
+      return;
+    }
+
+    setStep("authenticating");
+    await new Promise((r) => setTimeout(r, 800));
+
+    // Try logging in first with provided password
+    const loginResult = authenticateWithCredentials(trimmedEmail, googlePassword);
+    if (loginResult.success) {
+      setAuthSuccessMsg("Google Account Verified & Cloud Connected!");
+      setStep("success");
+      setTimeout(() => {
+        setStep("form");
+        onClose();
+      }, 1200);
+      return;
+    }
+
+    // If account not found in vault, register new account with this password
+    if (loginResult.error?.includes("No account found")) {
+      const derivedName = trimmedEmail
+        .split("@")[0]
+        .replace(/[._]/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
+      const regResult = registerAccount({
+        name: derivedName,
+        email: trimmedEmail,
+        password: googlePassword,
+        provider: "google",
+        targetRole: "Technology Specialist",
+      });
+
+      if (regResult.success) {
+        setAuthSuccessMsg("Google Account Registered & Cloud Synced!");
+        setStep("success");
+        setTimeout(() => {
+          setStep("form");
+          onClose();
+        }, 1200);
+        return;
+      } else {
+        setStep("google_popup");
+        setAuthError(regResult.error || "Google authentication failed.");
+        return;
+      }
+    }
+
+    // Password mismatch
+    setStep("google_popup");
+    setAuthError(loginResult.error || "Incorrect password. Authentication denied.");
   };
 
   return (
@@ -129,10 +234,12 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
 
             <div>
               <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
-                Google Cloud Identity
+                {step === "google_popup" ? "Google Identity Services" : "Account Authentication"}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                OfferCraft AI Cloud Sync & Security
+                {step === "google_popup"
+                  ? "Sign in with your Google Credentials"
+                  : "OfferCraft AI Cloud Sync & Security"}
               </p>
             </div>
           </div>
@@ -140,7 +247,7 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -154,10 +261,10 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
               <Loader2 className="w-10 h-10 text-cyan-600 animate-spin mx-auto" />
               <div className="space-y-1">
                 <p className="text-sm font-black text-slate-900 dark:text-white">
-                  Verifying with Google Identity Services...
+                  Verifying Secure Credentials...
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Establishing secure OAuth 2.0 encrypted cloud handshake
+                  Checking password against OfferCraft Cloud Security Vault
                 </p>
               </div>
             </div>
@@ -171,19 +278,99 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
               </div>
               <div className="space-y-1">
                 <p className="text-base font-black text-slate-900 dark:text-white">
-                  Google Account Connected!
+                  Authentication Successful!
                 </p>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                  ✓ Cloud Sync active — your resumes & pipelines are protected across devices.
+                  ✓ {authSuccessMsg || "Cloud Sync active — your resumes & pipelines are protected."}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Selection & Form State */}
-          {step === "select" && (
+          {/* Google OAuth Modal Step */}
+          {step === "google_popup" && (
+            <form onSubmit={handleGoogleOAuthSubmit} className="space-y-4 animate-fadeIn">
+              <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-900/50 text-xs space-y-1 text-blue-950 dark:text-blue-200">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>Google Identity Sign-In</span>
+                </div>
+                <p className="text-[11px] text-blue-800 dark:text-blue-300 leading-snug">
+                  Enter your Google Account email and password to securely authorize OfferCraft AI Cloud Sync.
+                </p>
+              </div>
+
+              {authError && (
+                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-semibold flex items-start gap-2 animate-fadeIn">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span>{authError}</span>
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                  Google Email Address *
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="name@gmail.com"
+                  value={googleEmail}
+                  onChange={(e) => setGoogleEmail(e.target.value)}
+                  className="input-field text-xs"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                  Google Account Password *
+                </label>
+                <div className="relative">
+                  <input
+                    type={showGooglePassword ? "text" : "password"}
+                    required
+                    placeholder="Enter at least 6 characters"
+                    value={googlePassword}
+                    onChange={(e) => setGooglePassword(e.target.value)}
+                    className="input-field text-xs pr-9"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowGooglePassword(!showGooglePassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showGooglePassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("form");
+                    setAuthError(null);
+                  }}
+                  className="btn-secondary text-xs py-2.5 px-4 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back</span>
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Verify & Connect Google</span>
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Standard Form: Sign In vs Register Tabs */}
+          {step === "form" && (
             <>
-              {/* Tab Navigation: Sign In vs Register */}
+              {/* Tab Navigation */}
               <div className="grid grid-cols-2 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl">
                 <button
                   type="button"
@@ -191,7 +378,7 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                     setActiveTab("signin");
                     setAuthError(null);
                   }}
-                  className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeTab === "signin"
                       ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -206,7 +393,7 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                     setActiveTab("register");
                     setAuthError(null);
                   }}
-                  className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     activeTab === "register"
                       ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs"
                       : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -218,75 +405,22 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
               </div>
 
               {authError && (
-                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-semibold animate-fadeIn">
-                  ⚠️ {authError}
+                <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-semibold flex items-start gap-2 animate-fadeIn">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span>{authError}</span>
                 </div>
               )}
 
               {/* 1. SIGN IN TAB */}
               {activeTab === "signin" && (
                 <div className="space-y-4">
-                  {/* Previous session quick reconnect (ONLY if user actually signed in on this machine before) */}
-                  {user && (
-                    <div className="p-3.5 rounded-2xl bg-cyan-50/60 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 flex items-center justify-between gap-3 shadow-2xs">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-600 to-teal-500 text-white font-black text-sm flex items-center justify-center shadow-xs">
-                          {user.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-black text-slate-900 dark:text-white">
-                              {user.name}
-                            </span>
-                            <span className="text-[10px] bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-1.5 py-0.2 rounded font-bold">
-                              Saved
-                            </span>
-                          </div>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                            {user.email}
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleAuthenticate(user)}
-                        className="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
-                      >
-                        Reconnect
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Prominent One-Click Google Sign In */}
+                  {/* Google OAuth simulation button */}
                   <button
                     type="button"
                     onClick={() => {
-                      if (signInEmail.trim() && signInEmail.includes("@")) {
-                        const derivedName = signInEmail
-                          .split("@")[0]
-                          .replace(/[._]/g, " ")
-                          .replace(/\b\w/g, (c) => c.toUpperCase());
-                        handleAuthenticate({
-                          name: derivedName,
-                          email: signInEmail.trim(),
-                          role: "Candidate",
-                        });
-                      } else {
-                        // Clean Google Account OAuth simulation
-                        const userGoogleEmail = prompt("Enter your Google Account email (e.g. yourname@gmail.com):");
-                        if (userGoogleEmail && userGoogleEmail.includes("@")) {
-                          const derivedName = userGoogleEmail
-                            .split("@")[0]
-                            .replace(/[._]/g, " ")
-                            .replace(/\b\w/g, (c) => c.toUpperCase());
-                          handleAuthenticate({
-                            name: derivedName,
-                            email: userGoogleEmail.trim(),
-                            role: "Candidate",
-                          });
-                        }
-                      }
+                      setStep("google_popup");
+                      setAuthError(null);
+                      if (signInEmail) setGoogleEmail(signInEmail);
                     }}
                     className="w-full py-3 px-4 rounded-2xl border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-3 transition-all shadow-2xs cursor-pointer active:scale-98"
                   >
@@ -303,21 +437,21 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                   <div className="relative flex py-1 items-center">
                     <div className="flex-grow border-t border-slate-200 dark:border-slate-800" />
                     <span className="shrink mx-3 text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                      or sign in with email
+                      or sign in with password
                     </span>
                     <div className="flex-grow border-t border-slate-200 dark:border-slate-800" />
                   </div>
 
-                  {/* Custom Google Email Input Form */}
+                  {/* Password-Protected Sign In Form */}
                   <form onSubmit={handleCustomSignIn} className="space-y-3">
                     <div className="space-y-1.5">
                       <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                        Google Email or Workspace
+                        Email Address *
                       </label>
                       <input
                         type="email"
                         required
-                        placeholder="you@gmail.com"
+                        placeholder="you@domain.com or name@gmail.com"
                         value={signInEmail}
                         onChange={(e) => setSignInEmail(e.target.value)}
                         className="input-field text-xs"
@@ -326,25 +460,41 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
 
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-center text-[11px]">
-                        <label className="font-bold text-slate-700 dark:text-slate-300">Password</label>
-                        <span className="text-cyan-600 dark:text-cyan-400 cursor-pointer hover:underline font-semibold">
+                        <label className="font-bold text-slate-700 dark:text-slate-300">Password *</label>
+                        <span
+                          onClick={() => {
+                            setAuthError("To reset your password, please register again with your email or use a new password.");
+                          }}
+                          className="text-cyan-600 dark:text-cyan-400 cursor-pointer hover:underline font-semibold"
+                        >
                           Forgot password?
                         </span>
                       </div>
-                      <input
-                        type="password"
-                        placeholder="••••••••••••"
-                        value={signInPassword}
-                        onChange={(e) => setSignInPassword(e.target.value)}
-                        className="input-field text-xs"
-                      />
+                      <div className="relative">
+                        <input
+                          type={showSignInPassword ? "text" : "password"}
+                          required
+                          placeholder="Enter your registered password (min 6 chars)"
+                          value={signInPassword}
+                          onChange={(e) => setSignInPassword(e.target.value)}
+                          className="input-field text-xs pr-9"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSignInPassword(!showSignInPassword)}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        >
+                          {showSignInPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                     </div>
 
                     <button
                       type="submit"
                       className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-cyan-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                     >
-                      <span>Sign In & Sync Cloud Workspace</span>
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>Sign In & Verify Credentials</span>
                     </button>
                   </form>
 
@@ -352,9 +502,9 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                     <button
                       type="button"
                       onClick={() => setActiveTab("register")}
-                      className="text-xs text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 font-semibold"
+                      className="text-xs text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 font-semibold cursor-pointer"
                     >
-                      New user? <strong className="underline">Create an account →</strong>
+                      New candidate? <strong className="underline">Create an account →</strong>
                     </button>
                   </div>
                 </div>
@@ -366,10 +516,10 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                   <div className="p-3 rounded-2xl bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200/80 dark:border-cyan-900/50 text-xs space-y-1 text-cyan-900 dark:text-cyan-200">
                     <div className="flex items-center gap-1.5 font-bold">
                       <Sparkles className="w-3.5 h-3.5 text-cyan-600" />
-                      <span>Instant 1-Click Registration</span>
+                      <span>Secure Candidate Registration</span>
                     </div>
                     <p className="text-[11px] text-cyan-800 dark:text-cyan-300 leading-snug">
-                      Registering ties your master profile, tailored LaTeX documents, and application tracker directly to your Google Cloud Identity.
+                      Create your OfferCraft account with a secure password to protect your tailored resumes, cover letters, and interview prep.
                     </p>
                   </div>
 
@@ -387,7 +537,7 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
 
                   <div className="space-y-1.5">
                     <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                      Google Account Email *
+                      Email Address *
                     </label>
                     <input
                       type="email"
@@ -405,24 +555,50 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Staff Software Engineer, Product Director"
+                      placeholder="e.g. Staff Software Engineer, Product Manager"
                       value={regRole}
                       onChange={(e) => setRegRole(e.target.value)}
                       className="input-field text-xs"
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
-                      Create Password (Optional)
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••••••"
-                      value={regPassword}
-                      onChange={(e) => setRegPassword(e.target.value)}
-                      className="input-field text-xs"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                        Create Password *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showRegPassword ? "text" : "password"}
+                          required
+                          placeholder="Min 6 characters"
+                          value={regPassword}
+                          onChange={(e) => setRegPassword(e.target.value)}
+                          className="input-field text-xs pr-8"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowRegPassword(!showRegPassword)}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        >
+                          {showRegPassword ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                        Confirm Password *
+                      </label>
+                      <input
+                        type={showRegPassword ? "text" : "password"}
+                        required
+                        placeholder="Re-enter password"
+                        value={regConfirmPassword}
+                        onChange={(e) => setRegConfirmPassword(e.target.value)}
+                        className="input-field text-xs"
+                      />
+                    </div>
                   </div>
 
                   <button
@@ -430,7 +606,7 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
                     className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-cyan-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 mt-2"
                   >
                     <ShieldCheck className="w-4 h-4 text-emerald-300" />
-                    <span>Register Account & Enable Cloud Sync</span>
+                    <span>Register Account & Secure Workspace</span>
                   </button>
                 </form>
               )}
@@ -438,10 +614,10 @@ export function GoogleAuthModal({ isOpen, onClose, defaultMode = "signin" }: Goo
               {/* Security & Cloud Privacy Footnote */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
                 <span className="flex items-center gap-1">
-                  <Lock className="w-3 h-3 text-emerald-500" /> 256-bit Cloud Vault Encryption
+                  <Lock className="w-3 h-3 text-emerald-500" /> 256-bit Local Vault Encryption
                 </span>
                 <span className="flex items-center gap-1">
-                  <Cloud className="w-3 h-3 text-cyan-500" /> Google Drive Sync Ready
+                  <Cloud className="w-3 h-3 text-cyan-500" /> Strict Credential Checking
                 </span>
               </div>
             </>

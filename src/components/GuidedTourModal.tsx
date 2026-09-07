@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Target, LayoutGrid, MessageSquare, GraduationCap, ArrowRight, ArrowLeft, Check, Sparkles, X } from "lucide-react";
+import { Target, LayoutGrid, MessageSquare, ArrowRight, ArrowLeft, Check, Sparkles, X } from "lucide-react";
 
 interface GuidedTourModalProps {
   isOpen: boolean;
@@ -63,20 +63,20 @@ const TOUR_SLIDES = [
   },
   {
     step: "04 / 04",
-    title: "OfferCraft Academy & Real AI Learning",
-    subtitle: "12 real-world AI modules, flashcards & interview bible",
-    icon: GraduationCap,
-    badge: "Academy",
-    badgeColor: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700",
-    color: "from-emerald-500 to-teal-500",
+    title: "Ready to Craft: 3-Step Resume Preparation",
+    subtitle: "Step 1: Role & JD Setup → Step 2: Experience → Step 3: AI Studio",
+    icon: Sparkles,
+    badge: "Step 1: Start Here",
+    badgeColor: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700",
+    color: "from-cyan-500 to-teal-500",
     description:
-      "Master real-world AI with our integrated 12-module GenAI Engineering Roadmap, Leitner spaced repetition flashcards, and interactive RAG architecture simulator. Download your complete 1-click application ZIP bundle.",
+      "You're ready! Start at Step 1 by pasting your target Job Description or importing via URL. OfferCraft will extract required competencies, align your experience bank, and generate tailored LaTeX resumes with 90+ ATS match scores.",
     highlights: [
-      "12-Module GenAI Roadmap & Executive Leadership Bible",
-      "Interactive RAG & Agent Architecture Lab simulator",
-      "1-Click ZIP bundle: Formatted PDF + Cover Letter + Strategy Guide",
+      "Step 1: Job Description Command Center & Keyword Match Matrix",
+      "Step 2: Master Experience Bank & STAR Achievement Bullets",
+      "Step 3: Interactive AI Studio, LaTeX PDF export & Interview Coach",
     ],
-    targetScreen: "learning-hub" as const,
+    targetScreen: "jd" as const,
   },
 ];
 
@@ -96,13 +96,16 @@ export function GuidedTourModal({ isOpen, onClose, onNavigateToScreen }: GuidedT
         localStorage.setItem("offercraft_tour_completed", "true");
       } catch {}
     }
+    if (onNavigateToScreen) {
+      onNavigateToScreen("jd");
+    }
     onClose();
   };
 
   const handleJumpToModule = () => {
     handleFinish();
-    if (onNavigateToScreen && slide.targetScreen) {
-      onNavigateToScreen(slide.targetScreen);
+    if (onNavigateToScreen) {
+      onNavigateToScreen("jd");
     }
   };
 
@@ -237,7 +240,7 @@ export function GuidedTourModal({ isOpen, onClose, onNavigateToScreen }: GuidedT
                   onClick={handleJumpToModule}
                   className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-cyan-500/25 flex items-center gap-2 cursor-pointer transition-all active:scale-98"
                 >
-                  <span>Start Crafting Now 🚀</span>
+                  <span>Start Resume Preparation (Step 1) 🚀</span>
                 </button>
               )}
             </div>

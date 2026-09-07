@@ -88,6 +88,38 @@ function saveStoredUser(user: UserAccount | null) {
   }
 }
 
+const LOCAL_STORAGE_USERS_VAULT_KEY = "offercraft_users_vault_v1";
+
+interface VaultUserRecord {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  avatar?: string;
+  targetRole?: string;
+  provider: "google" | "email";
+  registeredAt: string;
+}
+
+function loadUsersVault(): Record<string, VaultUserRecord> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_USERS_VAULT_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveUsersVault(vault: Record<string, VaultUserRecord>) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_USERS_VAULT_KEY, JSON.stringify(vault));
+  } catch {
+    /* ignore */
+  }
+}
+
 const LOCAL_STORAGE_TRIAL_KEY = "offercraft_trial_credits_v1";
 
 interface TrialState {
@@ -186,6 +218,7 @@ interface AppStore {
   // Google Account Cloud Sync & User Session
   user: UserAccount | null;
   isSyncing: boolean;
+  authenticateWithCredentials: (email: string, password: string) => { success: boolean; error?: string };
   loginWithGoogle: (details: {
     name: string;
     email: string;
@@ -195,10 +228,11 @@ interface AppStore {
   registerAccount: (details: {
     name: string;
     email: string;
+    password?: string;
     avatar?: string;
     targetRole?: string;
     provider?: "google" | "email";
-  }) => void;
+  }) => { success: boolean; error?: string };
   logoutUser: () => void;
   syncCloudData: () => Promise<boolean>;
   updateUserAccount: (updates: Partial<UserAccount>) => void;
@@ -470,18 +504,101 @@ export const useAppStore = create<AppStore>((set, get) => ({
     saveStoredPageFit(updated);
   },
 
-  loginWithGoogle: ({ name, email, avatar, targetRole }) => {
+  authenticateWithCredentials: (email: string, password: string) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
+      return { success: false, error: "Please enter a valid email address." };
+    }
+    if (!password || password.length < 6) {
+      return { success: false, error: "Password must be at least 6 characters." };
+    }
+
+    const vault = loadUsersVault();
+    const existing = vault[trimmedEmail];
+
+    if (!existing) {
+      return {
+        success: false,
+        error: "No account found with this email. Please register as a new user.",
+      };
+    }
+
+    if (!existing.password || existing.password !== password) {
+      return {
+        success: false,
+        error: "Incorrect password. Please verify your credentials.",
+      };
+    }
+
     const userAccount: UserAccount = {
-      id: `usr_${Date.now()}`,
-      name: name.trim() || email.split("@")[0],
-      email: email.trim(),
+      id: existing.id,
+      name: existing.name,
+      email: existing.email,
+      avatar: existing.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(existing.name)}`,
+      provider: existing.provider || "email",
+      isGoogleConnected: existing.provider === "google",
+      cloudSyncEnabled: true,
+      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      targetRole: existing.targetRole || "Candidate",
+      registeredAt: existing.registeredAt || new Date().toISOString(),
+    };
+
+    saveStoredUser(userAccount);
+
+    // If user has a previously synced vault in cloud localStorage, restore it!
+    if (typeof window !== "undefined") {
+      try {
+        const vaultKey = `offercraft_cloud_vault_${userAccount.email}`;
+        const vaultData = localStorage.getItem(vaultKey);
+        if (vaultData) {
+          const parsed = JSON.parse(vaultData);
+          if (parsed.profile?.resumeText) {
+            set({ profile: parsed.profile });
+          }
+          if (parsed.applications?.length) {
+            set({ applications: parsed.applications });
+            saveStoredApplications(parsed.applications);
+          }
+        }
+      } catch (err) {
+        console.error("Cloud vault restore error:", err);
+      }
+    }
+
+    set({ user: userAccount });
+    return { success: true };
+  },
+
+  loginWithGoogle: ({ name, email, avatar, targetRole }) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    const vault = loadUsersVault();
+    const now = new Date().toISOString();
+
+    const userRecord: VaultUserRecord = {
+      id: vault[trimmedEmail]?.id || `usr_g_${Date.now()}`,
+      name: name.trim() || trimmedEmail.split("@")[0],
+      email: trimmedEmail,
+      password: vault[trimmedEmail]?.password || "",
       avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name || email)}`,
+      targetRole: targetRole?.trim() || vault[trimmedEmail]?.targetRole || "Technology Specialist",
+      provider: "google",
+      registeredAt: vault[trimmedEmail]?.registeredAt || now,
+    };
+
+    vault[trimmedEmail] = userRecord;
+    saveUsersVault(vault);
+
+    const userAccount: UserAccount = {
+      id: userRecord.id,
+      name: userRecord.name,
+      email: userRecord.email,
+      avatar: userRecord.avatar,
       provider: "google",
       isGoogleConnected: true,
       cloudSyncEnabled: true,
       lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      targetRole: targetRole?.trim() || "Technology Leader",
-      registeredAt: new Date().toISOString(),
+      targetRole: userRecord.targetRole || "Technology Specialist",
+      registeredAt: userRecord.registeredAt,
     };
     saveStoredUser(userAccount);
 
@@ -508,21 +625,51 @@ export const useAppStore = create<AppStore>((set, get) => ({
     set({ user: userAccount });
   },
 
-  registerAccount: ({ name, email, avatar, targetRole, provider = "google" }) => {
-    const userAccount: UserAccount = {
-      id: `usr_${Date.now()}`,
+  registerAccount: ({ name, email, password, avatar, targetRole, provider = "email" }) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail || !trimmedEmail.includes("@")) {
+      return { success: false, error: "Please enter a valid email address." };
+    }
+    if (!name.trim()) {
+      return { success: false, error: "Please provide your full name." };
+    }
+    if (!password || password.length < 6) {
+      return { success: false, error: "Password must be at least 6 characters." };
+    }
+
+    const vault = loadUsersVault();
+    const now = new Date().toISOString();
+
+    const userRecord: VaultUserRecord = {
+      id: vault[trimmedEmail]?.id || `usr_${Date.now()}`,
       name: name.trim(),
-      email: email.trim(),
+      email: trimmedEmail,
+      password: password || vault[trimmedEmail]?.password || "",
       avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`,
+      targetRole: targetRole?.trim() || "Candidate",
       provider,
-      isGoogleConnected: provider === "google",
+      registeredAt: vault[trimmedEmail]?.registeredAt || now,
+    };
+
+    vault[trimmedEmail] = userRecord;
+    saveUsersVault(vault);
+
+    const userAccount: UserAccount = {
+      id: userRecord.id,
+      name: userRecord.name,
+      email: userRecord.email,
+      avatar: userRecord.avatar,
+      provider: userRecord.provider,
+      isGoogleConnected: userRecord.provider === "google",
       cloudSyncEnabled: true,
       lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      targetRole: targetRole?.trim() || "Candidate",
-      registeredAt: new Date().toISOString(),
+      targetRole: userRecord.targetRole || "Candidate",
+      registeredAt: userRecord.registeredAt,
     };
+
     saveStoredUser(userAccount);
     set({ user: userAccount });
+    return { success: true };
   },
 
   logoutUser: () => {

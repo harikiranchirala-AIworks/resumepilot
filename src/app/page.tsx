@@ -54,9 +54,9 @@ Requirements:
 - Hands-on experience with GenAI, machine learning adoption, cloud migration, and agile delivery.`;
 
 const SCREEN_TITLES: Record<NavScreenId, string> = {
-  studio: "Interactive AI Studio (Enhancv / Worded)",
-  jd: "Target Role & Job Description Intelligence",
-  profile: "Master Candidate Profile & Experience Bank",
+  jd: "Step 1: Resume Preparation & Target Role Setup",
+  profile: "Step 2: Master Candidate Experience Bank",
+  studio: "Step 3: Interactive AI Tailoring Studio & LaTeX Export",
   "learning-hub": "OfferCraft Academy — The Real AI Learning & Interview Bible",
   interview: "AI STAR Interview Practice & Coach Studio",
   linkedin: "LinkedIn Profile Auto-Optimizer (Recruiter SEO)",

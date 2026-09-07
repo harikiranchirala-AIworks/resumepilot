@@ -163,8 +163,45 @@ Requirements:
 
   return (
     <div className="space-y-6">
+      {/* First-time Candidate Onboarding Banner */}
+      {!hasText && (
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-teal-500/10 to-indigo-500/10 border border-cyan-200 dark:border-cyan-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm animate-fadeIn">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 to-teal-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-cyan-500/25">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-300">
+                  Step 1 of 3: Resume Preparation
+                </span>
+                <span className="text-[10px] bg-cyan-100 dark:bg-cyan-900/60 text-cyan-800 dark:text-cyan-200 px-2 py-0.5 rounded-full font-bold">
+                  Start Here
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mt-0.5">
+                Paste your target Job Description below or import via URL
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                OfferCraft AI will extract the hiring manager&apos;s must-have keywords, run real-time archetype scoring, and tailor your resume bullets to achieve a 90+ ATS match.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setJobDescription(SAMPLE_JDS[0].text)}
+              className="text-xs px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold shadow-2xs transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Try Sample JD</span>
+              <span>⚡</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 1. Header Action Control Bar */}
-      <div className="card space-y-5 bg-white border border-slate-200 shadow-md">
+      <div className="card space-y-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
