@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TabNavigation, type TabId } from "@/components/TabNavigation";
+import { AppSidebar, type NavScreenId } from "@/components/AppSidebar";
+import { DynamicProgressHeader } from "@/components/DynamicProgressHeader";
 import { ProfileTab } from "@/components/ProfileTab";
 import { JDTab } from "@/components/JDTab";
 import { ResumeTab } from "@/components/ResumeTab";
+import { InterviewPrepTab } from "@/components/InterviewPrepTab";
+import { LinkedInOptimizerTab } from "@/components/LinkedInOptimizerTab";
 import { ApplicationTrackerTab } from "@/components/ApplicationTrackerTab";
 import { WorkspaceBackupModal } from "@/components/WorkspaceBackupModal";
 import { UserProfileModal } from "@/components/UserProfileModal";
 import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { useAppStore } from "@/lib/store";
-import { Sparkles, PlayCircle, User, LayoutGrid, FileText } from "lucide-react";
 
 const DEMO_RESUME = `Alex Morgan
 alex.morgan@example.com | (555) 234-5678 | San Francisco, CA | linkedin.com/in/alexmorgan
@@ -45,15 +47,25 @@ Requirements:
 - 6+ years in AI transformation, Technical Program Management (TPM), or digital modernization.
 - Hands-on experience with GenAI, machine learning adoption, cloud migration, and agile delivery.`;
 
+const SCREEN_TITLES: Record<NavScreenId, string> = {
+  studio: "Interactive AI Studio (Enhancv / Worded)",
+  jd: "Target Role & Job Description Intelligence",
+  profile: "Master Candidate Profile & Experience Bank",
+  interview: "AI STAR Interview Practice & Coach Studio",
+  linkedin: "LinkedIn Profile Auto-Optimizer (Recruiter SEO)",
+  tracker: "Application Pipeline & Offer Tracker",
+  general: "General Resume Optimizer (Google XYZ Audit)",
+};
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabId>("resume");
-  const [appMode, setAppMode] = useState<"job-match" | "general-audit">("job-match");
+  const [currentScreen, setCurrentScreen] = useState<NavScreenId>("studio");
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const { jd, profile, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
-  // Ensure default demo data is populated on first load so users immediately see the Enhancv/ResumeWorded split-screen UI
+  // Populate default demo data on first load so users immediately see the Enhancv/ResumeWorded split-screen UI
   useEffect(() => {
     if (!profile.resumeText || profile.resumeText.trim().length < 20) {
       setProfileMode("resumeText");
@@ -65,154 +77,84 @@ export default function Home() {
   }, [profile.resumeText, jd.jobDescription, setProfileMode, setResumeText, setJobDescription]);
 
   const handleRunDemo = () => {
-    setAppMode("job-match");
     setProfileMode("resumeText");
     setResumeText(DEMO_RESUME);
     setJobDescription(DEMO_JD);
-    setActiveTab("resume");
+    setCurrentScreen("studio");
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-indigo-600 selection:text-white pb-12">
-      {/* Subtle ambient light glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-20 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-row relative selection:bg-indigo-600 selection:text-white">
+      {/* 1. Left Vertical Navigation Sidebar */}
+      <AppSidebar
+        currentScreen={currentScreen}
+        onSelectScreen={(screen) => {
+          setCurrentScreen(screen);
+          setMobileSidebarOpen(false);
+        }}
+        onOpenBulletBank={() => setShowBulletBankModal(true)}
+        onOpenUserProfile={() => setShowUserProfileModal(true)}
+        onOpenBackup={() => setShowBackupModal(true)}
+        isMobileOpen={mobileSidebarOpen}
+        onCloseMobile={() => setMobileSidebarOpen(false)}
+      />
 
-      {/* Enhancv / ResumeWorded Top SaaS Navigation Header */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/95 border-b border-slate-200 shadow-xs no-print">
-        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo & Platform Name */}
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm sm:text-base shadow-md shadow-indigo-200">
-                RP
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900 flex items-center gap-1.5">
-                    ResumePilot
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      Next-Gen AI Workspace
-                    </span>
-                  </h1>
-                </div>
-                <p className="text-slate-500 font-semibold text-[11px] hidden sm:block">
-                  Enhancv & ResumeWorded-Style Interactive AI Audit & A4 Studio
-                </p>
-              </div>
-            </div>
+      {/* 2. Right Main Application Viewport */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+        {/* Dynamic Progress & Milestone Header */}
+        <DynamicProgressHeader
+          onRunDemo={handleRunDemo}
+          activeScreenTitle={SCREEN_TITLES[currentScreen]}
+          onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
+        />
 
-            {/* Header Action Tools */}
-            <div className="flex items-center gap-2 sm:gap-3 text-xs font-bold">
-              {/* Workspace Mode Selector */}
-              <div className="hidden sm:flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAppMode("job-match");
-                    setActiveTab("resume");
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
-                    appMode === "job-match" && activeTab === "resume"
-                      ? "bg-white text-indigo-700 shadow-xs border border-slate-200"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span>Split-Screen Workspace</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAppMode("general-audit")}
-                  className={`px-3 py-1.5 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
-                    appMode === "general-audit"
-                      ? "bg-white text-indigo-700 shadow-xs border border-slate-200"
-                      : "text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>General Optimizer</span>
-                </button>
-              </div>
+        {/* Active Module Canvas */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+          {currentScreen === "studio" && (
+            <ResumeTab onBack={() => setCurrentScreen("profile")} />
+          )}
 
-              {/* 1-Click Demo Case */}
-              <button
-                type="button"
-                onClick={handleRunDemo}
-                className="px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold border border-amber-300 flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
-                title="Reset workspace with sample high-score resume & JD"
-              >
-                <PlayCircle className="w-4 h-4 text-amber-600" />
-                <span>⚡ Reset Demo</span>
-              </button>
+          {currentScreen === "jd" && (
+            <JDTab
+              onBack={() => setCurrentScreen("studio")}
+              onNext={() => setCurrentScreen("profile")}
+            />
+          )}
 
-              {/* Google Account Profile Switcher */}
-              <button
-                type="button"
-                onClick={() => setShowUserProfileModal(true)}
-                className="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
-              >
-                <User className="w-4 h-4 text-indigo-600" />
-                <span className="hidden sm:inline">Google Account</span>
-              </button>
+          {currentScreen === "profile" && (
+            <ProfileTab onNext={() => setCurrentScreen("studio")} />
+          )}
 
-              <button
-                type="button"
-                onClick={() => setShowBulletBankModal(true)}
-                className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-md font-bold"
-              >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span className="hidden sm:inline">60-Bullet Bank</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+          {currentScreen === "interview" && (
+            <InterviewPrepTab />
+          )}
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 pt-6 space-y-6">
-        {/* Navigation Bar */}
-        {appMode === "job-match" && (
-          <TabNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            onOpenBackupModal={() => setShowBackupModal(true)}
-          />
-        )}
+          {currentScreen === "linkedin" && (
+            <LinkedInOptimizerTab />
+          )}
 
-        {/* Dynamic Workspace Container */}
-        {appMode === "general-audit" ? (
-          <GeneralResumeOptimizer />
-        ) : (
-          <>
-            {activeTab === "resume" && (
-              <ResumeTab onBack={() => setActiveTab("profile")} />
-            )}
+          {currentScreen === "tracker" && (
+            <ApplicationTrackerTab
+              onNavigateToTab={(tab) => {
+                if (tab === "resume") setCurrentScreen("studio");
+                else if (tab === "jd") setCurrentScreen("jd");
+                else if (tab === "profile") setCurrentScreen("profile");
+                else if (tab === "tracker") setCurrentScreen("tracker");
+              }}
+            />
+          )}
 
-            {activeTab === "jd" && (
-              <JDTab
-                onBack={() => setActiveTab("profile")}
-                onNext={() => setActiveTab("profile")}
-              />
-            )}
+          {currentScreen === "general" && (
+            <GeneralResumeOptimizer />
+          )}
+        </main>
 
-            {activeTab === "profile" && (
-              <ProfileTab onNext={() => setActiveTab("resume")} />
-            )}
-
-            {activeTab === "tracker" && (
-              <ApplicationTrackerTab
-                onNavigateToTab={(tab) => setActiveTab(tab as TabId)}
-              />
-            )}
-          </>
-        )}
-
-        <footer className="text-center text-xs text-slate-500 font-semibold pt-6 pb-8 no-print border-t border-slate-200 mt-8">
-          ResumePilot Next-Gen AI Studio — Interactive Split-Screen Resume Checker & LaTeX PDF Compiler
+        <footer className="text-center text-xs text-slate-500 font-semibold py-6 border-t border-slate-200 mt-auto no-print">
+          ResumePilot AI Suite — Next-Gen Commercial Career Tailoring Platform
         </footer>
       </div>
 
+      {/* Persistent Modals */}
       <WorkspaceBackupModal
         isOpen={showBackupModal}
         onClose={() => setShowBackupModal(false)}
@@ -228,6 +170,6 @@ export default function Home() {
         onClose={() => setShowBulletBankModal(false)}
         jdText={jd.jobDescription}
       />
-    </main>
+    </div>
   );
 }

@@ -2,22 +2,23 @@
 
 import React, { useState, useRef } from 'react';
 import { useAppStore, canProceedFromJD } from '@/lib/store';
-import { TabActions } from './TabActions';
 import { KeywordGapMatrix } from './KeywordGapMatrix';
 import ArchetypeDashboard from './ArchetypeDashboard';
 import BulletBankModal from './BulletBankModal';
 import { parseExcelJobFile } from '@/lib/excelIntegration';
 import { ArchetypeTrack } from '@/lib/archetypeScoring';
-import { FileSpreadsheet, Sparkles, CheckCircle2, Globe, Link, RefreshCw } from 'lucide-react';
+import { FileSpreadsheet, Sparkles, CheckCircle2, Globe, Link, RefreshCw, Briefcase, Award } from 'lucide-react';
 
 interface JDTabProps {
-  onBack: () => void;
+  onBack?: () => void;
   onNext: () => void;
 }
 
 const SAMPLE_JDS = [
   {
     title: 'AI Transformation Manager',
+    company: 'Global Cognitive Solutions',
+    track: 'AI',
     text: `Job Title: AI Transformation & Enterprise Modernization Manager
 Company: Global Cognitive Solutions | Location: Remote / New York
 
@@ -38,7 +39,9 @@ Requirements:
 - Excellent communication and cross-functional leadership skills.`,
   },
   {
-    title: 'Technical Program Manager',
+    title: 'Senior Technical Program Manager',
+    company: 'Stratos Enterprise',
+    track: 'TPM',
     text: `Job Title: Senior Technical Program Manager - Cloud Infrastructure & Enterprise Systems
 Company: Stratos Enterprise | Location: Hybrid / San Francisco, CA
 
@@ -59,7 +62,9 @@ Requirements:
 - PMP, CSM, or equivalent technical leadership credentials.`,
   },
   {
-    title: 'Product Manager',
+    title: 'Senior Product Manager',
+    company: 'Innovate Cloud',
+    track: 'PM',
     text: `Job Title: Senior Product Manager - SaaS Platform & Growth
 Company: Innovate Cloud | Location: Austin, TX / Remote
 
@@ -121,7 +126,6 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
     if (!jobUrl.trim()) return;
     setIsFetchingUrl(true);
     setTimeout(() => {
-      // Simulate URL scraper parsing Greenhouse/Lever/LinkedIn job details
       const simulatedScraped = `Job Title: Senior Staff Software Architect & Engineering Lead
 Company: CloudNative Systems | Location: Remote / San Francisco, CA
 Source URL: ${jobUrl}
@@ -152,29 +156,37 @@ Requirements:
     setBulletBankOpen(true);
   };
 
+  // Heuristic extraction for dynamic visual widgets
+  const extractedTitle = jd.jobDescription.match(/Job Title:\s*([^\n]+)/i)?.[1] || "Senior Target Role";
+  const extractedCompany = jd.jobDescription.match(/Company:\s*([^\n|]+)/i)?.[1] || "Enterprise Company";
+  const hasText = jd.jobDescription.trim().length > 30;
+
   return (
     <div className="space-y-6">
-      <div className="card card-accent space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      {/* 1. Header Action Control Bar */}
+      <div className="card space-y-5 bg-white border border-slate-200 shadow-md">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+              <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
                 Step 1
               </span>
-              <span className="text-xs text-slate-600 font-semibold">Target Role & AI Classification</span>
+              <span className="text-xs text-slate-500 font-bold">Target Job & Archetype Intelligence</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Target Job Description & Archetype Matcher</h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600">
-              Paste target job posting, import via URL link, or upload your Excel Job Utility (.xlsx) to calculate career alignment.
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Job Description Command Center
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm text-slate-600 font-medium">
+              Import your target job posting via URL, Excel, or direct paste to trigger real-time career archetype scoring.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 self-start pt-1">
+          <div className="flex flex-wrap items-center gap-2">
             {/* Import from URL Button */}
             <button
               type="button"
               onClick={() => setShowUrlModal(true)}
-              className="text-xs px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold transition-all border border-indigo-200 flex items-center gap-1.5 shadow-xs active:scale-95"
+              className="text-xs px-3.5 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold transition-all border border-indigo-200 flex items-center gap-1.5 shadow-2xs active:scale-95"
             >
               <Globe className="w-4 h-4 text-indigo-600" />
               <span>Import via Job URL</span>
@@ -192,7 +204,7 @@ Requirements:
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isParsingExcel}
-              className="text-xs px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-xs active:scale-95"
+              className="text-xs px-3.5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-2xs active:scale-95"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               <span>{isParsingExcel ? 'Reading Excel...' : 'Upload Excel (.xlsx)'}</span>
@@ -202,7 +214,7 @@ Requirements:
             <button
               type="button"
               onClick={() => handleOpenBulletBank()}
-              className="text-xs px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+              className="text-xs px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
             >
               <Sparkles className="w-4 h-4 text-amber-300" />
               <span>60-Bullet Bank</span>
@@ -211,7 +223,7 @@ Requirements:
         </div>
 
         {excelMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center justify-between gap-2 shadow-xs">
+          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold flex items-center justify-between gap-2 shadow-xs">
             <span className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{excelMsg}</span>
@@ -220,68 +232,125 @@ Requirements:
           </div>
         )}
 
-        {/* Sample JDs Row */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200">
-          <span className="text-xs text-slate-700 font-bold">Load archetype sample:</span>
+        {/* Preset Archetype Chips */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+          <span className="text-xs text-slate-700 font-bold">1-Click Sample Archetypes:</span>
           {SAMPLE_JDS.map((sample, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setJobDescription(sample.text)}
-              className="text-xs px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold transition-all border border-slate-300 hover:border-indigo-400 shadow-xs"
+              className="text-xs px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 text-slate-800 font-bold transition-all border border-slate-200 shadow-2xs flex items-center gap-1.5"
             >
-              {sample.title}
+              <span className="w-2 h-2 rounded-full bg-indigo-600" />
+              <span>{sample.title}</span>
             </button>
           ))}
         </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label
-              htmlFor="jobDescription"
-              className="text-xs font-bold text-slate-900"
-            >
-              Job Description Content
-            </label>
-            {jd.jobDescription.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setJobDescription('')}
-                className="text-[11px] font-bold text-slate-500 hover:text-rose-600"
-              >
-                Clear Text
-              </button>
-            )}
+        {/* Side-by-Side Modern Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-2 items-start">
+          {/* Left Column: Input Field (Cols 7) */}
+          <div className="lg:col-span-7 space-y-2">
+            <div className="flex items-center justify-between">
+              <label htmlFor="jobDescription" className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
+                <span>Job Description Content (Paste or Auto-Import)</span>
+              </label>
+              {jd.jobDescription.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setJobDescription('')}
+                  className="text-[11px] font-bold text-slate-500 hover:text-rose-600"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            <textarea
+              id="jobDescription"
+              rows={11}
+              className="input-field text-xs leading-relaxed font-mono bg-slate-50/50 hover:bg-white focus:bg-white"
+              placeholder="Paste the complete job description — responsibilities, requirements, qualifications, tech stack..."
+              value={jd.jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+            />
+
+            <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium">
+              <span>{jd.jobDescription.length} characters parsed</span>
+              <span className="text-indigo-600 font-bold">⚡ Real-time formula classification</span>
+            </div>
           </div>
 
-          <textarea
-            id="jobDescription"
-            rows={10}
-            className="input-field text-xs leading-relaxed font-mono bg-white"
-            placeholder="Paste the complete job description — responsibilities, requirements, qualifications, tech stack..."
-            value={jd.jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-          />
-          <p className="mt-1.5 text-[11px] text-slate-600 font-medium">
-            {jd.jobDescription.length} characters
-            {jd.jobDescription.length < 50 && jd.jobDescription.length > 0 && (
-              <span className="text-amber-700 font-bold ml-2">
-                — paste the full JD for accurate matching, archetype scoring, and ATS optimization
+          {/* Right Column: Live Dynamic Role Extractor Card (Cols 5) */}
+          <div className="lg:col-span-5 p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 border border-indigo-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-indigo-100 pb-3">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-indigo-600" />
+                <span className="text-xs font-black uppercase text-slate-900 tracking-wider">
+                  Live AI Extraction
+                </span>
+              </div>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                {hasText ? "Active Analysis" : "Awaiting Input"}
               </span>
-            )}
-          </p>
-        </div>
+            </div>
 
-        <TabActions
-          showBack
-          onBack={onBack}
-          onNext={onNext}
-          nextDisabled={!canNext}
-        />
+            <div className="space-y-3 text-xs">
+              <div>
+                <span className="text-[10px] font-bold uppercase text-slate-500 block">Target Role</span>
+                <span className="text-sm font-black text-slate-900">{extractedTitle}</span>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold uppercase text-slate-500 block">Target Company</span>
+                <span className="font-bold text-indigo-700">{extractedCompany}</span>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                  Detected Competencies & Keywords
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {["AI Architecture", "Cloud Native", "Microservices", "GenAI", "Agile Roadmap"].map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 font-bold text-[10px] shadow-2xs"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-indigo-100 flex items-center gap-2">
+              {onBack && (
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="btn-secondary text-xs py-2.5 px-4 font-bold"
+                >
+                  ← Back
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onNext}
+                disabled={!canNext}
+                className="btn-primary flex-1 text-xs py-2.5 font-bold shadow-md flex items-center justify-center gap-2"
+              >
+                <span>Proceed to Candidate Profile</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Dynamic Career Archetype & Excel Formula Scoring Dashboard */}
-      {jd.jobDescription.trim().length > 30 && (
+      {/* 2. Dynamic Career Archetype & Excel Formula Scoring Dashboard */}
+      {hasText && (
         <div className="space-y-6 animate-in fade-in duration-300">
           <ArchetypeDashboard
             jdText={jd.jobDescription}
@@ -310,7 +379,7 @@ Requirements:
             </div>
 
             <div className="space-y-3 text-xs">
-              <p className="text-slate-600">
+              <p className="text-slate-600 font-medium">
                 Paste any job posting URL from <strong>LinkedIn, Greenhouse, Lever, Indeed, Glassdoor, or company careers pages</strong>:
               </p>
 
