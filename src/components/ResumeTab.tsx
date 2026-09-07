@@ -3,11 +3,9 @@
 import { useCallback, useState } from "react";
 import { useAppStore, canGenerate, getProfileContent } from "@/lib/store";
 import { ScoreBadge } from "./ScoreBadge";
-import { TabActions } from "./TabActions";
 import { ResumePdfPreview } from "./ResumePdfPreview";
 import { InteractiveDocumentSheet } from "./InteractiveDocumentSheet";
 import { ResumeRanking } from "./ResumeRanking";
-import { ProviderSelector } from "./ProviderSelector";
 import { ResumeDiffViewer } from "./ResumeDiffViewer";
 import { CoverLetterTab } from "./CoverLetterTab";
 import { InterviewPrepTab } from "./InterviewPrepTab";

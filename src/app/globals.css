@@ -107,23 +107,35 @@ body {
 }
 
 /* Print Stylesheet for 100% Vector PDF Printing */
+@page {
+  size: A4 portrait;
+  margin: 12mm 14mm;
+}
+
 @media print {
   body {
     background: #ffffff !important;
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  header, nav, footer, button, .no-print, [aria-hidden="true"] {
+  aside, header, nav, footer, button, .no-print, [aria-hidden="true"], .print-hidden {
     display: none !important;
   }
 
-  .print-page {
-    box-shadow: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
+  .print-clean {
     border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background: transparent !important;
+  }
+
+  .print-clean * {
+    box-shadow: none !important;
   }
 }
