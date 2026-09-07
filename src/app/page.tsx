@@ -87,7 +87,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-row relative selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-row relative selection:bg-indigo-600 selection:text-white transition-colors duration-200">
       {/* 1. Left Vertical Navigation Sidebar */}
       <AppSidebar
         currentScreen={currentScreen}
@@ -153,7 +153,7 @@ export default function Home() {
           )}
         </main>
 
-        <footer className="text-center text-xs text-slate-500 font-semibold py-6 border-t border-slate-200 mt-auto no-print">
+        <footer className="text-center text-xs text-slate-500 dark:text-slate-400 font-semibold py-6 border-t border-slate-200 dark:border-slate-800 mt-auto no-print">
           ResumePilot AI Suite — Next-Gen Commercial Career Tailoring Platform
         </footer>
       </div>

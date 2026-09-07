@@ -43,34 +43,41 @@ body {
     @apply bg-indigo-600 text-white shadow-md shadow-indigo-200 border border-indigo-500;
   }
   .tab-btn-inactive {
-    @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-xs;
+    @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-xs
+      dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-white;
   }
   .tab-btn-done {
-    @apply text-emerald-700 bg-emerald-50 border border-emerald-300 font-bold;
+    @apply text-emerald-700 bg-emerald-50 border border-emerald-300 font-bold
+      dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800;
   }
   .card {
-    @apply bg-white backdrop-blur-xl rounded-2xl border border-slate-200 shadow-md shadow-slate-200/50 p-6 md:p-8 transition-all hover:shadow-lg hover:shadow-slate-200/60;
+    @apply bg-white backdrop-blur-xl rounded-2xl border border-slate-200 shadow-md shadow-slate-200/50 p-6 md:p-8 transition-all hover:shadow-lg hover:shadow-slate-200/60
+      dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-slate-950/60 dark:hover:shadow-slate-950/80;
   }
   .card-accent {
-    @apply border-l-4 border-l-indigo-600 border-y border-r border-slate-200;
+    @apply border-l-4 border-l-indigo-600 border-y border-r border-slate-200
+      dark:border-y-slate-800 dark:border-r-slate-800;
   }
   .input-field {
     @apply w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-base text-slate-900
       placeholder:text-slate-400
       focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-600 focus:bg-white
-      transition-all;
+      transition-all
+      dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-950;
   }
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-xl bg-indigo-600
       px-6 py-3 text-base font-bold text-white shadow-md shadow-indigo-200
       hover:bg-indigo-700 hover:shadow-lg border border-indigo-500
       disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
-      transition-all duration-200 active:scale-[0.98];
+      transition-all duration-200 active:scale-[0.98]
+      dark:shadow-indigo-950;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white
       px-6 py-3 text-base font-semibold text-slate-700 shadow-xs
-      hover:bg-slate-50 hover:text-slate-900 hover:border-slate-400 transition-all;
+      hover:bg-slate-50 hover:text-slate-900 hover:border-slate-400 transition-all
+      dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white;
   }
   .score-ring {
     @apply flex h-20 w-20 items-center justify-center rounded-full border-4 text-2xl font-bold;
@@ -80,14 +87,33 @@ body {
       bg-indigo-600 text-white shadow-sm;
   }
   .tip-box {
-    @apply rounded-xl bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/60 border border-indigo-200 p-4 text-slate-800 shadow-sm;
+    @apply rounded-xl bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/60 border border-indigo-200 p-4 text-slate-800 shadow-sm
+      dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 dark:border-indigo-900/50 dark:text-slate-200;
   }
   .latex-preview {
-    @apply text-slate-900;
+    @apply text-slate-900 dark:text-slate-100;
   }
   .latex-preview .body {
     max-width: none;
   }
+}
+
+/* Dark mode scrollbars & body styles */
+html.dark {
+  color-scheme: dark;
+}
+html.dark body {
+  background-color: #090d16;
+  color: #f1f5f9;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #090d16;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 /* Animations */

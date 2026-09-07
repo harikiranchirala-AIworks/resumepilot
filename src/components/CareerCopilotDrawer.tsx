@@ -204,12 +204,12 @@ export function CareerCopilotDrawer({
 
       {/* Slide-out Drawer Panel */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[480px] md:w-[520px] bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[480px] md:w-[520px] bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
         }`}
       >
         {/* Drawer Header */}
-        <div className="p-4 border-b border-slate-200 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex items-center justify-between">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/30">
               <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
@@ -250,7 +250,7 @@ export function CareerCopilotDrawer({
         </div>
 
         {/* Quick Action Chips Bar */}
-        <div className="p-3 bg-slate-50 border-b border-slate-200 overflow-x-auto scrollbar-none flex items-center gap-2">
+        <div className="p-3 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none flex items-center gap-2">
           {QUICK_PROMPTS.map((qp) => {
             const Icon = qp.icon;
             return (
@@ -259,9 +259,9 @@ export function CareerCopilotDrawer({
                 type="button"
                 disabled={loading}
                 onClick={() => handleSendMessage(qp.prompt)}
-                className="whitespace-nowrap px-2.5 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 hover:shadow-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50"
+                className="whitespace-nowrap px-2.5 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:shadow-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50"
               >
-                <Icon className="w-3.5 h-3.5 text-indigo-600" />
+                <Icon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                 <span>{qp.label}</span>
               </button>
             );
@@ -269,7 +269,7 @@ export function CareerCopilotDrawer({
         </div>
 
         {/* Messages Stream Container */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-slate-950/80">
           {messages.map((msg) => {
             const isAi = msg.role === "assistant";
             return (
@@ -286,7 +286,7 @@ export function CareerCopilotDrawer({
                 <div
                   className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed shadow-xs ${
                     isAi
-                      ? "bg-white border border-slate-200 text-slate-800"
+                      ? "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100"
                       : "bg-indigo-600 text-white font-medium"
                   }`}
                 >
@@ -294,16 +294,16 @@ export function CareerCopilotDrawer({
 
                   {/* 1-Click Apply Action Card for Suggested Bullet */}
                   {msg.suggestedBullet && (
-                    <div className="mt-3.5 p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-slate-900 space-y-2">
+                    <div className="mt-3.5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-slate-100 space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-black uppercase text-emerald-800 flex items-center gap-1">
+                        <span className="text-[11px] font-black uppercase text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
                           <Zap className="w-3.5 h-3.5 text-amber-500" /> Recommended Bullet:
                         </span>
-                        <span className="text-[10px] bg-emerald-200/80 text-emerald-900 px-1.5 py-0.5 rounded font-bold">
+                        <span className="text-[10px] bg-emerald-200/80 dark:bg-emerald-800/80 text-emerald-900 dark:text-emerald-100 px-1.5 py-0.5 rounded font-bold">
                           98 ATS Score
                         </span>
                       </div>
-                      <p className="text-xs font-semibold text-emerald-950 italic">
+                      <p className="text-xs font-semibold text-emerald-950 dark:text-emerald-200 italic">
                         &ldquo;{msg.suggestedBullet}&rdquo;
                       </p>
 
@@ -383,7 +383,7 @@ export function CareerCopilotDrawer({
         </div>
 
         {/* Input Bar */}
-        <div className="p-3.5 border-t border-slate-200 bg-white">
+        <div className="p-3.5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -397,7 +397,7 @@ export function CareerCopilotDrawer({
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask Copilot (e.g. 'Quantify my AWS project')..."
               disabled={loading}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none text-xs sm:text-sm text-slate-800 placeholder-slate-400 transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/50 outline-none text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 transition-all"
             />
             <button
               type="submit"
@@ -408,7 +408,7 @@ export function CareerCopilotDrawer({
               <Send className="w-3.5 h-3.5" />
             </button>
           </form>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1.5 px-1 font-medium">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 px-1 font-medium">
             <span>Press Enter to send</span>
             <span>Google XYZ &bull; STAR Method &bull; ATS Ready</span>
           </div>

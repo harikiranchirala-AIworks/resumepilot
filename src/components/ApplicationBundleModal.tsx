@@ -130,9 +130,9 @@ export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleMod
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-white border border-slate-200 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-200 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex items-center justify-between">
+        <div className="p-5 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <FolderArchive className="w-5 h-5 text-amber-300" />
@@ -163,17 +163,17 @@ export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleMod
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-5 bg-slate-50/50">
-          <div className="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-200 flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-            <div className="text-xs sm:text-sm text-indigo-950 leading-relaxed font-medium">
+        <div className="p-6 overflow-y-auto space-y-5 bg-slate-50/50 dark:bg-slate-950/80">
+          <div className="p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed font-medium">
               Everything you need to apply, interview, and negotiate in one clean download. No more manual file naming or missing recruiter follow-ups!
             </div>
           </div>
 
           {/* File Checklist Cards */}
           <div className="space-y-2.5">
-            <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider px-1">
+            <h3 className="text-xs font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider px-1">
               Included Artifacts (6 Files in ZIP):
             </h3>
 
@@ -182,19 +182,19 @@ export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleMod
               return (
                 <div
                   key={i}
-                  className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between gap-3 hover:border-indigo-300 transition-all"
+                  className="p-3.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs flex items-center justify-between gap-3 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 text-slate-700">
-                      <Icon className="w-4 h-4 text-indigo-600" />
+                    <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 text-slate-700 dark:text-slate-300">
+                      <Icon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                        <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
                           {f.name}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 truncate font-medium">{f.desc}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate font-medium">{f.desc}</p>
                     </div>
                   </div>
 
@@ -210,8 +210,8 @@ export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleMod
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3">
-          <div className="text-xs text-slate-500 font-medium hidden sm:block">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-wrap items-center justify-between gap-3">
+          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
             Compressed size: ~18 KB &bull; Compatible with MS Word, Google Docs & Mac Pages
           </div>
 
@@ -219,7 +219,7 @@ export function ApplicationBundleModal({ isOpen, onClose }: ApplicationBundleMod
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-100 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
             >
               Close
             </button>

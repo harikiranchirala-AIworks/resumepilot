@@ -125,25 +125,25 @@ export function AppSidebar({
       )}
 
       <aside
-        className={`w-72 bg-white border-r border-slate-200 flex flex-col justify-between h-screen fixed lg:sticky top-0 left-0 z-50 lg:z-30 shadow-xl lg:shadow-xs select-none transition-transform duration-300 ease-in-out ${
+        className={`w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between h-screen fixed lg:sticky top-0 left-0 z-50 lg:z-30 shadow-xl lg:shadow-xs select-none transition-all duration-300 ease-in-out ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* 1. Top Section: Platform Logo & User Card */}
-        <div className="p-4 border-b border-slate-100 space-y-4">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-indigo-200">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center font-black text-sm shadow-md shadow-indigo-200 dark:shadow-none">
                 RP
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-black text-slate-900 text-base tracking-tight">ResumePilot</span>
-                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  <span className="font-black text-slate-900 dark:text-white text-base tracking-tight">ResumePilot</span>
+                  <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
                     v2.0
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-500 font-semibold">AI Resume & ATS Platform</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">AI Resume & ATS Platform</p>
               </div>
             </div>
 
@@ -209,21 +209,21 @@ export function AppSidebar({
                 }}
                 className={`w-full p-2.5 sm:p-3 rounded-xl text-left transition-all duration-200 flex items-center justify-between group ${
                   isActive
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div
                     className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                      isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600 group-hover:text-indigo-600 group-hover:bg-indigo-50"
+                      isActive ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/50"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs sm:text-sm font-bold block truncate">{item.label}</span>
-                    <span className={`text-xs block truncate font-medium ${isActive ? "text-indigo-100" : "text-slate-500"}`}>
+                    <span className={`text-xs block truncate font-medium ${isActive ? "text-indigo-100" : "text-slate-500 dark:text-slate-400"}`}>
                       {item.description}
                     </span>
                   </div>
@@ -242,7 +242,7 @@ export function AppSidebar({
         </div>
 
         {/* 3. Bottom Section: AI Copilot & Live ATS Readiness Dial */}
-        <div className="p-3.5 border-t border-slate-100 space-y-3 bg-slate-50/50">
+        <div className="p-3.5 border-t border-slate-100 dark:border-slate-800 space-y-3 bg-slate-50/50 dark:bg-slate-900/50">
           {/* AI Career Copilot Fast Trigger */}
           {onOpenCopilot && (
             <button
@@ -251,7 +251,7 @@ export function AppSidebar({
                 onOpenCopilot();
                 onCloseMobile?.();
               }}
-              className="w-full p-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 hover:from-indigo-700 hover:to-black text-white font-bold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-between group cursor-pointer"
+              className="w-full p-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 hover:from-indigo-700 hover:to-black text-white font-bold text-xs shadow-md shadow-indigo-200 dark:shadow-none transition-all flex items-center justify-between group cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
@@ -264,33 +264,33 @@ export function AppSidebar({
           )}
 
           {/* Live Radial Gauge Mini Card */}
-          <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2.5">
+          <div className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xs space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-xs font-bold text-slate-800">Target ATS Match</span>
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Target ATS Match</span>
               </div>
-              <span className="text-xs font-black text-indigo-600">{matchScore}%</span>
+              <span className="text-xs font-black text-indigo-600 dark:text-indigo-400">{matchScore}%</span>
             </div>
 
             {/* Sub progress bars */}
             <div className="space-y-1.5">
               <div>
-                <div className="flex justify-between text-xs text-slate-600 font-semibold mb-0.5">
+                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400 font-semibold mb-0.5">
                   <span>Google XYZ Impact</span>
-                  <span className="font-bold text-slate-800">{impactScore}%</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">{impactScore}%</span>
                 </div>
-                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
                   <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${impactScore}%` }} />
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs text-slate-600 font-semibold mb-0.5">
+                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400 font-semibold mb-0.5">
                   <span>Keywords Coverage</span>
-                  <span className="font-bold text-slate-800">{keywordScore}%</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">{keywordScore}%</span>
                 </div>
-              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
                 <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${keywordScore}%` }} />
               </div>
             </div>
@@ -302,7 +302,7 @@ export function AppSidebar({
           <button
             type="button"
             onClick={onOpenBulletBank}
-            className="py-1.5 px-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+            className="py-1.5 px-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span className="text-[11px]">Bullet Bank</span>
@@ -311,9 +311,9 @@ export function AppSidebar({
           <button
             type="button"
             onClick={onOpenBackup}
-            className="py-1.5 px-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+            className="py-1.5 px-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs"
           >
-            <Database className="w-3.5 h-3.5 text-slate-500" />
+            <Database className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <span className="text-[11px]">Backup</span>
           </button>
           </div>

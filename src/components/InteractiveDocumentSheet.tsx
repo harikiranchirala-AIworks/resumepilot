@@ -302,17 +302,17 @@ export function InteractiveDocumentSheet({
   return (
     <div className="space-y-4">
       {/* Top Bar Actions & Direct Export Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm print:hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm print:hidden">
         <div className="flex items-center gap-2.5">
           <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
           <div>
-            <h3 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
+            <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
               Live A4 Interactive Document Sheet
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-200">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800">
                 WYSIWYG Editable
               </span>
             </h3>
-            <p className="text-xs text-slate-500 font-medium hidden sm:block">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
               Click any text to edit inline &bull; Real-time Google XYZ score sync &bull; Direct exports
             </p>
           </div>

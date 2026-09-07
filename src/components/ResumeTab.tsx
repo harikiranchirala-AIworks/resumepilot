@@ -125,22 +125,22 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
       {profile.mode === "library" && <ResumeRanking />}
 
       {/* Sleek Executive Action Command Bar */}
-      <div className="p-5 sm:p-6 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
               AI Tailoring & Generation Engine
             </span>
             {result?.providerUsed && !isGenerating && (
-              <span className="text-xs font-bold text-slate-500">
-                Engine: <strong className="text-indigo-600 font-black">{result.providerUsed}</strong>
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                Engine: <strong className="text-indigo-600 dark:text-indigo-400 font-black">{result.providerUsed}</strong>
               </span>
             )}
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
             AI Resume Tailoring & Split-Screen Studio
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
             Optimize experience bullets, analyze ATS alignment, edit live paper, and export LaTeX PDF.
           </p>
         </div>
