@@ -65,6 +65,7 @@ const SCREEN_TITLES: Record<NavScreenId, string> = {
 };
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const [currentScreen, setCurrentScreen] = useState<NavScreenId>("jd");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
@@ -78,6 +79,7 @@ export default function Home() {
 
   // First-time clean onboarding: prompt 20s interactive guided tour if not yet completed
   useEffect(() => {
+    setMounted(true);
     try {
       const tourCompleted = localStorage.getItem("offercraft_tour_completed");
       if (!tourCompleted) {
@@ -92,6 +94,26 @@ export default function Home() {
     setJobDescription(DEMO_JD);
     setCurrentScreen("studio");
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-pulse">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-600 via-teal-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-cyan-500/20 text-white">
+            <Sparkles className="w-8 h-8" />
+          </div>
+          <div className="text-center space-y-1">
+            <div className="text-lg font-black text-slate-800 dark:text-slate-200 tracking-tight">
+              OfferCraft AI
+            </div>
+            <div className="text-xs font-semibold text-slate-400">
+              Loading your career intelligence workspace...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-row relative selection:bg-cyan-500 selection:text-white transition-colors duration-200">
