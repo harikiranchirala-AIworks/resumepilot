@@ -23,7 +23,7 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
     const a = document.createElement("a");
     const dateStr = new Date().toISOString().split("T")[0];
     a.href = url;
-    a.download = `resumepilot-workspace-backup-${dateStr}.json`;
+    a.download = `offercraft-workspace-backup-${dateStr}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -54,7 +54,7 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
       <div className="card max-w-md w-full space-y-5 shadow-2xl border border-slate-200 bg-white">
         <div className="flex items-center justify-between border-b border-slate-200 pb-3">
           <div className="flex items-center gap-2">
-            <HardDrive className="w-5 h-5 text-indigo-600" />
+            <HardDrive className="w-5 h-5 text-cyan-600" />
             <h3 className="text-base font-bold text-slate-900">
               Workspace Backup & Restore
             </h3>
@@ -70,16 +70,16 @@ export function WorkspaceBackupModal({ isOpen, onClose }: WorkspaceBackupModalPr
 
         <div className="text-xs text-slate-600 space-y-2 leading-relaxed font-medium">
           <p>
-            Export and save your entire ResumePilot workspace including your saved profiles (<strong className="text-indigo-600">{library.length}</strong>), application tracker records (<strong className="text-indigo-600">{applications.length}</strong>), and custom settings.
+            Export and save your entire OfferCraft AI workspace including your saved profiles (<strong className="text-cyan-600">{library.length}</strong>), application tracker records (<strong className="text-cyan-600">{applications.length}</strong>), and custom settings.
           </p>
         </div>
 
         <div className="space-y-3 pt-2">
           {/* Export Box */}
-          <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50/50 flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl border border-cyan-200 bg-cyan-50/50 flex items-center justify-between gap-3">
             <div>
-              <h4 className="text-xs font-bold text-indigo-950">Download Backup File</h4>
-              <p className="text-[11px] text-indigo-700">JSON snapshot of all local data</p>
+              <h4 className="text-xs font-bold text-cyan-950">Download Backup File</h4>
+              <p className="text-[11px] text-cyan-700">JSON snapshot of all local data</p>
             </div>
             <button
               type="button"

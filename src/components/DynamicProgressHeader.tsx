@@ -60,12 +60,12 @@ export function DynamicProgressHeader({
               <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                 {activeScreenTitle}
               </h2>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
                 Live Studio
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Next-Gen AI Resume Checker & Multi-Track Career Tailoring
+              Next-Gen AI Career Suite & Offer Acceleration Engine
             </p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function DynamicProgressHeader({
               onClick={onOpenProModal}
               className={`px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer ${
                 isPro
-                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
+                  ? "bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800"
                   : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs shadow-amber-200 dark:shadow-none"
               }`}
               title="View Pro Membership & Pricing"
@@ -107,19 +107,19 @@ export function DynamicProgressHeader({
       </div>
 
       {/* Prominent Multi-Step Animated Progress Bar */}
-      <div className="p-3 rounded-2xl bg-gradient-to-r from-slate-50 via-indigo-50/40 to-slate-50 dark:from-slate-800/80 dark:via-indigo-950/40 dark:to-slate-800/80 border border-slate-200 dark:border-slate-800 space-y-2">
+      <div className="p-3 rounded-2xl bg-gradient-to-r from-slate-50 via-cyan-50/40 to-slate-50 dark:from-slate-800/80 dark:via-cyan-950/40 dark:to-slate-800/80 border border-slate-200 dark:border-slate-800 space-y-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-bold text-slate-800 dark:text-slate-200">
           <span className="flex items-center gap-2">
-            <Target className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            <Target className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
             <span>{statusText}</span>
           </span>
-          <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm">{progressPercent}% Tailored</span>
+          <span className="text-cyan-600 dark:text-cyan-400 font-black text-sm">{progressPercent}% Tailored</span>
         </div>
 
         {/* Dynamic Glow Bar */}
-        <div className="w-full bg-slate-200/80 h-3 rounded-full overflow-hidden p-0.5 shadow-inner">
+        <div className="w-full bg-slate-200/80 dark:bg-slate-700/80 h-3 rounded-full overflow-hidden p-0.5 shadow-inner">
           <div
-            className="bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-500 h-full rounded-full transition-all duration-700 shadow-sm"
+            className="bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-400 h-full rounded-full transition-all duration-700 shadow-sm"
             style={{ width: `${Math.max(5, progressPercent)}%` }}
           />
         </div>

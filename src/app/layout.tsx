@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tailor Resume — JD-Optimized LaTeX Resumes",
+  title: "OfferCraft AI — Craft Your Next Career Move",
   description:
-    "Tailor your resume to any job description with ATS scoring and LaTeX output.",
+    "Next-gen AI career intelligence suite: tailor resumes with ATS scoring, generate high-impact cover letters, master interview prep, and track applications.",
 };
 
 export default function RootLayout({

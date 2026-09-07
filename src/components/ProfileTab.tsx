@@ -150,8 +150,8 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
                 <Info className="w-4 h-4 text-indigo-600 shrink-0" />
                 How Candidate Profile Works:
               </p>
-              <p className="text-indigo-800">
-                Your profile forms the baseline experience. ResumePilot compares this raw experience against target Job Descriptions to quantify achievements, weave ATS keywords, and format PDF resumes.
+              <p className="text-cyan-900 dark:text-cyan-200">
+                Your profile forms the baseline experience. OfferCraft AI compares this raw experience against target Job Descriptions to quantify achievements, weave ATS keywords, and format PDF resumes.
               </p>
             </div>
           )}

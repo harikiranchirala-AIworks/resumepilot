@@ -71,7 +71,7 @@ export function ProUpgradeModal({ isOpen, onClose }: ProUpgradeModalProps) {
               <span>Commercial Pro Membership</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Land 3.8x More Interviews with ResumePilot Pro
+              Land 3.8x More Interviews with OfferCraft Pro
             </h2>
             <p className="text-sm sm:text-base text-indigo-200 mt-2 font-medium">
               Join 14,200+ candidates who used Google XYZ auto-fix, 1-click application packets, and our AI career coach to land roles at Google, Meta, Amazon, and Apple.

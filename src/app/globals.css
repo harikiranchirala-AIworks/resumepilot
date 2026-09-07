@@ -40,7 +40,7 @@ body {
     @apply px-4 py-3 text-sm sm:text-base font-bold rounded-xl transition-all duration-200;
   }
   .tab-btn-active {
-    @apply bg-indigo-600 text-white shadow-md shadow-indigo-200 border border-indigo-500;
+    @apply bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-md shadow-cyan-500/25 border border-cyan-400/30;
   }
   .tab-btn-inactive {
     @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-xs
@@ -55,23 +55,23 @@ body {
       dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-slate-950/60 dark:hover:shadow-slate-950/80;
   }
   .card-accent {
-    @apply border-l-4 border-l-indigo-600 border-y border-r border-slate-200
+    @apply border-l-4 border-l-cyan-500 border-y border-r border-slate-200
       dark:border-y-slate-800 dark:border-r-slate-800;
   }
   .input-field {
     @apply w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-base text-slate-900
       placeholder:text-slate-400
-      focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-600 focus:bg-white
+      focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 focus:bg-white
       transition-all
       dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:bg-slate-950;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-indigo-600
-      px-6 py-3 text-base font-bold text-white shadow-md shadow-indigo-200
-      hover:bg-indigo-700 hover:shadow-lg border border-indigo-500
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600
+      px-6 py-3 text-base font-bold text-white shadow-md shadow-cyan-500/25
+      hover:from-cyan-500 hover:to-teal-500 hover:shadow-lg hover:shadow-cyan-500/30 border border-cyan-400/40
       disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
       transition-all duration-200 active:scale-[0.98]
-      dark:shadow-indigo-950;
+      dark:shadow-cyan-950/60;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white
@@ -84,11 +84,11 @@ body {
   }
   .step-pill {
     @apply inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold
-      bg-indigo-600 text-white shadow-sm;
+      bg-cyan-600 text-white shadow-sm;
   }
   .tip-box {
-    @apply rounded-xl bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/60 border border-indigo-200 p-4 text-slate-800 shadow-sm
-      dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900 dark:border-indigo-900/50 dark:text-slate-200;
+    @apply rounded-xl bg-gradient-to-br from-cyan-50/80 via-white to-teal-50/60 border border-cyan-200 p-4 text-slate-800 shadow-sm
+      dark:from-slate-900 dark:via-cyan-950/30 dark:to-slate-900 dark:border-cyan-900/50 dark:text-slate-200;
   }
   .latex-preview {
     @apply text-slate-900 dark:text-slate-100;

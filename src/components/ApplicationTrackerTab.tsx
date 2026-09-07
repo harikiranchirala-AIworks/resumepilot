@@ -54,7 +54,7 @@ export function ApplicationTrackerTab({
     saveCurrentWorkspaceAsApplication({
       companyName: defaultCompany,
       roleTitle: defaultRole,
-      notes: `Tailored with ${result?.providerUsed || "ResumePilot"} (Score: ${result?.match.overallScore || 85}%)`,
+      notes: `Tailored with ${result?.providerUsed || "OfferCraft AI"} (Score: ${result?.match.overallScore || 85}%)`,
     });
   };
 

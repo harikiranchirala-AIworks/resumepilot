@@ -10,7 +10,7 @@ export function exportToExcel(
 
   // 1. OVERVIEW Sheet
   const overviewData = [
-    ['🎯 RESUMEPILOT - JD TO RESUME MATCHING REPORT'],
+    ['⚡ OFFERCRAFT AI - JD TO RESUME MATCHING REPORT'],
     ['Target Job Title:', jobTitle],
     ['Best-Fit Archetype:', result.bestFit.name, 'Score:', `${result.bestFit.finalScore}/40`, 'Match:', result.bestFit.matchLevel],
     [],
@@ -129,7 +129,7 @@ export function exportToExcel(
 
   // Download
   const cleanTitle = (jobTitle || 'Resume_Scoring').replace(/[^a-zA-Z0-9_-]/g, '_');
-  XLSX.writeFile(wb, `${cleanTitle}_ResumePilot_Analysis.xlsx`);
+  XLSX.writeFile(wb, `${cleanTitle}_OfferCraft_Analysis.xlsx`);
 }
 
 export async function parseExcelJobFile(file: File): Promise<{ jdText?: string; jobTitle?: string }> {
