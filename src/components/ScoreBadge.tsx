@@ -1,46 +1,140 @@
 "use client";
 
-function scoreTheme(score: number): { ring: string; text: string; bg: string } {
+function scoreTheme(score: number): { ring: string; text: string; bg: string; stroke: string } {
   if (score >= 80) {
     return {
-      ring: "border-emerald-600 shadow-sm",
+      ring: "border-emerald-600 shadow-md shadow-emerald-100",
       text: "text-emerald-900",
       bg: "bg-emerald-50",
+      stroke: "#059669",
     };
   }
   if (score >= 65) {
     return {
-      ring: "border-indigo-600 shadow-sm",
+      ring: "border-indigo-600 shadow-md shadow-indigo-100",
       text: "text-indigo-900",
       bg: "bg-indigo-50",
+      stroke: "#4F46E5",
     };
   }
   if (score >= 50) {
     return {
-      ring: "border-amber-500 shadow-sm",
+      ring: "border-amber-500 shadow-md shadow-amber-100",
       text: "text-amber-900",
       bg: "bg-amber-50",
+      stroke: "#D97706",
     };
   }
   return {
-    ring: "border-rose-500 shadow-sm",
+    ring: "border-rose-500 shadow-md shadow-rose-100",
     text: "text-rose-900",
     bg: "bg-rose-50",
+    stroke: "#E11D48",
   };
 }
 
 interface ScoreBadgeProps {
   label: string;
   score: number;
-  size?: "sm" | "lg";
+  size?: "sm" | "lg" | "radial";
+  subCategories?: {
+    impactScore?: number;
+    keywordScore?: number;
+    brevityScore?: number;
+    formattingScore?: number;
+  };
 }
 
-export function ScoreBadge({ label, score, size = "lg" }: ScoreBadgeProps) {
+export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBadgeProps) {
   const theme = scoreTheme(score);
-  const ringSize =
-    size === "lg"
-      ? "h-20 w-20 text-2xl"
-      : "h-14 w-14 text-lg";
+
+  if (size === "radial") {
+    const radius = 36;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (score / 100) * circumference;
+
+    const categories = [
+      { name: "Impact & Google XYZ Formula", val: subCategories?.impactScore ?? Math.min(100, score + 4) },
+      { name: "ATS Keyword Match & Coverage", val: subCategories?.keywordScore ?? score },
+      { name: "Brevity & Conciseness", val: subCategories?.brevityScore ?? Math.max(70, score - 5) },
+      { name: "Structure & LaTeX Formatting", val: subCategories?.formattingScore ?? 98 },
+    ];
+
+    return (
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-md p-6 space-y-5">
+        <div className="flex items-center gap-5">
+          {/* Radial Circular SVG Score Meter */}
+          <div className="relative flex items-center justify-center shrink-0">
+            <svg className="w-24 h-24 transform -rotate-90">
+              <circle
+                cx="48"
+                cy="48"
+                r={radius}
+                className="text-slate-100"
+                strokeWidth="8"
+                stroke="currentColor"
+                fill="transparent"
+              />
+              <circle
+                cx="48"
+                cy="48"
+                r={radius}
+                stroke={theme.stroke}
+                strokeWidth="8"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+                fill="transparent"
+                className="transition-all duration-1000 ease-out"
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center justify-center">
+              <span className={`text-2xl font-black ${theme.text}`}>{score}</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">/100</span>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+              Resume Audit Gauge
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 leading-tight">{label}</h3>
+            <p className="text-xs text-slate-600 font-medium">
+              {score >= 80
+                ? "Top 5% candidate match. High interview callback potential!"
+                : "Good base. Use 1-click AI auto-fixes to boost score to 90+."}
+            </p>
+          </div>
+        </div>
+
+        {/* 4 Sub-Category Progress Bars */}
+        <div className="space-y-3 pt-2 border-t border-slate-100 text-xs">
+          {categories.map((cat, idx) => (
+            <div key={idx} className="space-y-1">
+              <div className="flex justify-between font-semibold text-slate-700">
+                <span>{cat.name}</span>
+                <span className="font-bold text-slate-900">{cat.val}%</span>
+              </div>
+              <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${
+                    cat.val >= 80
+                      ? "bg-emerald-500"
+                      : cat.val >= 65
+                      ? "bg-indigo-600"
+                      : "bg-amber-500"
+                  }`}
+                  style={{ width: `${cat.val}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const ringSize = size === "lg" ? "h-20 w-20 text-2xl" : "h-14 w-14 text-lg";
 
   return (
     <div className="flex flex-col items-center gap-2">

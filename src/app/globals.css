@@ -46,7 +46,7 @@ body {
     @apply text-emerald-700 bg-emerald-50 border border-emerald-300 font-bold;
   }
   .card {
-    @apply bg-white backdrop-blur-xl rounded-2xl border border-slate-200 shadow-md shadow-slate-200/50 p-6 md:p-8 transition-all;
+    @apply bg-white backdrop-blur-xl rounded-2xl border border-slate-200 shadow-md shadow-slate-200/50 p-6 md:p-8 transition-all hover:shadow-lg hover:shadow-slate-200/60;
   }
   .card-accent {
     @apply border-l-4 border-l-indigo-600 border-y border-r border-slate-200;
@@ -66,7 +66,7 @@ body {
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white
-      px-6 py-3 text-base font-semibold text-slate-700 shadow-sm
+      px-6 py-3 text-base font-semibold text-slate-700 shadow-xs
       hover:bg-slate-50 hover:text-slate-900 hover:border-slate-400 transition-all;
   }
   .score-ring {
@@ -85,6 +85,22 @@ body {
   .latex-preview .body {
     max-width: none;
   }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
 }
 
 /* Print Stylesheet for 100% Vector PDF Printing */
