@@ -123,6 +123,15 @@ npm run tailor -- my-resume.pdf job-posting.txt tailored-output.tex
 
 ---
 
+## 📚 Complete Documentation Suite
+
+For detailed technical guides and user documentation:
+- **[Usage & Workflow Guide (USAGE_GUIDE.md)](USAGE_GUIDE.md)**: End-to-end user walkthrough, 3-step workflow, AI Career Suite, Pro tier, and FAQ.
+- **[Technical Architecture & Engineering Reference (TECHNICAL_DOCUMENTATION.md)](TECHNICAL_DOCUMENTATION.md)**: Deep architectural dive, SSR hydration guard, multi-model AI routing, 5-tier parser pipeline, and full REST API route specs.
+- **[System Quick Reference (README.txt)](README.txt)**: Formatted plain-text reference guide and project structure.
+
+---
+
 ## 📄 License
 
 MIT License.
