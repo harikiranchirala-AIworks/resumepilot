@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useAppStore } from "@/lib/store";
 import {
@@ -56,6 +57,13 @@ export function AppSidebar({
   onCloseMobile,
 }: AppSidebarProps) {
   const { jd, result, isPro, proPlan, user } = useAppStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const activeUser = mounted ? user : null;
+  const activeIsPro = mounted ? isPro : false;
 
   const coreWorkflowItems = [
     {
@@ -186,35 +194,35 @@ export function AppSidebar({
           </div>
 
           {/* Candidate Persona Card with Google Cloud Sync */}
-          {user ? (
+          {activeUser ? (
             <div
               onClick={onOpenUserProfile}
               className="p-3.5 rounded-2xl bg-gradient-to-r from-cyan-50/80 via-slate-50 to-teal-50/60 dark:from-slate-800/80 dark:via-slate-900/60 dark:to-cyan-950/30 border border-cyan-100/80 dark:border-cyan-900/40 hover:border-cyan-300 dark:hover:border-cyan-700 transition-all cursor-pointer group shadow-2xs"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
-                  {user.avatar ? (
+                  {activeUser.avatar ? (
                     <img
-                      src={user.avatar}
-                      alt={user.name}
+                      src={activeUser.avatar}
+                      alt={activeUser.name}
                       className="w-9 h-9 rounded-xl object-cover border border-cyan-500/30 shadow-2xs shrink-0"
                     />
                   ) : (
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
-                      {user.name.slice(0, 2).toUpperCase()}
+                      {activeUser.name.slice(0, 2).toUpperCase()}
                     </div>
                   )}
                   <div className="space-y-0.5 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
-                        {user.name}
+                        {activeUser.name}
                       </span>
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[130px]">
-                        {user.targetRole || "Google Synced"}
+                        {activeUser.targetRole || "Google Synced"}
                       </p>
                     </div>
                   </div>
@@ -256,7 +264,7 @@ export function AppSidebar({
           {/* Pro Membership Banner */}
           {onOpenProModal && (
             <div>
-              {!isPro ? (
+              {!activeIsPro ? (
                 <button
                   type="button"
                   onClick={() => {

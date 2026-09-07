@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { PlayCircle, Target, Menu, Crown, Sparkles } from "lucide-react";
 import { ProviderSelector } from "./ProviderSelector";
@@ -25,6 +26,13 @@ export function DynamicProgressHeader({
   onOpenTour,
 }: DynamicProgressHeaderProps) {
   const { jd, profile, result, isPro, user, freeTailorCredits } = useAppStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const activeUser = mounted ? user : null;
+  const activeIsPro = mounted ? isPro : false;
 
   const hasJd = jd.jobDescription.trim().length > 30;
   const hasProfile = profile.resumeText.trim().length > 30;
@@ -78,12 +86,12 @@ export function DynamicProgressHeader({
 
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Google Account Cloud Sync Fast Trigger */}
-          {user ? (
+          {activeUser ? (
             <button
               type="button"
               onClick={onOpenUserProfile}
               className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition-all shadow-2xs text-xs font-bold cursor-pointer"
-              title={`Google Cloud Sync Active (${user.email})`}
+              title={`Google Cloud Sync Active (${activeUser.email})`}
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" />
@@ -91,7 +99,7 @@ export function DynamicProgressHeader({
                 <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z" />
                 <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
               </svg>
-              <span>{user.name.split(" ")[0]}</span>
+              <span>{activeUser.name.split(" ")[0]}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             </button>
           ) : (
@@ -146,21 +154,21 @@ export function DynamicProgressHeader({
               type="button"
               onClick={onOpenProModal}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border ${
-                isPro
+                activeIsPro
                   ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : freeTailorCredits > 0
                   ? "bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/50 dark:hover:bg-purple-900/50 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800"
                   : "bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800"
               }`}
               title={
-                isPro
+                activeIsPro
                   ? "OfferCraft Pro is Active — Unlimited AI Tailors"
                   : freeTailorCredits > 0
                   ? "1 Free Full-Power AI Tailor Available"
                   : "Free Trial Used — Upgrade for Unlimited Tailors"
               }
             >
-              {isPro ? (
+              {activeIsPro ? (
                 <>
                   <Crown className="w-3.5 h-3.5 text-amber-500" />
                   <span>Pro Active</span>
@@ -180,7 +188,7 @@ export function DynamicProgressHeader({
           )}
 
           {/* Pro Upgrade Trigger (Only if not already Pro) */}
-          {onOpenProModal && !isPro && (
+          {onOpenProModal && !activeIsPro && (
             <button
               type="button"
               onClick={onOpenProModal}
