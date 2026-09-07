@@ -88,11 +88,51 @@ function saveStoredUser(user: UserAccount | null) {
   }
 }
 
+const LOCAL_STORAGE_TRIAL_KEY = "offercraft_trial_credits_v1";
+
+interface TrialState {
+  freeTailorCredits: number;
+  tailoredCount: number;
+}
+
+function loadStoredTrial(): TrialState {
+  if (typeof window === "undefined") return { freeTailorCredits: 1, tailoredCount: 0 };
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_TRIAL_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        freeTailorCredits: typeof parsed.freeTailorCredits === "number" ? parsed.freeTailorCredits : 1,
+        tailoredCount: typeof parsed.tailoredCount === "number" ? parsed.tailoredCount : 0,
+      };
+    }
+    return { freeTailorCredits: 1, tailoredCount: 0 };
+  } catch {
+    return { freeTailorCredits: 1, tailoredCount: 0 };
+  }
+}
+
+function saveStoredTrial(trial: TrialState) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LOCAL_STORAGE_TRIAL_KEY, JSON.stringify(trial));
+  } catch {
+    /* ignore */
+  }
+}
+
 interface AppStore {
   profile: ProfileState;
   jd: JDState;
   result: GenerateResult | null;
   isGenerating: boolean;
+
+  // 1-Free-Trial Credit Counter & Pro Feature Gating
+  freeTailorCredits: number;
+  tailoredCount: number;
+  canTailorResume: () => boolean;
+  consumeTailorCredit: () => boolean;
+  resetTrialCredits: () => void;
   error: string | null;
   library: ResumeEntry[];
   selectedResumeId: string | null;
@@ -168,6 +208,8 @@ interface AppStore {
   importWorkspaceJson: (jsonString: string) => boolean;
 }
 
+const initialTrial = loadStoredTrial();
+
 export const useAppStore = create<AppStore>((set, get) => ({
   profile: {
     mode: "resumeText",
@@ -183,6 +225,38 @@ export const useAppStore = create<AppStore>((set, get) => ({
   selectedResumeId: null,
   preferredProvider: "auto",
   selectedTemplate: "tech-standard",
+
+  // 1-Free-Trial Credit Counter & Actions
+  freeTailorCredits: initialTrial.freeTailorCredits,
+  tailoredCount: initialTrial.tailoredCount,
+
+  canTailorResume: () => {
+    const { isPro, freeTailorCredits } = get();
+    return isPro || freeTailorCredits > 0;
+  },
+
+  consumeTailorCredit: () => {
+    const { isPro, freeTailorCredits, tailoredCount } = get();
+    if (isPro) {
+      const nextCount = tailoredCount + 1;
+      saveStoredTrial({ freeTailorCredits, tailoredCount: nextCount });
+      set({ tailoredCount: nextCount });
+      return true;
+    }
+    if (freeTailorCredits <= 0) {
+      return false;
+    }
+    const nextCredits = Math.max(0, freeTailorCredits - 1);
+    const nextCount = tailoredCount + 1;
+    saveStoredTrial({ freeTailorCredits: nextCredits, tailoredCount: nextCount });
+    set({ freeTailorCredits: nextCredits, tailoredCount: nextCount });
+    return true;
+  },
+
+  resetTrialCredits: () => {
+    saveStoredTrial({ freeTailorCredits: 1, tailoredCount: 0 });
+    set({ freeTailorCredits: 1, tailoredCount: 0 });
+  },
   editableLatex: "",
 
   applications: [],

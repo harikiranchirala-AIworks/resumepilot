@@ -20,9 +20,10 @@ type ViewMode = "interactive" | "pdf-latex";
 
 interface ResumeTabProps {
   onBack: () => void;
+  onOpenProModal?: () => void;
 }
 
-export function ResumeTab({ onBack }: ResumeTabProps) {
+export function ResumeTab({ onBack, onOpenProModal }: ResumeTabProps) {
   const {
     profile,
     jd,
@@ -33,6 +34,9 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
     result,
     isGenerating,
     error,
+    isPro,
+    canTailorResume,
+    consumeTailorCredit,
     setResult,
     setIsGenerating,
     setError,
@@ -46,6 +50,13 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
 
   const handleGenerate = useCallback(async () => {
     if (!canGenerate(profile, jd, library, selectedResumeId)) return;
+
+    // Feature gating check: Free Trial credit exhaustion
+    if (!canTailorResume()) {
+      onOpenProModal?.();
+      setError("You've used your 1 free tailored resume! Upgrade to OfferCraft Pro to tailor unlimited applications.");
+      return;
+    }
 
     setIsGenerating(true);
     setError(null);
@@ -80,6 +91,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
       }
 
       setResult(data as GenerateResult);
+      consumeTailorCredit();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -94,6 +106,9 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
     selectedResumeId,
     preferredProvider,
     selectedTemplate,
+    canTailorResume,
+    consumeTailorCredit,
+    onOpenProModal,
     setResult,
     setIsGenerating,
     setError,
@@ -196,6 +211,33 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
         <p className="text-xs sm:text-sm text-rose-900 bg-rose-50 border border-rose-300 rounded-xl p-3.5 font-semibold">
           {error}
         </p>
+      )}
+
+      {/* 1st Free Trial Celebratory Notice */}
+      {!isPro && result && (
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-cyan-950/40 border border-emerald-300 dark:border-emerald-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xl">🎉</span>
+            <div>
+              <div className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
+                Your 1st Free AI-Tailored Resume is Ready!
+              </div>
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">
+                Review your Google XYZ bullet improvements below and download your tailored PDF. Upgrade to Pro when you are ready to tailor unlimited jobs!
+              </p>
+            </div>
+          </div>
+          {onOpenProModal && (
+            <button
+              type="button"
+              onClick={onOpenProModal}
+              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 transition-all shadow-xs cursor-pointer flex items-center gap-1"
+            >
+              <span>Unlock Unlimited ($19/mo)</span>
+              <span>→</span>
+            </button>
+          )}
+        </div>
       )}
 
       {/* Main Suite Tabs Bar */}

@@ -1,10 +1,71 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check, Sparkles, UserCheck, Search, Tag } from "lucide-react";
+import { Copy, Check, Sparkles, UserCheck, Search, Tag, Send, Mail, Users } from "lucide-react";
+import { useAppStore } from "@/lib/store";
 
 export function LinkedInOptimizerTab() {
+  const { user, jd } = useAppStore();
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+
+  // Extract company & role name if available from JD
+  const roleMatch = jd.jobDescription.match(/(?:Job Title|Role|Position):\s*([^\n\r]+)/i);
+  const companyMatch = jd.jobDescription.match(/(?:Company|Organization):\s*([^\n\r]+)/i);
+
+  const targetRole = roleMatch ? roleMatch[1].trim() : (user?.targetRole || "Senior AI & Cloud Engineer");
+  const targetCompany = companyMatch ? companyMatch[1].trim() : "your team";
+  const candidateName = user?.name || "Candidate";
+
+  const outreachDMs = [
+    {
+      id: "dm-hiring-manager",
+      title: "Direct Hiring Manager DM (Value-First Hook)",
+      target: "For Engineering / Product / Program Directors",
+      icon: Send,
+      text: `Hi [Hiring Manager],
+
+I came across your opening for the ${targetRole} role at ${targetCompany}.
+
+Given your team's focus on scaling modern cloud architectures and Generative AI delivery, I recently engineered an event-driven platform handling 50M+ daily transactions while cutting cloud spend by 40%.
+
+I've submitted my tailored application, but wanted to reach out directly to share a few quick ideas on how I can accelerate your upcoming roadmap. Would 10 minutes next Tuesday or Wednesday work for a brief introductory chat?
+
+Best regards,
+${candidateName}`,
+    },
+    {
+      id: "dm-recruiter",
+      title: "Talent Acquisition / Recruiter DM (ATS Fast-Track)",
+      target: "For In-house Recruiters & Talent Partners",
+      icon: Mail,
+      text: `Hi [Recruiter Name],
+
+I just submitted my formal application for the ${targetRole} position at ${targetCompany}.
+
+My background is an 88%+ direct match with your posted requirements—specifically leading cross-functional squads in cloud migration, LLM integration pipelines, and agile delivery.
+
+I know your inbox is swamped with applicants, so I wanted to express my strong enthusiasm for ${targetCompany}'s mission directly. If you have 5 minutes this week, I'd welcome the opportunity to connect!
+
+Warm regards,
+${candidateName}`,
+    },
+    {
+      id: "dm-peer",
+      title: "Team Peer / Alumni Coffee Chat (Warm Cultural Outreach)",
+      target: "For Future Team Peers & School / Company Alumni",
+      icon: Users,
+      text: `Hi [Name],
+
+I noticed you're working as a [Role/Title] at ${targetCompany}—the recent work your group has shipped is really impressive!
+
+I'm currently in the application process for the ${targetRole} role and would love to ask 2 quick questions about the day-to-day culture and engineering practices over a virtual coffee.
+
+Totally understand if you're swamped, but wanted to say hello and connect!
+
+Best,
+${candidateName}`,
+    },
+  ];
 
   const headLines = [
     `Senior Full Stack & Cloud Architect | AWS, Microservices, Node.js & Generative AI Systems`,
@@ -134,6 +195,74 @@ export function LinkedInOptimizerTab() {
               <Sparkles className="w-3 h-3 text-amber-500" /> #{sk}
             </span>
           ))}
+        </div>
+      </div>
+
+      {/* 4. High-Conversion Recruiter & Hiring Manager Cold Outreach DMs */}
+      <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <div>
+            <h4 className="text-xs font-black uppercase text-slate-900 dark:text-slate-100 tracking-wider flex items-center gap-1.5">
+              <Send className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+              <span>📬 1-Click Cold Outreach DMs (Hiring Manager, Recruiter & Peer)</span>
+            </h4>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              Targeted LinkedIn & Email messages tailored for <strong className="text-slate-700 dark:text-slate-300">{targetRole}</strong> at <strong className="text-slate-700 dark:text-slate-300">{targetCompany}</strong>.
+            </p>
+          </div>
+          <span className="text-[10px] font-black uppercase bg-cyan-100 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-300 dark:border-cyan-800 self-start sm:self-auto">
+            High Response Rate
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3.5">
+          {outreachDMs.map((dm) => {
+            const Icon = dm.icon;
+            return (
+              <div
+                key={dm.id}
+                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-cyan-400/50 transition-all space-y-3 shadow-2xs"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 flex items-center justify-center shrink-0">
+                      <Icon className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                        {dm.title}
+                      </h5>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
+                        {dm.target}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(dm.text, dm.id)}
+                    className="btn-primary text-xs py-1 px-3 font-bold flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
+                  >
+                    {copiedSection === dm.id ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-300" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy DM</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <pre className="text-xs font-sans whitespace-pre-wrap leading-relaxed text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 select-all">
+                  {dm.text}
+                </pre>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

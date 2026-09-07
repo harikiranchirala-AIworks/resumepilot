@@ -24,7 +24,7 @@ export function DynamicProgressHeader({
   onOpenUserProfile,
   onOpenTour,
 }: DynamicProgressHeaderProps) {
-  const { jd, profile, result, isPro, user } = useAppStore();
+  const { jd, profile, result, isPro, user, freeTailorCredits } = useAppStore();
 
   const hasJd = jd.jobDescription.trim().length > 30;
   const hasProfile = profile.resumeText.trim().length > 30;
@@ -140,20 +140,55 @@ export function DynamicProgressHeader({
           {/* Theme Toggle (Dark / Light) */}
           <ThemeToggle />
 
-          {/* Pro Upgrade Trigger */}
+          {/* Trial / Pro Credit Status Pill */}
           {onOpenProModal && (
             <button
               type="button"
               onClick={onOpenProModal}
-              className={`px-3 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border ${
                 isPro
-                  ? "bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800"
-                  : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs shadow-amber-200 dark:shadow-none"
+                  ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
+                  : freeTailorCredits > 0
+                  ? "bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/50 dark:hover:bg-purple-900/50 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800"
+                  : "bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800"
               }`}
+              title={
+                isPro
+                  ? "OfferCraft Pro is Active — Unlimited AI Tailors"
+                  : freeTailorCredits > 0
+                  ? "1 Free Full-Power AI Tailor Available"
+                  : "Free Trial Used — Upgrade for Unlimited Tailors"
+              }
+            >
+              {isPro ? (
+                <>
+                  <Crown className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Pro Active</span>
+                </>
+              ) : freeTailorCredits > 0 ? (
+                <>
+                  <span className="text-xs">🎁</span>
+                  <span>1 Free Tailor</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-xs">🔒</span>
+                  <span>0 Credits (Upgrade)</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Pro Upgrade Trigger (Only if not already Pro) */}
+          {onOpenProModal && !isPro && (
+            <button
+              type="button"
+              onClick={onOpenProModal}
+              className="px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-xs shadow-amber-200 dark:shadow-none"
               title="View Pro Membership & Pricing"
             >
               <Crown className="w-3.5 h-3.5 text-amber-300" />
-              <span>{isPro ? "Pro Active" : "Upgrade"}</span>
+              <span>Upgrade</span>
             </button>
           )}
         </div>

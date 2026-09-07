@@ -128,7 +128,10 @@ export default function Home() {
         {/* Active Module Canvas */}
         <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 space-y-6">
           {currentScreen === "studio" && (
-            <ResumeTab onBack={() => setCurrentScreen("profile")} />
+            <ResumeTab
+              onBack={() => setCurrentScreen("profile")}
+              onOpenProModal={() => setShowProModal(true)}
+            />
           )}
 
           {currentScreen === "jd" && (

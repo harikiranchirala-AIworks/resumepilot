@@ -22,7 +22,7 @@ interface ProUpgradeModalProps {
 }
 
 export function ProUpgradeModal({ isOpen, onClose }: ProUpgradeModalProps) {
-  const { isPro, proPlan, setProPlan } = useAppStore();
+  const { isPro, proPlan, setProPlan, freeTailorCredits, tailoredCount } = useAppStore();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
   const [isUpgrading, setIsUpgrading] = useState(false);
   const [successPlan, setSuccessPlan] = useState<string | null>(null);
@@ -92,6 +92,23 @@ export function ProUpgradeModal({ isOpen, onClose }: ProUpgradeModalProps) {
             <span>30-Day Money-Back Guarantee</span>
             <span>&bull;</span>
             <span>Cancel Anytime in 1-Click</span>
+          </div>
+
+          {/* Free Trial Status Notice */}
+          <div className="mt-4 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-indigo-100">
+              <span className="text-base">{freeTailorCredits > 0 ? "🎁" : "🔒"}</span>
+              <span className="font-medium">
+                {isPro
+                  ? "You have OfferCraft Pro Active with Unlimited AI Tailors!"
+                  : freeTailorCredits > 0
+                  ? "You have 1 Free Full-Power AI Tailor available. Upgrade below to unlock unlimited applications."
+                  : `You have used your 1 Free AI Tailoring trial (${tailoredCount} resume tailored). Unlock unlimited applications below:`}
+              </span>
+            </div>
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-900 font-black text-[10px] uppercase shrink-0">
+              {isPro ? "Pro Active" : freeTailorCredits > 0 ? "1 Credit Left" : "Trial Used"}
+            </span>
           </div>
         </div>
 
