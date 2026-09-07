@@ -11,8 +11,9 @@ import { CoverLetterTab } from "./CoverLetterTab";
 import { InterviewPrepTab } from "./InterviewPrepTab";
 import { BulletPointRewriter } from "./BulletPointRewriter";
 import { LinkedInOptimizerTab } from "./LinkedInOptimizerTab";
+import { ApplicationBundleModal } from "./ApplicationBundleModal";
 import type { GenerateResult } from "@/lib/types";
-import { Zap, CheckCircle2, AlertTriangle, Sparkles, RefreshCw, FileText, LayoutGrid } from "lucide-react";
+import { Zap, CheckCircle2, AlertTriangle, Sparkles, RefreshCw, FileText, LayoutGrid, FolderArchive } from "lucide-react";
 
 type ResultSubTab = "resume" | "diff" | "cover-letter" | "interview-prep" | "bullet-optimizer" | "linkedin-optimizer";
 type ViewMode = "interactive" | "pdf-latex";
@@ -41,6 +42,7 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("interactive");
   const [generationStep, setGenerationStep] = useState<string>("Analyzing Job Description...");
   const [fixingAction, setFixingAction] = useState<string | null>(null);
+  const [showBundleModal, setShowBundleModal] = useState(false);
 
   const handleGenerate = useCallback(async () => {
     if (!canGenerate(profile, jd, library, selectedResumeId)) return;
@@ -153,6 +155,16 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
               ← Back to Profile
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => setShowBundleModal(true)}
+            className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-md shadow-emerald-200 flex items-center gap-2 transition-all cursor-pointer"
+            title="Download complete 6-file application bundle (Word, ATS text, Cover Letter, STAR prep & InMails in ZIP)"
+          >
+            <FolderArchive className="w-4 h-4 text-emerald-200" />
+            <span>🎁 Application Packet (.zip)</span>
+          </button>
 
           <button
             type="button"
@@ -472,6 +484,12 @@ export function ResumeTab({ onBack }: ResumeTabProps) {
 
       {/* Sub-tab 6: Bullet Point Optimizer */}
       {activeSubTab === "bullet-optimizer" && <BulletPointRewriter />}
+
+      {/* 1-Click Application Packet Bundle Modal */}
+      <ApplicationBundleModal
+        isOpen={showBundleModal}
+        onClose={() => setShowBundleModal(false)}
+      />
     </div>
   );
 }
