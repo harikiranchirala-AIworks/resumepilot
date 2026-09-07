@@ -32,6 +32,7 @@ interface AppSidebarProps {
   onOpenBulletBank: () => void;
   onOpenUserProfile: () => void;
   onOpenBackup: () => void;
+  onOpenCopilot?: () => void;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
@@ -42,6 +43,7 @@ export function AppSidebar({
   onOpenBulletBank,
   onOpenUserProfile,
   onOpenBackup,
+  onOpenCopilot,
   isMobileOpen = false,
   onCloseMobile,
 }: AppSidebarProps) {
@@ -239,8 +241,28 @@ export function AppSidebar({
           })}
         </div>
 
-        {/* 3. Bottom Section: Live ATS Readiness Dial & Quick Tools */}
+        {/* 3. Bottom Section: AI Copilot & Live ATS Readiness Dial */}
         <div className="p-3.5 border-t border-slate-100 space-y-3 bg-slate-50/50">
+          {/* AI Career Copilot Fast Trigger */}
+          {onOpenCopilot && (
+            <button
+              type="button"
+              onClick={() => {
+                onOpenCopilot();
+                onCloseMobile?.();
+              }}
+              className="w-full p-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 hover:from-indigo-700 hover:to-black text-white font-bold text-xs shadow-md shadow-indigo-200 transition-all flex items-center justify-between group cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                <span className="tracking-wide">AI Career Copilot</span>
+              </div>
+              <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-md text-white font-bold">
+                Chat 💬
+              </span>
+            </button>
+          )}
+
           {/* Live Radial Gauge Mini Card */}
           <div className="p-3 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2.5">
             <div className="flex items-center justify-between">

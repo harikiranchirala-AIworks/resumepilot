@@ -13,6 +13,8 @@ import { WorkspaceBackupModal } from "@/components/WorkspaceBackupModal";
 import { UserProfileModal } from "@/components/UserProfileModal";
 import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
+import { CareerCopilotDrawer } from "@/components/CareerCopilotDrawer";
+import { Sparkles } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
 const DEMO_RESUME = `Alex Morgan
@@ -63,6 +65,7 @@ export default function Home() {
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const [showCopilotDrawer, setShowCopilotDrawer] = useState(false);
   const { jd, profile, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
   // Populate default demo data on first load so users immediately see the Enhancv/ResumeWorded split-screen UI
@@ -95,6 +98,7 @@ export default function Home() {
         onOpenBulletBank={() => setShowBulletBankModal(true)}
         onOpenUserProfile={() => setShowUserProfileModal(true)}
         onOpenBackup={() => setShowBackupModal(true)}
+        onOpenCopilot={() => setShowCopilotDrawer(true)}
         isMobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
@@ -169,6 +173,30 @@ export default function Home() {
         isOpen={showBulletBankModal}
         onClose={() => setShowBulletBankModal(false)}
         jdText={jd.jobDescription}
+      />
+
+      {/* Floating AI Career Copilot Launcher */}
+      <button
+        type="button"
+        onClick={() => setShowCopilotDrawer(true)}
+        className="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 text-white font-black text-sm shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer border border-indigo-400/30 group no-print"
+        title="Open AI Career Copilot Chat"
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
+        <span>AI Career Copilot</span>
+        <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-indigo-100">
+          Coach
+        </span>
+      </button>
+
+      {/* Slide-out AI Career Copilot Drawer */}
+      <CareerCopilotDrawer
+        isOpen={showCopilotDrawer}
+        onClose={() => setShowCopilotDrawer(false)}
       />
     </div>
   );
