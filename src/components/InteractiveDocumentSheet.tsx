@@ -16,6 +16,7 @@ import {
   Edit3,
 } from "lucide-react";
 import { exportResumeToWord, exportResumeToTxt, ResumeExportData } from "@/lib/exportDocx";
+import { useAppStore } from "@/lib/store";
 
 export type BulletCategory = "quantified" | "needs-metric" | "matched-keyword" | "passive";
 
@@ -109,16 +110,18 @@ export function InteractiveDocumentSheet({
   initialBullets,
   missingKeywords = ["GraphQL", "Docker", "Event-Driven"],
   onBulletChange,
-  headerName = "ALEX MORGAN",
-  headerTitle = "Senior Full Stack & Cloud Solutions Engineer",
+  headerName,
+  headerTitle,
 }: InteractiveDocumentSheetProps) {
-  // Document state (editable WYSIWYG)
-  const [name, setName] = useState(headerName);
-  const [title, setTitle] = useState(headerTitle);
-  const [email, setEmail] = useState("alex.morgan@example.com");
-  const [phone, setPhone] = useState("(555) 019-2834");
-  const [location, setLocation] = useState("San Francisco, CA");
-  const [linkedin, setLinkedin] = useState("linkedin.com/in/alexmorgan");
+  const { user } = useAppStore();
+
+  // Document state (editable WYSIWYG) - dynamically binds to authenticated user
+  const [name, setName] = useState(headerName || user?.name || "Candidate Name");
+  const [title, setTitle] = useState(headerTitle || user?.targetRole || "Technology Specialist");
+  const [email, setEmail] = useState(user?.email || "candidate@example.com");
+  const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
+  const [linkedin, setLinkedin] = useState("");
   const [summary, setSummary] = useState(INITIAL_SUMMARY);
 
   const [role, setRole] = useState("Lead Cloud Systems Architect");
@@ -199,12 +202,12 @@ export function InteractiveDocumentSheet({
 
   // Handle Reset AI Draft
   const handleResetDraft = () => {
-    setName(headerName);
-    setTitle(headerTitle);
-    setEmail("alex.morgan@example.com");
-    setPhone("(555) 019-2834");
-    setLocation("San Francisco, CA");
-    setLinkedin("linkedin.com/in/alexmorgan");
+    setName(headerName || user?.name || "Candidate Name");
+    setTitle(headerTitle || user?.targetRole || "Technology Specialist");
+    setEmail(user?.email || "candidate@example.com");
+    setPhone("");
+    setLocation("");
+    setLinkedin("");
     setSummary(INITIAL_SUMMARY);
     setRole("Lead Cloud Systems Architect");
     setCompany("TechCorp Solutions Inc.");

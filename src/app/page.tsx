@@ -131,6 +131,8 @@ export default function Home() {
             <ResumeTab
               onBack={() => setCurrentScreen("profile")}
               onOpenProModal={() => setShowProModal(true)}
+              onNavigateScreen={(screen) => setCurrentScreen(screen)}
+              onRunDemo={handleRunDemo}
             />
           )}
 

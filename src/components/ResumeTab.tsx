@@ -13,7 +13,7 @@ import { BulletPointRewriter } from "./BulletPointRewriter";
 import { LinkedInOptimizerTab } from "./LinkedInOptimizerTab";
 import { ApplicationBundleModal } from "./ApplicationBundleModal";
 import type { GenerateResult } from "@/lib/types";
-import { Zap, CheckCircle2, AlertTriangle, Sparkles, RefreshCw, FileText, LayoutGrid, FolderArchive } from "lucide-react";
+import { Zap, CheckCircle2, AlertTriangle, Sparkles, RefreshCw, FileText, LayoutGrid, FolderArchive, Target, ArrowRight } from "lucide-react";
 
 type ResultSubTab = "resume" | "diff" | "cover-letter" | "interview-prep" | "bullet-optimizer" | "linkedin-optimizer";
 type ViewMode = "interactive" | "pdf-latex";
@@ -21,9 +21,16 @@ type ViewMode = "interactive" | "pdf-latex";
 interface ResumeTabProps {
   onBack: () => void;
   onOpenProModal?: () => void;
+  onNavigateScreen?: (screen: "jd" | "profile" | "studio" | "learning-hub") => void;
+  onRunDemo?: () => void;
 }
 
-export function ResumeTab({ onBack, onOpenProModal }: ResumeTabProps) {
+export function ResumeTab({
+  onBack,
+  onOpenProModal,
+  onNavigateScreen,
+  onRunDemo,
+}: ResumeTabProps) {
   const {
     profile,
     jd,
@@ -47,6 +54,10 @@ export function ResumeTab({ onBack, onOpenProModal }: ResumeTabProps) {
   const [generationStep, setGenerationStep] = useState<string>("Analyzing Job Description...");
   const [fixingAction, setFixingAction] = useState<string | null>(null);
   const [showBundleModal, setShowBundleModal] = useState(false);
+
+  const hasJd = jd.jobDescription.trim().length > 30;
+  const hasProfile = profile.resumeText.trim().length > 30;
+  const showEmptyStarter = !result && (!hasJd || !hasProfile);
 
   const handleGenerate = useCallback(async () => {
     if (!canGenerate(profile, jd, library, selectedResumeId)) return;
@@ -201,17 +212,143 @@ export function ResumeTab({ onBack, onOpenProModal }: ResumeTabProps) {
         </div>
       </div>
 
-      {!ready && (
-        <p className="text-xs sm:text-sm text-amber-900 bg-amber-50 border border-amber-300 rounded-xl p-3.5 font-semibold">
-          ⚠️ Please provide Candidate Profile and Job Description to enable full tailoring. You can preview demo mode below!
-        </p>
-      )}
-
       {error && (
         <p className="text-xs sm:text-sm text-rose-900 bg-rose-50 border border-rose-300 rounded-xl p-3.5 font-semibold">
           {error}
         </p>
       )}
+
+      {showEmptyStarter ? (
+        /* Resumatic-Inspired Clean Modern Workspace Starter Hub */
+        <div className="space-y-8 py-2 animate-fadeIn">
+          {/* Hero Banner */}
+          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-white via-slate-50/50 to-white dark:from-slate-900 dark:via-slate-850 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 text-center space-y-4 shadow-sm relative overflow-hidden">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 text-xs font-bold tracking-wide">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>AI Resume Intelligence & Tailoring Suite</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white max-w-2xl mx-auto leading-tight">
+              Transform Your Resume for Any Target Job in Seconds
+            </h1>
+
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium leading-relaxed">
+              Match target ATS keywords, auto-quantify bullet points with Google&apos;s XYZ formula, and pass hiring manager screening with confidence.
+            </p>
+
+            {/* Fast 1-Click Demo Trigger Pill */}
+            {onRunDemo && (
+              <div className="pt-2 flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={onRunDemo}
+                  className="px-4 py-2 rounded-2xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/40 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-800 font-bold text-xs flex items-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-95"
+                >
+                  <Zap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  <span>⚡ Want to explore first? Click to load sample demo case</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 3-Step Resumatic Action Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Card 1: Target Role & JD */}
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-cyan-600 transition-all shadow-xs hover:shadow-md flex flex-col justify-between space-y-4 group">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-300 flex items-center justify-center font-black text-lg border border-cyan-200 dark:border-cyan-800">
+                  <Target className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                      Target Role & JD
+                    </h3>
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${hasJd ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
+                      {hasJd ? "✓ Analyzed" : "Step 1"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
+                    Paste any job posting text or URL. OfferCraft extracts mission-critical ATS keywords and role fit.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onNavigateScreen?.("jd")}
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-cyan-600 hover:text-white dark:bg-slate-800 dark:hover:bg-cyan-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>{hasJd ? "Edit Job Description" : "Paste Target JD"}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Card 2: Candidate Profile */}
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-purple-400 dark:hover:border-purple-600 transition-all shadow-xs hover:shadow-md flex flex-col justify-between space-y-4 group">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 flex items-center justify-center font-black text-lg border border-purple-200 dark:border-purple-800">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                      Candidate Profile
+                    </h3>
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${hasProfile ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
+                      {hasProfile ? "✓ Loaded" : "Step 2"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
+                    Paste your current resume or experience history. This serves as your master source of truth.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onNavigateScreen ? onNavigateScreen("profile") : onBack()}
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-purple-600 hover:text-white dark:bg-slate-800 dark:hover:bg-purple-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>{hasProfile ? "View Profile Bank" : "Upload or Paste Resume"}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Card 3: OfferCraft Academy */}
+            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-600 transition-all shadow-xs hover:shadow-md flex flex-col justify-between space-y-4 group">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-black text-lg border border-emerald-200 dark:border-emerald-800">
+                  <LayoutGrid className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                      OfferCraft Academy
+                    </h3>
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                      Real AI
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
+                    12 real-world AI engineering curriculum modules, Leitner flashcards, and RAG playground to ace tech screens.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onNavigateScreen?.("learning-hub")}
+                className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white dark:bg-slate-800 dark:hover:bg-emerald-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Launch Academy</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
 
       {/* 1st Free Trial Celebratory Notice */}
       {!isPro && result && (
@@ -526,6 +663,8 @@ export function ResumeTab({ onBack, onOpenProModal }: ResumeTabProps) {
 
       {/* Sub-tab 6: Bullet Point Optimizer */}
       {activeSubTab === "bullet-optimizer" && <BulletPointRewriter />}
+        </>
+      )}
 
       {/* 1-Click Application Packet Bundle Modal */}
       <ApplicationBundleModal
