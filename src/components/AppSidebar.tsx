@@ -33,6 +33,7 @@ interface AppSidebarProps {
   onSelectScreen: (screen: NavScreenId) => void;
   onOpenBulletBank: () => void;
   onOpenUserProfile: () => void;
+  onOpenGoogleAuth?: () => void;
   onOpenBackup: () => void;
   onOpenCopilot?: () => void;
   onOpenProModal?: () => void;
@@ -45,13 +46,14 @@ export function AppSidebar({
   onSelectScreen,
   onOpenBulletBank,
   onOpenUserProfile,
+  onOpenGoogleAuth,
   onOpenBackup,
   onOpenCopilot,
   onOpenProModal,
   isMobileOpen = false,
   onCloseMobile,
 }: AppSidebarProps) {
-  const { jd, result, isPro, proPlan } = useAppStore();
+  const { jd, result, isPro, proPlan, user } = useAppStore();
 
   const navItems = [
     {
@@ -171,30 +173,72 @@ export function AppSidebar({
           </div>
 
           {/* Candidate Persona Card with Google Cloud Sync */}
-          <div
-            onClick={onOpenUserProfile}
-            className="p-3.5 rounded-2xl bg-gradient-to-r from-cyan-50/80 via-slate-50 to-teal-50/60 dark:from-slate-800/80 dark:via-slate-900/60 dark:to-cyan-950/30 border border-cyan-100/80 dark:border-cyan-900/40 hover:border-cyan-300 dark:hover:border-cyan-700 transition-all cursor-pointer group shadow-2xs"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                  AM
-                </div>
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                      Alex Morgan
-                    </span>
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+          {user ? (
+            <div
+              onClick={onOpenUserProfile}
+              className="p-3.5 rounded-2xl bg-gradient-to-r from-cyan-50/80 via-slate-50 to-teal-50/60 dark:from-slate-800/80 dark:via-slate-900/60 dark:to-cyan-950/30 border border-cyan-100/80 dark:border-cyan-900/40 hover:border-cyan-300 dark:hover:border-cyan-700 transition-all cursor-pointer group shadow-2xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-9 h-9 rounded-xl object-cover border border-cyan-500/30 shadow-2xs shrink-0"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
+                      {user.name.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
+                        {user.name}
+                      </span>
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[130px]">
+                        {user.targetRole || "Google Synced"}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[140px]">
-                    Cloud & Full Stack Lead
-                  </p>
                 </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors shrink-0" />
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />
             </div>
-          </div>
+          ) : (
+            <div
+              onClick={() => (onOpenGoogleAuth ? onOpenGoogleAuth() : onOpenUserProfile())}
+              className="p-3 rounded-2xl bg-gradient-to-r from-slate-50 via-cyan-50/50 to-teal-50/40 dark:from-slate-800/90 dark:via-slate-900 dark:to-cyan-950/30 border border-dashed border-cyan-300 dark:border-cyan-800 hover:border-cyan-500 dark:hover:border-cyan-600 transition-all cursor-pointer group shadow-2xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 shadow-2xs">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" />
+                      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" />
+                      <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z" />
+                      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="text-xs font-black text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 block transition-colors">
+                      Google Cloud Sync
+                    </span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block">
+                      Sign In / Register to sync
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-cyan-600 text-white shrink-0 shadow-2xs group-hover:bg-cyan-500 transition-colors">
+                  Sign In
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Pro Membership Banner */}
           {onOpenProModal && (

@@ -15,6 +15,7 @@ import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { CareerCopilotDrawer } from "@/components/CareerCopilotDrawer";
 import { ProUpgradeModal } from "@/components/ProUpgradeModal";
+import { GoogleAuthModal } from "@/components/GoogleAuthModal";
 import { Sparkles } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 
@@ -66,6 +67,7 @@ export default function Home() {
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const [showGoogleAuthModal, setShowGoogleAuthModal] = useState(false);
   const [showCopilotDrawer, setShowCopilotDrawer] = useState(false);
   const [showProModal, setShowProModal] = useState(false);
   const { jd, profile, setProfileMode, setResumeText, setJobDescription } = useAppStore();
@@ -99,6 +101,7 @@ export default function Home() {
         }}
         onOpenBulletBank={() => setShowBulletBankModal(true)}
         onOpenUserProfile={() => setShowUserProfileModal(true)}
+        onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
         onOpenBackup={() => setShowBackupModal(true)}
         onOpenCopilot={() => setShowCopilotDrawer(true)}
         onOpenProModal={() => setShowProModal(true)}
@@ -114,6 +117,8 @@ export default function Home() {
           activeScreenTitle={SCREEN_TITLES[currentScreen]}
           onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
           onOpenProModal={() => setShowProModal(true)}
+          onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
+          onOpenUserProfile={() => setShowUserProfileModal(true)}
         />
 
         {/* Active Module Canvas */}
@@ -171,6 +176,12 @@ export default function Home() {
       <UserProfileModal
         isOpen={showUserProfileModal}
         onClose={() => setShowUserProfileModal(false)}
+        onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
+      />
+
+      <GoogleAuthModal
+        isOpen={showGoogleAuthModal}
+        onClose={() => setShowGoogleAuthModal(false)}
       />
 
       <BulletBankModal
@@ -183,16 +194,16 @@ export default function Home() {
       <button
         type="button"
         onClick={() => setShowCopilotDrawer(true)}
-        className="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 text-white font-black text-sm shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer border border-indigo-400/30 group no-print"
+        className="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-600 via-teal-600 to-slate-900 text-white font-black text-sm shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer border border-cyan-400/30 group no-print"
         title="Open AI Career Copilot Chat"
       >
         <span className="relative flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
         </span>
-        <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
+        <Sparkles className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
         <span>AI Career Copilot</span>
-        <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-indigo-100">
+        <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-cyan-100">
           Coach
         </span>
       </button>

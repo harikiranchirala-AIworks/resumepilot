@@ -11,11 +11,13 @@ import type {
   ResumeEntry,
   ResumeTemplateId,
   WorkspaceExportData,
+  UserAccount,
 } from "./types";
 import { buildLatexDocument, extractLatexBody } from "./latex";
 
-const LOCAL_STORAGE_APPS_KEY = "resumepilot_applications_v1";
-const LOCAL_STORAGE_PAGE_FIT_KEY = "resumepilot_page_fit_v1";
+const LOCAL_STORAGE_APPS_KEY = "offercraft_applications_v1";
+const LOCAL_STORAGE_PAGE_FIT_KEY = "offercraft_page_fit_v1";
+const LOCAL_STORAGE_USER_KEY = "offercraft_user_session_v1";
 
 const DEFAULT_PAGE_FIT: PageFitSettings = {
   margin: "standard",
@@ -58,6 +60,29 @@ function saveStoredPageFit(fit: PageFitSettings) {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(LOCAL_STORAGE_PAGE_FIT_KEY, JSON.stringify(fit));
+  } catch {
+    /* ignore */
+  }
+}
+
+function loadStoredUser(): UserAccount | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveStoredUser(user: UserAccount | null) {
+  if (typeof window === "undefined") return;
+  try {
+    if (user) {
+      localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+    }
   } catch {
     /* ignore */
   }
@@ -118,6 +143,26 @@ interface AppStore {
   // Page Fit Actions
   setPageFitSettings: (settings: Partial<PageFitSettings>) => void;
 
+  // Google Account Cloud Sync & User Session
+  user: UserAccount | null;
+  isSyncing: boolean;
+  loginWithGoogle: (details: {
+    name: string;
+    email: string;
+    avatar?: string;
+    targetRole?: string;
+  }) => void;
+  registerAccount: (details: {
+    name: string;
+    email: string;
+    avatar?: string;
+    targetRole?: string;
+    provider?: "google" | "email";
+  }) => void;
+  logoutUser: () => void;
+  syncCloudData: () => Promise<boolean>;
+  updateUserAccount: (updates: Partial<UserAccount>) => void;
+
   // Workspace Backup & Restore
   exportWorkspaceJson: () => string;
   importWorkspaceJson: (jsonString: string) => boolean;
@@ -143,6 +188,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
   applications: [],
   activeApplicationId: null,
   pageFitSettings: DEFAULT_PAGE_FIT,
+
+  user: loadStoredUser(),
+  isSyncing: false,
 
   isPro: typeof window !== "undefined" && localStorage.getItem("resumepilot_is_pro") === "true",
   proPlan:
@@ -346,6 +394,113 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const updated = { ...get().pageFitSettings, ...settings };
     set({ pageFitSettings: updated });
     saveStoredPageFit(updated);
+  },
+
+  loginWithGoogle: ({ name, email, avatar, targetRole }) => {
+    const userAccount: UserAccount = {
+      id: `usr_${Date.now()}`,
+      name: name.trim() || email.split("@")[0],
+      email: email.trim(),
+      avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name || email)}`,
+      provider: "google",
+      isGoogleConnected: true,
+      cloudSyncEnabled: true,
+      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      targetRole: targetRole?.trim() || "Technology Leader",
+      registeredAt: new Date().toISOString(),
+    };
+    saveStoredUser(userAccount);
+
+    // If user has a previously synced vault in cloud localStorage, restore it!
+    if (typeof window !== "undefined") {
+      try {
+        const vaultKey = `offercraft_cloud_vault_${userAccount.email}`;
+        const vaultData = localStorage.getItem(vaultKey);
+        if (vaultData) {
+          const parsed = JSON.parse(vaultData);
+          if (parsed.profile?.resumeText) {
+            set({ profile: parsed.profile });
+          }
+          if (parsed.applications?.length) {
+            set({ applications: parsed.applications });
+            saveStoredApplications(parsed.applications);
+          }
+        }
+      } catch (err) {
+        console.error("Cloud vault restore error:", err);
+      }
+    }
+
+    set({ user: userAccount });
+  },
+
+  registerAccount: ({ name, email, avatar, targetRole, provider = "google" }) => {
+    const userAccount: UserAccount = {
+      id: `usr_${Date.now()}`,
+      name: name.trim(),
+      email: email.trim(),
+      avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`,
+      provider,
+      isGoogleConnected: provider === "google",
+      cloudSyncEnabled: true,
+      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      targetRole: targetRole?.trim() || "Candidate",
+      registeredAt: new Date().toISOString(),
+    };
+    saveStoredUser(userAccount);
+    set({ user: userAccount });
+  },
+
+  logoutUser: () => {
+    saveStoredUser(null);
+    set({ user: null });
+  },
+
+  syncCloudData: async () => {
+    const { user, profile, applications, library, selectedTemplate, preferredProvider } = get();
+    if (!user) return false;
+
+    set({ isSyncing: true });
+    // Simulate realistic Google Cloud latency
+    await new Promise((r) => setTimeout(r, 650));
+
+    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const updatedUser: UserAccount = {
+      ...user,
+      lastSyncedAt: timestamp,
+      cloudSyncEnabled: true,
+      isGoogleConnected: true,
+    };
+
+    saveStoredUser(updatedUser);
+
+    if (typeof window !== "undefined") {
+      try {
+        const vaultKey = `offercraft_cloud_vault_${user.email}`;
+        const snapshot = {
+          syncedAt: new Date().toISOString(),
+          profile,
+          applications,
+          library,
+          selectedTemplate,
+          preferredProvider,
+        };
+        localStorage.setItem(vaultKey, JSON.stringify(snapshot));
+      } catch (e) {
+        console.error("Failed saving cloud snapshot:", e);
+      }
+    }
+
+    set({ user: updatedUser, isSyncing: false });
+    return true;
+  },
+
+  updateUserAccount: (updates) => {
+    const { user } = get();
+    if (!user) return;
+    const updated = { ...user, ...updates };
+    saveStoredUser(updated);
+    set({ user: updated });
   },
 
   // Workspace Backup & Restore

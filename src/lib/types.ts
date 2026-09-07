@@ -204,3 +204,17 @@ export interface WorkspaceExportData {
   selectedTemplate: ResumeTemplateId;
   preferredProvider: AIProvider;
 }
+
+export interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  provider: "google" | "email";
+  isGoogleConnected: boolean;
+  cloudSyncEnabled: boolean;
+  lastSyncedAt: string;
+  targetRole: string;
+  registeredAt: string;
+}
+
