@@ -7,10 +7,11 @@ import { JDTab } from "@/components/JDTab";
 import { ResumeTab } from "@/components/ResumeTab";
 import { ApplicationTrackerTab } from "@/components/ApplicationTrackerTab";
 import { WorkspaceBackupModal } from "@/components/WorkspaceBackupModal";
+import { UserProfileModal } from "@/components/UserProfileModal";
 import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { useAppStore } from "@/lib/store";
-import { Sparkles, ArrowRight, PlayCircle, X, Target } from "lucide-react";
+import { Sparkles, ArrowRight, PlayCircle, X, Target, User } from "lucide-react";
 
 const DEMO_RESUME = `Alex Morgan
 alex.morgan@example.com | (555) 234-5678 | San Francisco, CA | linkedin.com/in/alexmorgan
@@ -49,6 +50,7 @@ export default function Home() {
   const [appMode, setAppMode] = useState<"job-match" | "general-audit">("job-match");
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
   const { jd, profile, result, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
@@ -101,7 +103,7 @@ export default function Home() {
                   <h1 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
                     ResumePilot
                     <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      AI v1.4
+                      AI v1.6
                     </span>
                   </h1>
                 </div>
@@ -148,6 +150,16 @@ export default function Home() {
               >
                 <PlayCircle className="w-3.5 h-3.5 text-amber-600 fill-amber-500/20" />
                 <span>⚡ Try Demo Case</span>
+              </button>
+
+              {/* Google Profile Switcher Button */}
+              <button
+                type="button"
+                onClick={() => setShowUserProfileModal(true)}
+                className="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold border border-indigo-200 flex items-center gap-1.5 transition-all shadow-xs active:scale-95"
+              >
+                <User className="w-3.5 h-3.5 text-indigo-600" />
+                <span className="hidden sm:inline">Google Account</span>
               </button>
 
               <button
@@ -282,6 +294,11 @@ export default function Home() {
       <WorkspaceBackupModal
         isOpen={showBackupModal}
         onClose={() => setShowBackupModal(false)}
+      />
+
+      <UserProfileModal
+        isOpen={showUserProfileModal}
+        onClose={() => setShowUserProfileModal(false)}
       />
 
       <BulletBankModal

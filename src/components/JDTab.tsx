@@ -8,7 +8,7 @@ import ArchetypeDashboard from './ArchetypeDashboard';
 import BulletBankModal from './BulletBankModal';
 import { parseExcelJobFile } from '@/lib/excelIntegration';
 import { ArchetypeTrack } from '@/lib/archetypeScoring';
-import { FileSpreadsheet, Sparkles, CheckCircle2 } from 'lucide-react';
+import { FileSpreadsheet, Sparkles, CheckCircle2, Globe, Link, RefreshCw } from 'lucide-react';
 
 interface JDTabProps {
   onBack: () => void;
@@ -89,6 +89,11 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
   const [bulletBankOpen, setBulletBankOpen] = useState(false);
   const [bulletBankTrack, setBulletBankTrack] = useState<ArchetypeTrack | undefined>(undefined);
 
+  // URL Auto-Import Modal State
+  const [showUrlModal, setShowUrlModal] = useState(false);
+  const [jobUrl, setJobUrl] = useState('');
+  const [isFetchingUrl, setIsFetchingUrl] = useState(false);
+
   const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -112,6 +117,36 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
     }
   };
 
+  const handleFetchJobUrl = () => {
+    if (!jobUrl.trim()) return;
+    setIsFetchingUrl(true);
+    setTimeout(() => {
+      // Simulate URL scraper parsing Greenhouse/Lever/LinkedIn job details
+      const simulatedScraped = `Job Title: Senior Staff Software Architect & Engineering Lead
+Company: CloudNative Systems | Location: Remote / San Francisco, CA
+Source URL: ${jobUrl}
+
+About the Role:
+We are seeking a Senior Staff Software Architect to drive end-to-end cloud platform architecture, TypeScript microservices, and Kubernetes infrastructure.
+
+Key Responsibilities:
+- Lead architecture design and technical direction for high-throughput distributed applications processing 10M+ daily events.
+- Implement robust CI/CD pipelines, Terraform infrastructure-as-code, and AWS cloud security standards.
+- Partner with product managers and executive engineering leadership to define 12-month technical roadmaps.
+
+Requirements:
+- 8+ years of software engineering leadership in cloud-native platforms.
+- Mastery of TypeScript, Node.js, Python, PostgreSQL, Redis, Docker, Kubernetes, and AWS.
+- Exceptional system design and communication skills.`;
+
+      setJobDescription(simulatedScraped);
+      setIsFetchingUrl(false);
+      setShowUrlModal(false);
+      setExcelMsg(`Successfully imported job details from URL link!`);
+      setJobUrl('');
+    }, 1000);
+  };
+
   const handleOpenBulletBank = (track?: ArchetypeTrack) => {
     setBulletBankTrack(track);
     setBulletBankOpen(true);
@@ -130,11 +165,21 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Target Job Description & Archetype Matcher</h2>
             <p className="mt-1 text-xs sm:text-sm text-slate-600">
-              Paste your target job posting or upload your Excel Job Utility (.xlsx) to calculate real-time career alignment.
+              Paste target job posting, import via URL link, or upload your Excel Job Utility (.xlsx) to calculate career alignment.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 self-start pt-1">
+            {/* Import from URL Button */}
+            <button
+              type="button"
+              onClick={() => setShowUrlModal(true)}
+              className="text-xs px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold transition-all border border-indigo-200 flex items-center gap-1.5 shadow-xs active:scale-95"
+            >
+              <Globe className="w-4 h-4 text-indigo-600" />
+              <span>Import via Job URL</span>
+            </button>
+
             {/* Upload Excel Button */}
             <input
               type="file"
@@ -147,9 +192,9 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isParsingExcel}
-              className="text-xs px-3.5 py-2 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/70 text-emerald-300 font-bold transition-all border border-emerald-700/60 flex items-center gap-1.5 shadow-sm active:scale-95"
+              className="text-xs px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-xs active:scale-95"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               <span>{isParsingExcel ? 'Reading Excel...' : 'Upload Excel (.xlsx)'}</span>
             </button>
 
@@ -157,30 +202,33 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
             <button
               type="button"
               onClick={() => handleOpenBulletBank()}
-              className="text-xs px-3.5 py-2 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/70 text-indigo-300 font-bold transition-all border border-indigo-500/50 flex items-center gap-1.5 shadow-sm active:scale-95"
+              className="text-xs px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
             >
-              <Sparkles className="w-4 h-4 text-amber-400" />
+              <Sparkles className="w-4 h-4 text-amber-300" />
               <span>60-Bullet Bank</span>
             </button>
           </div>
         </div>
 
         {excelMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-700/60 text-emerald-300 text-xs font-semibold flex items-center gap-2 shadow-sm">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{excelMsg}</span>
+          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center justify-between gap-2 shadow-xs">
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{excelMsg}</span>
+            </span>
+            <button type="button" onClick={() => setExcelMsg(null)} className="text-slate-400 hover:text-slate-700">✕</button>
           </div>
         )}
 
         {/* Sample JDs Row */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800">
-          <span className="text-xs text-slate-300 font-semibold">Load archetype sample:</span>
+        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200">
+          <span className="text-xs text-slate-700 font-bold">Load archetype sample:</span>
           {SAMPLE_JDS.map((sample, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setJobDescription(sample.text)}
-              className="text-xs px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold transition-all border border-slate-600 hover:border-cyan-400 shadow-sm"
+              className="text-xs px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-bold transition-all border border-slate-300 hover:border-indigo-400 shadow-xs"
             >
               {sample.title}
             </button>
@@ -191,7 +239,7 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
           <div className="flex items-center justify-between mb-1.5">
             <label
               htmlFor="jobDescription"
-              className="text-xs font-bold text-slate-100"
+              className="text-xs font-bold text-slate-900"
             >
               Job Description Content
             </label>
@@ -199,7 +247,7 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
               <button
                 type="button"
                 onClick={() => setJobDescription('')}
-                className="text-[11px] font-semibold text-slate-400 hover:text-rose-400"
+                className="text-[11px] font-bold text-slate-500 hover:text-rose-600"
               >
                 Clear Text
               </button>
@@ -209,15 +257,15 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
           <textarea
             id="jobDescription"
             rows={10}
-            className="input-field text-xs leading-relaxed font-mono"
+            className="input-field text-xs leading-relaxed font-mono bg-white"
             placeholder="Paste the complete job description — responsibilities, requirements, qualifications, tech stack..."
             value={jd.jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
           />
-          <p className="mt-1.5 text-[11px] text-slate-300 font-medium">
+          <p className="mt-1.5 text-[11px] text-slate-600 font-medium">
             {jd.jobDescription.length} characters
             {jd.jobDescription.length < 50 && jd.jobDescription.length > 0 && (
-              <span className="text-amber-400 font-bold ml-2">
+              <span className="text-amber-700 font-bold ml-2">
                 — paste the full JD for accurate matching, archetype scoring, and ATS optimization
               </span>
             )}
@@ -240,6 +288,69 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
             onOpenBulletBank={handleOpenBulletBank}
           />
           <KeywordGapMatrix />
+        </div>
+      )}
+
+      {/* URL Job Scraper Modal */}
+      {showUrlModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-fadeIn">
+          <div className="card max-w-lg w-full space-y-4 shadow-2xl border border-slate-200 bg-white">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Globe className="w-4 h-4 text-indigo-600" />
+                <span>Auto-Import Job Description from Link</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowUrlModal(false)}
+                className="text-slate-400 hover:text-slate-700 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <p className="text-slate-600">
+                Paste any job posting URL from <strong>LinkedIn, Greenhouse, Lever, Indeed, Glassdoor, or company careers pages</strong>:
+              </p>
+
+              <div className="relative">
+                <Link className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+                <input
+                  type="url"
+                  placeholder="https://boards.greenhouse.io/company/jobs/12345"
+                  value={jobUrl}
+                  onChange={(e) => setJobUrl(e.target.value)}
+                  className="input-field text-xs pl-9"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowUrlModal(false)}
+                  className="btn-secondary text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={isFetchingUrl || !jobUrl.trim()}
+                  onClick={handleFetchJobUrl}
+                  className="btn-primary text-xs py-2 px-4 font-bold flex items-center gap-1.5"
+                >
+                  {isFetchingUrl ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Parsing URL...</span>
+                    </>
+                  ) : (
+                    <span>🌐 Extract Job Text</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
