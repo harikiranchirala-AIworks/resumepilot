@@ -97,18 +97,21 @@ export default function Home() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center gap-4 animate-pulse">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-600 via-teal-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-cyan-500/20 text-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center gap-5">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center shadow-xl shadow-indigo-500/25 text-white">
             <Sparkles className="w-8 h-8" />
           </div>
           <div className="text-center space-y-1">
-            <div className="text-lg font-black text-slate-800 dark:text-slate-200 tracking-tight">
-              OfferCraft AI
+            <div className="text-lg font-bold text-slate-800 dark:text-slate-200 tracking-tight">
+              OfferCraft <span className="text-indigo-600">AI</span>
             </div>
-            <div className="text-xs font-semibold text-slate-400">
-              Loading your career intelligence workspace...
+            <div className="text-xs font-medium text-slate-400">
+              Loading your career workspace...
             </div>
+          </div>
+          <div className="w-32 h-1 rounded-full bg-slate-100 overflow-hidden">
+            <div className="h-full w-1/2 bg-indigo-500 rounded-full animate-pulse" />
           </div>
         </div>
       </div>
@@ -116,7 +119,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-row relative selection:bg-cyan-500 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-row relative selection:bg-indigo-500 selection:text-white transition-colors duration-200">
       {/* 1. Left Vertical Navigation Sidebar */}
       <AppSidebar
         currentScreen={currentScreen}
@@ -200,8 +203,8 @@ export default function Home() {
           )}
         </main>
 
-        <footer className="text-center text-xs text-slate-500 dark:text-slate-400 font-semibold py-6 border-t border-slate-200 dark:border-slate-800 mt-auto no-print">
-          OfferCraft AI Suite — Craft Your Next Career Move
+        <footer className="text-center text-xs text-slate-400 dark:text-slate-500 font-medium py-5 border-t border-slate-200 dark:border-slate-800 mt-auto no-print">
+          OfferCraft AI &mdash; Craft Your Next Career Move
         </footer>
       </div>
 
@@ -232,18 +235,19 @@ export default function Home() {
       <button
         type="button"
         onClick={() => setShowCopilotDrawer(true)}
-        className="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-600 via-teal-600 to-slate-900 text-white font-black text-sm shadow-xl shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer border border-cyan-400/30 group no-print"
+        className="fixed bottom-6 right-6 z-40 px-4 py-3 rounded-2xl
+          bg-indigo-600 hover:bg-indigo-700 active:scale-95
+          text-white font-semibold text-sm
+          shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/40
+          transition-all flex items-center gap-2.5 cursor-pointer no-print"
         title="Open AI Career Copilot Chat"
       >
-        <span className="relative flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
         </span>
-        <Sparkles className="w-4 h-4 text-cyan-200 group-hover:rotate-12 transition-transform" />
-        <span>AI Career Copilot</span>
-        <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider text-cyan-100">
-          Coach
-        </span>
+        <Sparkles className="w-4 h-4 text-indigo-200" />
+        <span>AI Copilot</span>
       </button>
 
       {/* Slide-out AI Career Copilot Drawer */}
