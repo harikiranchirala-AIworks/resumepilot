@@ -3,8 +3,8 @@
 export type TabId = "profile" | "jd" | "resume" | "tracker";
 
 const TABS: { id: TabId; label: string; step?: number; icon: string }[] = [
-  { id: "profile", label: "Candidate Profile", step: 1, icon: "👤" },
-  { id: "jd", label: "Target JD & Archetypes", step: 2, icon: "🎯" },
+  { id: "jd", label: "Target JD & Archetypes", step: 1, icon: "🎯" },
+  { id: "profile", label: "Candidate Profile", step: 2, icon: "👤" },
   { id: "resume", label: "Tailored Studio", step: 3, icon: "⚡" },
   { id: "tracker", label: "Applications Tracker", icon: "📊" },
 ];

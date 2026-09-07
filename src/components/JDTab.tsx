@@ -123,13 +123,13 @@ export function JDTab({ onBack, onNext }: JDTabProps) {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                Step 2
+              <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
+                Step 1
               </span>
-              <span className="text-xs text-slate-300 font-semibold">Target Role & AI Classification</span>
+              <span className="text-xs text-slate-600 font-semibold">Target Role & AI Classification</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Target Job Description & Archetype Matcher</h2>
-            <p className="mt-1 text-xs sm:text-sm text-slate-300">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Target Job Description & Archetype Matcher</h2>
+            <p className="mt-1 text-xs sm:text-sm text-slate-600">
               Paste your target job posting or upload your Excel Job Utility (.xlsx) to calculate real-time career alignment.
             </p>
           </div>

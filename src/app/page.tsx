@@ -8,8 +8,9 @@ import { ResumeTab } from "@/components/ResumeTab";
 import { ApplicationTrackerTab } from "@/components/ApplicationTrackerTab";
 import { WorkspaceBackupModal } from "@/components/WorkspaceBackupModal";
 import BulletBankModal from "@/components/BulletBankModal";
+import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { useAppStore } from "@/lib/store";
-import { Sparkles, ArrowRight, PlayCircle, X } from "lucide-react";
+import { Sparkles, ArrowRight, PlayCircle, X, Target } from "lucide-react";
 
 const DEMO_RESUME = `Alex Morgan
 alex.morgan@example.com | (555) 234-5678 | San Francisco, CA | linkedin.com/in/alexmorgan
@@ -44,18 +45,41 @@ Requirements:
 - Hands-on experience with GenAI, machine learning adoption, cloud migration, and agile delivery.`;
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabId>("profile");
+  const [activeTab, setActiveTab] = useState<TabId>("jd");
+  const [appMode, setAppMode] = useState<"job-match" | "general-audit">("job-match");
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(true);
-  const { jd, setProfileMode, setResumeText, setJobDescription } = useAppStore();
+  const { jd, profile, result, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
   const handleRunDemo = () => {
+    setAppMode("job-match");
     setProfileMode("resumeText");
     setResumeText(DEMO_RESUME);
     setJobDescription(DEMO_JD);
     setActiveTab("jd");
   };
+
+  // Calculate visual workspace progress
+  const hasJd = jd.jobDescription.trim().length > 30;
+  const hasProfile = profile.resumeText.trim().length > 30;
+  const hasResult = Boolean(result);
+
+  let progressPercent = 0;
+  let progressStepLabel = "Workspace Idle — Paste Job Posting to Begin";
+  if (hasResult) {
+    progressPercent = 100;
+    progressStepLabel = "Step 3 Complete — Tailored Resume, Cover Letter & Interview Kit Ready";
+  } else if (hasProfile && hasJd) {
+    progressPercent = 66;
+    progressStepLabel = "Step 2 Complete — Profile Matched with Target Job Description";
+  } else if (hasJd) {
+    progressPercent = 33;
+    progressStepLabel = "Step 1 Complete — Job Description Analyzed by AI Engine";
+  } else if (hasProfile) {
+    progressPercent = 20;
+    progressStepLabel = "Profile Uploaded — Paste Target Job Posting to Run Match";
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-indigo-600 selection:text-white pb-12">
@@ -77,7 +101,7 @@ export default function Home() {
                   <h1 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 flex items-center gap-1.5">
                     ResumePilot
                     <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-                      AI v1.3
+                      AI v1.4
                     </span>
                   </h1>
                 </div>
@@ -89,6 +113,32 @@ export default function Home() {
 
             {/* Header Action Tools & Demo Bar */}
             <div className="flex items-center gap-2 sm:gap-3 text-xs">
+              {/* Mode Switcher */}
+              <div className="hidden sm:flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setAppMode("job-match")}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                    appMode === "job-match"
+                      ? "bg-white text-indigo-700 shadow-xs border border-slate-200"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  🎯 Job Tailoring
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAppMode("general-audit")}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                    appMode === "general-audit"
+                      ? "bg-white text-indigo-700 shadow-xs border border-slate-200"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  ✨ General Optimizer
+                </button>
+              </div>
+
               {/* 1-Click Demo Trigger */}
               <button
                 type="button"
@@ -131,7 +181,7 @@ export default function Home() {
               <div className="space-y-1.5 max-w-3xl">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white uppercase tracking-wider">
-                    New User Guide
+                    Smart JD-First Workflow
                   </span>
                   <span className="text-xs text-indigo-200 font-medium">Build a 90%+ ATS resume in 3 quick steps</span>
                 </div>
@@ -139,7 +189,7 @@ export default function Home() {
                   Welcome to ResumePilot AI Studio
                 </h3>
                 <p className="text-xs text-indigo-100 leading-relaxed">
-                  1. Paste your profile or click <strong>Upload/Paste</strong> $\rightarrow$ 2. Paste target Job Posting to see real-time <strong>Career Archetype Match</strong> $\rightarrow$ 3. Generate tailored LaTeX Resume, Cover Letter, and Interview Prep.
+                  1. Paste target <strong>Job Posting or Job URL</strong> $\rightarrow$ 2. Auto-match your candidate profile or select saved resume $\rightarrow$ 3. Generate tailored LaTeX Resume, Cover Letter & Interview Kit.
                 </p>
                 <div className="pt-2 flex flex-wrap items-center gap-3 text-xs">
                   <button
@@ -150,7 +200,13 @@ export default function Home() {
                     <span>⚡ Load Instant Demo Sample</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
-                  <span className="text-[11px] text-indigo-200">Or start below with your own resume</span>
+                  <button
+                    type="button"
+                    onClick={() => setAppMode(appMode === "job-match" ? "general-audit" : "job-match")}
+                    className="text-xs text-indigo-200 hover:text-white underline font-medium"
+                  >
+                    Switch to General Resume Optimizer (No JD)
+                  </button>
                 </div>
               </div>
               <button
@@ -165,31 +221,57 @@ export default function Home() {
           </div>
         )}
 
-        <TabNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onOpenBackupModal={() => setShowBackupModal(true)}
-        />
-
-        {activeTab === "profile" && (
-          <ProfileTab onNext={() => setActiveTab("jd")} />
+        {/* Visual Workspace Progress Bar Slider */}
+        {appMode === "job-match" && (
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+              <span className="flex items-center gap-1.5">
+                <Target className="w-4 h-4 text-indigo-600" />
+                <span>{progressStepLabel}</span>
+              </span>
+              <span className="text-indigo-600">{progressPercent}% Tailored</span>
+            </div>
+            <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
+              <div
+                className="bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-500 h-full transition-all duration-500 rounded-full"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
         )}
 
-        {activeTab === "jd" && (
-          <JDTab
-            onBack={() => setActiveTab("profile")}
-            onNext={() => setActiveTab("resume")}
-          />
-        )}
+        {/* Mode Switcher Container */}
+        {appMode === "general-audit" ? (
+          <GeneralResumeOptimizer />
+        ) : (
+          <>
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              onOpenBackupModal={() => setShowBackupModal(true)}
+            />
 
-        {activeTab === "resume" && (
-          <ResumeTab onBack={() => setActiveTab("jd")} />
-        )}
+            {activeTab === "jd" && (
+              <JDTab
+                onBack={() => setActiveTab("profile")}
+                onNext={() => setActiveTab("profile")}
+              />
+            )}
 
-        {activeTab === "tracker" && (
-          <ApplicationTrackerTab
-            onNavigateToTab={(tab) => setActiveTab(tab as TabId)}
-          />
+            {activeTab === "profile" && (
+              <ProfileTab onNext={() => setActiveTab("resume")} />
+            )}
+
+            {activeTab === "resume" && (
+              <ResumeTab onBack={() => setActiveTab("profile")} />
+            )}
+
+            {activeTab === "tracker" && (
+              <ApplicationTrackerTab
+                onNavigateToTab={(tab) => setActiveTab(tab as TabId)}
+              />
+            )}
+          </>
         )}
 
         <footer className="text-center text-xs text-slate-500 font-medium pt-6 pb-8 no-print border-t border-slate-200 mt-8">

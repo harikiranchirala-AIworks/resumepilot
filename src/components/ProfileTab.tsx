@@ -126,7 +126,7 @@ export function ProfileTab({ onNext }: ProfileTabProps) {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
-              Step 1
+              Step 2
             </span>
             <span className="text-xs text-slate-600 font-medium">Baseline Context</span>
             <button
