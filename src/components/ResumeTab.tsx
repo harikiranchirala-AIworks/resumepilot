@@ -78,7 +78,7 @@ export function ResumeTab({
     }, 1800);
 
     const stepTimer2 = setTimeout(() => {
-      setGenerationStep("Evaluating ATS Score & Formatting LaTeX Document...");
+      setGenerationStep("Evaluating résumé–JD alignment & formatting the document...");
     }, 3600);
 
     try {
@@ -167,7 +167,7 @@ export function ResumeTab({
             AI Resume Tailoring & Split-Screen Studio
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
-            Optimize experience bullets, analyze ATS alignment, edit live paper, and export LaTeX PDF.
+            Improve experience bullets with supplied evidence, review résumé–JD alignment, edit live paper, and export a PDF.
           </p>
         </div>
 
@@ -331,7 +331,7 @@ export function ResumeTab({
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed">
-                    Generate an ATS 90+ score resume, LaTeX code, formatted PDF, and matching cover letter in one click.
+                    Generate an evidence-grounded tailored résumé, formatted PDF, and matching cover letter in one click.
                   </p>
                 </div>
               </div>

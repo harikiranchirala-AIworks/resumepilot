@@ -18,6 +18,7 @@ import { buildLatexDocument, extractLatexBody } from "./latex";
 const LOCAL_STORAGE_APPS_KEY = "offercraft_applications_v1";
 const LOCAL_STORAGE_PAGE_FIT_KEY = "offercraft_page_fit_v1";
 const LOCAL_STORAGE_USER_KEY = "offercraft_user_session_v1";
+const LOCAL_STORAGE_LIBRARY_KEY = "offercraft_resume_library_v1";
 
 const DEFAULT_PAGE_FIT: PageFitSettings = {
   margin: "standard",
@@ -88,33 +89,20 @@ function saveStoredUser(user: UserAccount | null) {
   }
 }
 
-const LOCAL_STORAGE_USERS_VAULT_KEY = "offercraft_users_vault_v1";
-
-interface VaultUserRecord {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-  avatar?: string;
-  targetRole?: string;
-  provider: "google" | "email";
-  registeredAt: string;
-}
-
-function loadUsersVault(): Record<string, VaultUserRecord> {
-  if (typeof window === "undefined") return {};
+function loadStoredLibrary(): ResumeEntry[] {
+  if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(LOCAL_STORAGE_USERS_VAULT_KEY);
-    return raw ? JSON.parse(raw) : {};
+    const raw = localStorage.getItem(LOCAL_STORAGE_LIBRARY_KEY);
+    return raw ? JSON.parse(raw) : [];
   } catch {
-    return {};
+    return [];
   }
 }
 
-function saveUsersVault(vault: Record<string, VaultUserRecord>) {
+function saveStoredLibrary(library: ResumeEntry[]) {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(LOCAL_STORAGE_USERS_VAULT_KEY, JSON.stringify(vault));
+    localStorage.setItem(LOCAL_STORAGE_LIBRARY_KEY, JSON.stringify(library));
   } catch {
     /* ignore */
   }
@@ -300,23 +288,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
   user: loadStoredUser(),
   isSyncing: false,
 
-  isPro: typeof window !== "undefined" && localStorage.getItem("resumepilot_is_pro") === "true",
-  proPlan:
-    (typeof window !== "undefined" &&
-      (localStorage.getItem("resumepilot_pro_plan") as
-        | "free"
-        | "pro-monthly"
-        | "pro-annual"
-        | "executive-lifetime")) ||
-    "free",
-  setProPlan: (plan) => {
-    const isPro = plan !== "free";
-    if (typeof window !== "undefined") {
-      localStorage.setItem("resumepilot_is_pro", isPro ? "true" : "false");
-      localStorage.setItem("resumepilot_pro_plan", plan);
-    }
-    set({ isPro, proPlan: plan });
-  },
+  isPro: false,
+  proPlan: "free",
+  setProPlan: () => set({ isPro: false, proPlan: "free" }),
 
   setProfileMode: (mode) =>
     set((state) => ({
@@ -375,35 +349,31 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   loadLibrary: async () => {
-    try {
-      const res = await fetch("/api/resumes");
-      const library = (await res.json()) as ResumeEntry[];
-      set({ library });
-    } catch {
-      /* ignore */
-    }
+    set({ library: loadStoredLibrary() });
   },
   selectResume: (id) =>
     set({ selectedResumeId: id, result: null, error: null }),
   upsertResume: async (entry) => {
-    const res = await fetch("/api/resumes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(entry),
-    });
-    const saved = (await res.json()) as ResumeEntry;
+    const saved: ResumeEntry = {
+      id: entry.id || crypto.randomUUID(),
+      name: entry.name.trim(),
+      text: entry.text.trim(),
+      updatedAt: new Date().toISOString(),
+    };
     const library = get().library;
     const idx = library.findIndex((e) => e.id === saved.id);
     const nextLibrary =
       idx >= 0
         ? library.map((e) => (e.id === saved.id ? saved : e))
         : [...library, saved];
+    saveStoredLibrary(nextLibrary);
     set({ library: nextLibrary, selectedResumeId: saved.id });
   },
   removeResume: async (id) => {
-    await fetch(`/api/resumes/${id}`, { method: "DELETE" });
+    const nextLibrary = get().library.filter((e) => e.id !== id);
+    saveStoredLibrary(nextLibrary);
     set((state) => ({
-      library: state.library.filter((e) => e.id !== id),
+      library: nextLibrary,
       selectedResumeId: state.selectedResumeId === id ? null : state.selectedResumeId,
     }));
   },
@@ -504,217 +474,24 @@ export const useAppStore = create<AppStore>((set, get) => ({
     saveStoredPageFit(updated);
   },
 
-  authenticateWithCredentials: (email: string, password: string) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    if (!trimmedEmail || !trimmedEmail.includes("@")) {
-      return { success: false, error: "Please enter a valid email address." };
-    }
-    if (!password || password.length < 6) {
-      return { success: false, error: "Password must be at least 6 characters." };
-    }
+  authenticateWithCredentials: () => ({
+    success: false,
+    error: "Account sign-in is disabled in the controlled beta. Use this browser-local workspace instead.",
+  }),
 
-    const vault = loadUsersVault();
-    const existing = vault[trimmedEmail];
+  loginWithGoogle: () => undefined,
 
-    if (!existing) {
-      return {
-        success: false,
-        error: "No account found with this email. Please register as a new user.",
-      };
-    }
-
-    if (!existing.password || existing.password !== password) {
-      return {
-        success: false,
-        error: "Incorrect password. Please verify your credentials.",
-      };
-    }
-
-    const userAccount: UserAccount = {
-      id: existing.id,
-      name: existing.name,
-      email: existing.email,
-      avatar: existing.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(existing.name)}`,
-      provider: existing.provider || "email",
-      isGoogleConnected: existing.provider === "google",
-      cloudSyncEnabled: true,
-      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      targetRole: existing.targetRole || "Candidate",
-      registeredAt: existing.registeredAt || new Date().toISOString(),
-    };
-
-    saveStoredUser(userAccount);
-
-    // If user has a previously synced vault in cloud localStorage, restore it!
-    if (typeof window !== "undefined") {
-      try {
-        const vaultKey = `offercraft_cloud_vault_${userAccount.email}`;
-        const vaultData = localStorage.getItem(vaultKey);
-        if (vaultData) {
-          const parsed = JSON.parse(vaultData);
-          if (parsed.profile?.resumeText) {
-            set({ profile: parsed.profile });
-          }
-          if (parsed.applications?.length) {
-            set({ applications: parsed.applications });
-            saveStoredApplications(parsed.applications);
-          }
-        }
-      } catch (err) {
-        console.error("Cloud vault restore error:", err);
-      }
-    }
-
-    set({ user: userAccount });
-    return { success: true };
-  },
-
-  loginWithGoogle: ({ name, email, avatar, targetRole }) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    const vault = loadUsersVault();
-    const now = new Date().toISOString();
-
-    const userRecord: VaultUserRecord = {
-      id: vault[trimmedEmail]?.id || `usr_g_${Date.now()}`,
-      name: name.trim() || trimmedEmail.split("@")[0],
-      email: trimmedEmail,
-      password: vault[trimmedEmail]?.password || "",
-      avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name || email)}`,
-      targetRole: targetRole?.trim() || vault[trimmedEmail]?.targetRole || "Technology Specialist",
-      provider: "google",
-      registeredAt: vault[trimmedEmail]?.registeredAt || now,
-    };
-
-    vault[trimmedEmail] = userRecord;
-    saveUsersVault(vault);
-
-    const userAccount: UserAccount = {
-      id: userRecord.id,
-      name: userRecord.name,
-      email: userRecord.email,
-      avatar: userRecord.avatar,
-      provider: "google",
-      isGoogleConnected: true,
-      cloudSyncEnabled: true,
-      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      targetRole: userRecord.targetRole || "Technology Specialist",
-      registeredAt: userRecord.registeredAt,
-    };
-    saveStoredUser(userAccount);
-
-    // If user has a previously synced vault in cloud localStorage, restore it!
-    if (typeof window !== "undefined") {
-      try {
-        const vaultKey = `offercraft_cloud_vault_${userAccount.email}`;
-        const vaultData = localStorage.getItem(vaultKey);
-        if (vaultData) {
-          const parsed = JSON.parse(vaultData);
-          if (parsed.profile?.resumeText) {
-            set({ profile: parsed.profile });
-          }
-          if (parsed.applications?.length) {
-            set({ applications: parsed.applications });
-            saveStoredApplications(parsed.applications);
-          }
-        }
-      } catch (err) {
-        console.error("Cloud vault restore error:", err);
-      }
-    }
-
-    set({ user: userAccount });
-  },
-
-  registerAccount: ({ name, email, password, avatar, targetRole, provider = "email" }) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    if (!trimmedEmail || !trimmedEmail.includes("@")) {
-      return { success: false, error: "Please enter a valid email address." };
-    }
-    if (!name.trim()) {
-      return { success: false, error: "Please provide your full name." };
-    }
-    if (!password || password.length < 6) {
-      return { success: false, error: "Password must be at least 6 characters." };
-    }
-
-    const vault = loadUsersVault();
-    const now = new Date().toISOString();
-
-    const userRecord: VaultUserRecord = {
-      id: vault[trimmedEmail]?.id || `usr_${Date.now()}`,
-      name: name.trim(),
-      email: trimmedEmail,
-      password: password || vault[trimmedEmail]?.password || "",
-      avatar: avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}`,
-      targetRole: targetRole?.trim() || "Candidate",
-      provider,
-      registeredAt: vault[trimmedEmail]?.registeredAt || now,
-    };
-
-    vault[trimmedEmail] = userRecord;
-    saveUsersVault(vault);
-
-    const userAccount: UserAccount = {
-      id: userRecord.id,
-      name: userRecord.name,
-      email: userRecord.email,
-      avatar: userRecord.avatar,
-      provider: userRecord.provider,
-      isGoogleConnected: userRecord.provider === "google",
-      cloudSyncEnabled: true,
-      lastSyncedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      targetRole: userRecord.targetRole || "Candidate",
-      registeredAt: userRecord.registeredAt,
-    };
-
-    saveStoredUser(userAccount);
-    set({ user: userAccount });
-    return { success: true };
-  },
+  registerAccount: () => ({
+    success: false,
+    error: "Account creation is disabled in the controlled beta. No password is collected or stored.",
+  }),
 
   logoutUser: () => {
     saveStoredUser(null);
     set({ user: null });
   },
 
-  syncCloudData: async () => {
-    const { user, profile, applications, library, selectedTemplate, preferredProvider } = get();
-    if (!user) return false;
-
-    set({ isSyncing: true });
-    // Simulate realistic Google Cloud latency
-    await new Promise((r) => setTimeout(r, 650));
-
-    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const updatedUser: UserAccount = {
-      ...user,
-      lastSyncedAt: timestamp,
-      cloudSyncEnabled: true,
-      isGoogleConnected: true,
-    };
-
-    saveStoredUser(updatedUser);
-
-    if (typeof window !== "undefined") {
-      try {
-        const vaultKey = `offercraft_cloud_vault_${user.email}`;
-        const snapshot = {
-          syncedAt: new Date().toISOString(),
-          profile,
-          applications,
-          library,
-          selectedTemplate,
-          preferredProvider,
-        };
-        localStorage.setItem(vaultKey, JSON.stringify(snapshot));
-      } catch (e) {
-        console.error("Failed saving cloud snapshot:", e);
-      }
-    }
-
-    set({ user: updatedUser, isSyncing: false });
-    return true;
-  },
+  syncCloudData: async () => false,
 
   updateUserAccount: (updates) => {
     const { user } = get();

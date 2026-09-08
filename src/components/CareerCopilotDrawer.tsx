@@ -300,7 +300,7 @@ export function CareerCopilotDrawer({
                           <Zap className="w-3.5 h-3.5 text-amber-500" /> Recommended Bullet:
                         </span>
                         <span className="text-[10px] bg-emerald-200/80 dark:bg-emerald-800/80 text-emerald-900 dark:text-emerald-100 px-1.5 py-0.5 rounded font-bold">
-                          98 ATS Score
+                          Draft signal
                         </span>
                       </div>
                       <p className="text-xs font-semibold text-emerald-950 dark:text-emerald-200 italic">

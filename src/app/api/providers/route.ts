@@ -1,7 +1,12 @@
 ﻿import { NextResponse } from "next/server";
-import { getAvailableProviders } from "@/lib/ai";
+import { hasAnthropic } from "@/lib/providers/anthropic";
+import { hasGemini } from "@/lib/providers/gemini";
+import { hasOpenAI } from "@/lib/providers/openai";
 
 export async function GET() {
-  const providers = getAvailableProviders();
-  return NextResponse.json(providers);
+  return NextResponse.json({
+    openai: hasOpenAI(),
+    gemini: hasGemini(),
+    anthropic: hasAnthropic(),
+  });
 }

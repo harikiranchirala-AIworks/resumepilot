@@ -180,7 +180,7 @@ Requirements:
                   Paste your target Job Description below
                 </h2>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                  OfferCraft AI extracts keywords, scores archetype fit, and tailors your resume to achieve a 90+ ATS match.
+                  OfferCraft AI extracts keywords, estimates résumé–JD alignment, and helps tailor your résumé using your supplied evidence.
                 </p>
               </div>
             </div>

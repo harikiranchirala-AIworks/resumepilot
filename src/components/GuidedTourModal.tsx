@@ -70,7 +70,7 @@ const TOUR_SLIDES = [
     badgeColor: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700",
     color: "from-cyan-500 to-teal-500",
     description:
-      "You're ready! Start at Step 1 by pasting your target Job Description or importing via URL. OfferCraft will extract required competencies, align your experience bank, and generate tailored LaTeX resumes with 90+ ATS match scores.",
+      "You're ready! Start at Step 1 by pasting your target Job Description or importing via URL. OfferCraft will extract required competencies, align your experience bank, and generate a tailored résumé using the evidence you provide.",
     highlights: [
       "Step 1: Job Description Command Center & Keyword Match Matrix",
       "Step 2: Master Experience Bank & STAR Achievement Bullets",

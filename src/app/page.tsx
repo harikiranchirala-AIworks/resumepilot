@@ -129,7 +129,6 @@ export default function Home() {
         }}
         onOpenBulletBank={() => setShowBulletBankModal(true)}
         onOpenUserProfile={() => setShowUserProfileModal(true)}
-        onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
         onOpenBackup={() => setShowBackupModal(true)}
         onOpenCopilot={() => setShowCopilotDrawer(true)}
         onOpenProModal={() => setShowProModal(true)}
@@ -145,7 +144,6 @@ export default function Home() {
           activeScreenTitle={SCREEN_TITLES[currentScreen]}
           onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
           onOpenProModal={() => setShowProModal(true)}
-          onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
           onOpenUserProfile={() => setShowUserProfileModal(true)}
           onOpenTour={() => setShowTourModal(true)}
         />
