@@ -203,8 +203,36 @@ export default function Home() {
           )}
         </main>
 
-        <footer className="text-center text-xs text-slate-400 dark:text-slate-500 font-medium py-5 border-t border-slate-200 dark:border-slate-800 mt-auto no-print">
-          OfferCraft AI &mdash; Craft Your Next Career Move
+        {/* Scrolling Ticker Bar */}
+        <footer className="no-print border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden mt-auto shrink-0">
+          <div className="relative flex items-center h-8 select-none">
+            {/* Left fade overlay */}
+            <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-white dark:from-slate-900 to-transparent z-10 pointer-events-none" />
+            {/* Right fade overlay */}
+            <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white dark:from-slate-900 to-transparent z-10 pointer-events-none" />
+
+            {/* Scrolling track — text duplicated to create seamless loop */}
+            <div className="ticker-track">
+              {[0, 1].map((i) => (
+                <div key={i} className="flex items-center gap-0 pr-0">
+                  {[
+                    "✦ An AI-assisted career operating workspace",
+                    "✦ Combining deterministic job & resume analysis",
+                    "✦ Résumé generation & tailoring",
+                    "✦ Job-search workflow management",
+                    "✦ Interview preparation & coaching",
+                    "✦ AI learning & career intelligence",
+                  ].map((segment, idx) => (
+                    <span key={idx} className="flex items-center gap-6 pr-10">
+                      <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                        {segment}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </footer>
       </div>
 
