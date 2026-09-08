@@ -14,8 +14,6 @@ import { UserProfileModal } from "@/components/UserProfileModal";
 import BulletBankModal from "@/components/BulletBankModal";
 import { GeneralResumeOptimizer } from "@/components/GeneralResumeOptimizer";
 import { CareerCopilotDrawer } from "@/components/CareerCopilotDrawer";
-import { ProUpgradeModal } from "@/components/ProUpgradeModal";
-import { GoogleAuthModal } from "@/components/GoogleAuthModal";
 import { GenAILearningHubTab } from "@/components/GenAILearningHubTab";
 import { GuidedTourModal } from "@/components/GuidedTourModal";
 import { Sparkles } from "lucide-react";
@@ -71,9 +69,7 @@ export default function Home() {
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showBulletBankModal, setShowBulletBankModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
-  const [showGoogleAuthModal, setShowGoogleAuthModal] = useState(false);
   const [showCopilotDrawer, setShowCopilotDrawer] = useState(false);
-  const [showProModal, setShowProModal] = useState(false);
   const [showTourModal, setShowTourModal] = useState(false);
   const { jd, setProfileMode, setResumeText, setJobDescription } = useAppStore();
 
@@ -131,7 +127,6 @@ export default function Home() {
         onOpenUserProfile={() => setShowUserProfileModal(true)}
         onOpenBackup={() => setShowBackupModal(true)}
         onOpenCopilot={() => setShowCopilotDrawer(true)}
-        onOpenProModal={() => setShowProModal(true)}
         isMobileOpen={mobileSidebarOpen}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
@@ -143,7 +138,6 @@ export default function Home() {
           onRunDemo={handleRunDemo}
           activeScreenTitle={SCREEN_TITLES[currentScreen]}
           onToggleMobileSidebar={() => setMobileSidebarOpen((prev) => !prev)}
-          onOpenProModal={() => setShowProModal(true)}
           onOpenUserProfile={() => setShowUserProfileModal(true)}
           onOpenTour={() => setShowTourModal(true)}
         />
@@ -153,7 +147,6 @@ export default function Home() {
           {currentScreen === "studio" && (
             <ResumeTab
               onBack={() => setCurrentScreen("profile")}
-              onOpenProModal={() => setShowProModal(true)}
               onNavigateScreen={(screen) => setCurrentScreen(screen)}
               onRunDemo={handleRunDemo}
             />
@@ -243,13 +236,8 @@ export default function Home() {
       <UserProfileModal
         isOpen={showUserProfileModal}
         onClose={() => setShowUserProfileModal(false)}
-        onOpenGoogleAuth={() => setShowGoogleAuthModal(true)}
       />
 
-      <GoogleAuthModal
-        isOpen={showGoogleAuthModal}
-        onClose={() => setShowGoogleAuthModal(false)}
-      />
 
       <BulletBankModal
         isOpen={showBulletBankModal}
@@ -282,11 +270,6 @@ export default function Home() {
         onClose={() => setShowCopilotDrawer(false)}
       />
 
-      {/* SaaS Monetization: Pro Upgrade & Paywall Modal */}
-      <ProUpgradeModal
-        isOpen={showProModal}
-        onClose={() => setShowProModal(false)}
-      />
 
       {/* 20-Second Interactive Guided Onboarding Tour */}
       <GuidedTourModal

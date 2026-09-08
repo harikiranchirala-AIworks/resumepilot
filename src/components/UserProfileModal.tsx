@@ -7,7 +7,6 @@ import { useAppStore } from "@/lib/store";
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenGoogleAuth?: () => void;
 }
 
 export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {

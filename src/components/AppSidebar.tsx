@@ -16,7 +16,6 @@ import {
   ChevronRight,
   TrendingUp,
   X,
-  Crown,
   GraduationCap,
 } from "lucide-react";
 
@@ -37,7 +36,6 @@ interface AppSidebarProps {
   onOpenUserProfile: () => void;
   onOpenBackup: () => void;
   onOpenCopilot?: () => void;
-  onOpenProModal?: () => void;
   isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
@@ -49,18 +47,16 @@ export function AppSidebar({
   onOpenUserProfile,
   onOpenBackup,
   onOpenCopilot,
-  onOpenProModal,
   isMobileOpen = false,
   onCloseMobile,
 }: AppSidebarProps) {
-  const { jd, result, isPro, proPlan, user } = useAppStore();
+  const { jd, result, user } = useAppStore();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const activeUser = mounted ? user : null;
-  const activeIsPro = mounted ? isPro : false;
 
   const applyItems = [
     {
@@ -212,7 +208,7 @@ export function AppSidebar({
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                       <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium truncate">
-                        {activeUser.targetRole || "Google Synced"}
+                        {activeUser.targetRole || "Local workspace"}
                       </p>
                     </div>
                   </div>
@@ -247,45 +243,6 @@ export function AppSidebar({
             </button>
           )}
 
-          {/* Pricing preview */}
-          {onOpenProModal && (
-            !activeIsPro ? (
-              <button
-                type="button"
-                onClick={() => { onOpenProModal(); onCloseMobile?.(); }}
-                className="w-full p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-left hover:bg-amber-100 dark:hover:bg-amber-950/50 transition-all group"
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-1.5">
-                    <Crown className="w-3.5 h-3.5 text-amber-500" />
-                    <span className="text-xs font-semibold text-slate-900 dark:text-white">Pricing preview</span>
-                  </div>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500 text-white">
-                    Coming soon
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
-                  The ₹499 / 30-day pass is still a hypothesis. No payment is collected.
-                </p>
-              </button>
-            ) : (
-              <div className="w-full p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/60 flex items-center justify-between">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Crown className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                  <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 truncate">
-                    {proPlan === "executive-lifetime" ? "Executive Lifetime" : "OfferCraft Pro"}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => { onOpenProModal(); onCloseMobile?.(); }}
-                  className="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline font-semibold shrink-0"
-                >
-                  Manage
-                </button>
-              </div>
-            )
-          )}
         </div>
 
         {/* ── Middle: Navigation ─────────────────────────────── */}

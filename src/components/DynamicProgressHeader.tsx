@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
-import { PlayCircle, Menu, Crown, Sparkles, ChevronRight } from "lucide-react";
+import { PlayCircle, Menu, Sparkles, ChevronRight } from "lucide-react";
 import { ProviderSelector } from "./ProviderSelector";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -10,7 +10,6 @@ interface DynamicProgressHeaderProps {
   onRunDemo: () => void;
   activeScreenTitle: string;
   onToggleMobileSidebar?: () => void;
-  onOpenProModal?: () => void;
   onOpenUserProfile?: () => void;
   onOpenTour?: () => void;
 }
@@ -19,19 +18,16 @@ export function DynamicProgressHeader({
   onRunDemo,
   activeScreenTitle,
   onToggleMobileSidebar,
-  onOpenProModal,
   onOpenUserProfile,
   onOpenTour,
 }: DynamicProgressHeaderProps) {
-  const { jd, profile, result, isPro, user, freeTailorCredits } = useAppStore();
+  const { jd, profile, result, user } = useAppStore();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const activeUser = mounted ? user : null;
-  const activeIsPro = mounted ? isPro : false;
-  const activeCredits = mounted ? freeTailorCredits : 1;
 
   const hasJd = jd.jobDescription.trim().length > 30;
   const hasProfile = profile.resumeText.trim().length > 30;
@@ -122,51 +118,6 @@ export function DynamicProgressHeader({
 
           {/* Theme toggle */}
           <ThemeToggle />
-
-          {/* Credit / Pro pill */}
-          {onOpenProModal && (
-            <button
-              type="button"
-              onClick={onOpenProModal}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-                activeIsPro
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-                  : activeCredits > 0
-                  ? "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800"
-                  : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
-              }`}
-            >
-              {activeIsPro ? (
-                <>
-                  <Crown className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Pro</span>
-                </>
-              ) : activeCredits > 0 ? (
-                <>
-                  <span>🎁</span>
-                  <span className="hidden sm:inline">1 Free Tailor</span>
-                </>
-              ) : (
-                <>
-                  <span>🔒</span>
-                  <span className="hidden sm:inline">Pricing</span>
-                </>
-              )}
-            </button>
-          )}
-
-          {/* Upgrade CTA when not pro */}
-          {onOpenProModal && !activeIsPro && (
-            <button
-              type="button"
-              onClick={onOpenProModal}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold
-                bg-indigo-600 hover:bg-indigo-700 text-white transition-all active:scale-95 shadow-sm shadow-indigo-500/20"
-            >
-              <Crown className="w-3.5 h-3.5 text-indigo-200" />
-              <span className="hidden sm:inline">Pricing</span>
-            </button>
-          )}
 
           {/* Local workspace */}
           {activeUser ? (

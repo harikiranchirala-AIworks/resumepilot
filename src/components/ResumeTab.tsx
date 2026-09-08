@@ -20,14 +20,12 @@ type ViewMode = "interactive" | "pdf-latex";
 
 interface ResumeTabProps {
   onBack: () => void;
-  onOpenProModal?: () => void;
   onNavigateScreen?: (screen: "jd" | "profile" | "studio" | "learning-hub" | "interview" | "linkedin" | "tracker" | "general") => void;
   onRunDemo?: () => void;
 }
 
 export function ResumeTab({
   onBack,
-  onOpenProModal,
   onNavigateScreen,
   onRunDemo,
 }: ResumeTabProps) {
@@ -41,7 +39,6 @@ export function ResumeTab({
     result,
     isGenerating,
     error,
-    isPro,
     canTailorResume,
     consumeTailorCredit,
     setResult,
@@ -64,8 +61,7 @@ export function ResumeTab({
 
     // Feature gating check: Free Trial credit exhaustion
     if (!canTailorResume()) {
-      onOpenProModal?.();
-      setError("This local beta has reached its tailoring allowance. Pricing is preview-only and no payment is enabled.");
+      setError("This local beta has reached its tailoring allowance. Please continue with the current workspace or export your work.");
       return;
     }
 
@@ -119,7 +115,6 @@ export function ResumeTab({
     selectedTemplate,
     canTailorResume,
     consumeTailorCredit,
-    onOpenProModal,
     setResult,
     setIsGenerating,
     setError,
@@ -438,30 +433,20 @@ export function ResumeTab({
       ) : (
         <>
 
-      {/* 1st Free Trial Celebratory Notice */}
-      {!isPro && result && (
+      {/* Tailored result notice */}
+      {result && (
         <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-cyan-950/40 border border-emerald-300 dark:border-emerald-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2.5">
             <span className="text-xl">🎉</span>
             <div>
               <div className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
-                Your 1st Free AI-Tailored Resume is Ready!
+                Your tailored résumé is ready
               </div>
               <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">
                   Review your evidence-grounded improvements below and download your tailored PDF. Pricing is currently preview-only.
               </p>
             </div>
           </div>
-          {onOpenProModal && (
-            <button
-              type="button"
-              onClick={onOpenProModal}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 transition-all shadow-xs cursor-pointer flex items-center gap-1"
-            >
-              <span>Unlock Unlimited ($19/mo)</span>
-              <span>→</span>
-            </button>
-          )}
         </div>
       )}
 
