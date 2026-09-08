@@ -173,14 +173,14 @@ Requirements:
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="section-tagline">Step 1 of 3 &mdash; Role & JD Setup</span>
+                  <span className="section-tagline">APPLY &mdash; Start with a target job</span>
                   <span className="badge badge-indigo">Start Here</span>
                 </div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
-                  Paste your target Job Description below
+                  Add a résumé and target job to prepare one application
                 </h2>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                  OfferCraft AI extracts keywords, estimates résumé–JD alignment, and helps tailor your résumé using your supplied evidence.
+                  Add your target job first. Then add your experience, improve one statement with verified facts, and prepare for the interview.
                 </p>
               </div>
             </div>
@@ -205,13 +205,13 @@ Requirements:
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="badge badge-indigo">Step 1</span>
-              <span className="section-tagline">Target Role & JD Intelligence</span>
+              <span className="section-tagline">Apply — target job</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Job Description Setup
             </h2>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Import your target job posting to trigger real-time archetype scoring and keyword extraction.
+              Add the job you want to pursue. We’ll use it to organize your résumé and preparation around one application.
             </p>
           </div>
 
@@ -375,7 +375,7 @@ Requirements:
                 disabled={!canNext}
                 className="btn-primary flex-1 text-xs py-2.5 font-bold shadow-md flex items-center justify-center gap-2"
               >
-                <span>Proceed to Candidate Profile</span>
+                <span>Next: add your experience</span>
                 <span>→</span>
               </button>
             </div>

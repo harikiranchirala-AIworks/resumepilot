@@ -54,14 +54,14 @@ Requirements:
 - Hands-on experience with GenAI, machine learning adoption, cloud migration, and agile delivery.`;
 
 const SCREEN_TITLES: Record<NavScreenId, string> = {
-  jd: "Step 1: Resume Preparation & Target Role Setup",
-  profile: "Step 2: Master Candidate Experience Bank",
-  studio: "Step 3: Interactive AI Tailoring Studio & LaTeX Export",
-  "learning-hub": "OfferCraft Academy — The Real AI Learning & Interview Bible",
-  interview: "AI STAR Interview Practice & Coach Studio",
-  linkedin: "LinkedIn Profile Auto-Optimizer (Recruiter SEO)",
-  tracker: "Application Pipeline & Offer Tracker",
-  general: "General Resume Optimizer (Google XYZ Audit)",
+  jd: "Apply: add your target job",
+  profile: "Apply: add your experience",
+  studio: "Apply: improve and tailor your résumé",
+  "learning-hub": "Grow: build new skills",
+  interview: "Prepare: practice for your interview",
+  linkedin: "Apply: strengthen your LinkedIn profile",
+  tracker: "Apply: track your applications",
+  general: "Apply: résumé–JD alignment",
 };
 
 export default function Home() {

@@ -54,8 +54,8 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
     const categories = [
-      { name: "Impact & Google XYZ Formula", val: subCategories?.impactScore ?? Math.min(100, score + 4) },
-      { name: "ATS Keyword Match & Coverage", val: subCategories?.keywordScore ?? score },
+      { name: "Evidence impact", val: subCategories?.impactScore ?? Math.min(100, score + 4) },
+      { name: "JD keyword coverage", val: subCategories?.keywordScore ?? score },
       { name: "Brevity & Conciseness", val: subCategories?.brevityScore ?? Math.max(70, score - 5) },
       { name: "Structure & LaTeX Formatting", val: subCategories?.formattingScore ?? 98 },
     ];
@@ -101,8 +101,8 @@ export function ScoreBadge({ label, score, size = "lg", subCategories }: ScoreBa
             <h3 className="text-xl font-black text-slate-900 leading-tight">{label}</h3>
             <p className="text-xs sm:text-sm text-slate-600 font-medium">
               {score >= 80
-                ? "Top 5% candidate match. High interview callback potential!"
-                : "Good base. Use 1-click AI auto-fixes to boost score to 90+."}
+                ? "Strong internal alignment estimate based on the supplied résumé and job description."
+                : "Use the evidence review to identify a clearer next improvement."}
             </p>
           </div>
         </div>

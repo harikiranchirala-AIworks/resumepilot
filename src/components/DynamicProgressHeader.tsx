@@ -149,7 +149,7 @@ export function DynamicProgressHeader({
               ) : (
                 <>
                   <span>🔒</span>
-                  <span className="hidden sm:inline">Upgrade</span>
+                  <span className="hidden sm:inline">Pricing</span>
                 </>
               )}
             </button>
@@ -164,7 +164,7 @@ export function DynamicProgressHeader({
                 bg-indigo-600 hover:bg-indigo-700 text-white transition-all active:scale-95 shadow-sm shadow-indigo-500/20"
             >
               <Crown className="w-3.5 h-3.5 text-indigo-200" />
-              <span className="hidden sm:inline">Upgrade</span>
+              <span className="hidden sm:inline">Pricing</span>
             </button>
           )}
 

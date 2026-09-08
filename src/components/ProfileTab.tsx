@@ -133,7 +133,7 @@ export function ProfileTab({ onBack, onNext }: ProfileTabProps) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-black uppercase tracking-wider text-purple-700 dark:text-purple-300">
-                  Step 2 of 3: Master Experience Bank
+                  APPLY — Add your experience
                 </span>
                 <span className="text-[10px] bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full font-bold">
                   Next Step
@@ -169,20 +169,20 @@ export function ProfileTab({ onBack, onNext }: ProfileTabProps) {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200">
-              Step 2
+                  Apply — experience
             </span>
             <span className="text-xs text-slate-600 font-medium">Baseline Context</span>
             <button
               type="button"
               onClick={() => setShowHelpTooltip(!showHelpTooltip)}
               className="text-slate-400 hover:text-indigo-600 transition-colors"
-              title="What is Candidate Profile?"
+                  title="What is the experience source?"
             >
               <HelpCircle className="w-4 h-4" />
             </button>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Your Candidate Profile</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Your experience source</h2>
           <p className="mt-1 text-xs sm:text-sm text-slate-600">
             Upload your master resume, select from your saved profiles library, or paste plain text.
           </p>
@@ -191,10 +191,10 @@ export function ProfileTab({ onBack, onNext }: ProfileTabProps) {
             <div className="mt-3 p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-900 space-y-1 animate-fadeIn">
               <p className="font-bold flex items-center gap-1.5">
                 <Info className="w-4 h-4 text-indigo-600 shrink-0" />
-                How Candidate Profile Works:
+                How your experience is used:
               </p>
               <p className="text-cyan-900 dark:text-cyan-200">
-                Your profile forms the baseline experience. OfferCraft AI compares this raw experience against target Job Descriptions to quantify achievements, weave ATS keywords, and format PDF resumes.
+                Your experience is the source of truth. OfferCraft compares it with the target job and only improves wording using facts you provide.
               </p>
             </div>
           )}

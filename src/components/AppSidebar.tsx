@@ -62,68 +62,73 @@ export function AppSidebar({
   const activeUser = mounted ? user : null;
   const activeIsPro = mounted ? isPro : false;
 
-  const coreWorkflowItems = [
+  const applyItems = [
     {
       id: "jd" as NavScreenId,
-      label: "Target Role & JD",
-      badge: "Step 1",
+      label: "Add target job",
+      badge: "1",
       icon: Target,
-      description: "Archetypes, keywords & scraper",
+      description: "Paste a job description",
     },
     {
       id: "profile" as NavScreenId,
-      label: "Candidate Profile",
-      badge: "Step 2",
+      label: "Add your experience",
+      badge: "2",
       icon: User,
-      description: "Master resume & experience bank",
+      description: "Master résumé and evidence",
     },
     {
       id: "studio" as NavScreenId,
-      label: "Interactive AI Studio",
-      badge: "Step 3",
+      label: "Improve & tailor résumé",
+      badge: "3",
       icon: LayoutGrid,
-      description: "Live A4 sheet & inline AI toolbar",
+      description: "Review, ground, and export",
     },
   ];
 
-  const accelerationTools = [
+  const applyTools = [
     {
       id: "general" as NavScreenId,
       label: "Résumé–JD Alignment",
-      badge: "Audit",
+      badge: "Review",
       icon: FileText,
       description: "Internal heuristic review",
     },
     {
       id: "linkedin" as NavScreenId,
       label: "LinkedIn Optimizer",
-      badge: "SEO",
+      badge: "Profile",
       icon: Share2,
       description: "5 headlines, bio & search tags",
     },
     {
-      id: "interview" as NavScreenId,
-      label: "STAR Interview Coach",
-      badge: "Coach",
-      icon: MessageSquare,
-      description: "Role questions & STAR evaluator",
-    },
-    {
       id: "tracker" as NavScreenId,
-      label: "Application Pipeline",
-      badge: "Kanban",
+      label: "Track applications",
+      badge: "Track",
       icon: Kanban,
-      description: "Job status, salaries & dates",
-    },
-    {
-      id: "learning-hub" as NavScreenId,
-      label: "OfferCraft Academy",
-      badge: "GenAI",
-      icon: GraduationCap,
-      description: "Real AI learning & interview bible",
+      description: "Job status and next actions",
     },
   ];
 
+  const prepareTools = [
+    {
+      id: "interview" as NavScreenId,
+      label: "Prepare for interview",
+      badge: "Coach",
+      icon: MessageSquare,
+      description: "JD-specific questions and STAR practice",
+    },
+  ];
+
+  const growTools = [
+    {
+      id: "learning-hub" as NavScreenId,
+      label: "Build new skills",
+      badge: "Learn",
+      icon: GraduationCap,
+      description: "GenAI learning and career development",
+    },
+  ];
   const matchScore = result?.match?.overallScore ?? (jd.jobDescription.length > 50 ? 88 : 65);
   const impactScore = result?.match?.experienceMatch ?? 85;
   const keywordScore = result?.match?.keywordMatch ?? 90;
@@ -242,7 +247,7 @@ export function AppSidebar({
             </button>
           )}
 
-          {/* Pro banner */}
+          {/* Pricing preview */}
           {onOpenProModal && (
             !activeIsPro ? (
               <button
@@ -253,14 +258,14 @@ export function AppSidebar({
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5">
                     <Crown className="w-3.5 h-3.5 text-amber-500" />
-                    <span className="text-xs font-semibold text-slate-900 dark:text-white">Upgrade to Pro</span>
+                    <span className="text-xs font-semibold text-slate-900 dark:text-white">Pricing preview</span>
                   </div>
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500 text-white">
-                    56% Off
+                    Coming soon
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-snug">
-                  Unlimited tailorings, XYZ auto-fix & ZIP bundles.
+                  The ₹499 / 30-day pass is still a hypothesis. No payment is collected.
                 </p>
               </button>
             ) : (
@@ -289,10 +294,10 @@ export function AppSidebar({
           <div className="space-y-0.5">
             <div className="px-2 pb-1.5">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                Core Workflow
+                APPLY
               </span>
             </div>
-            {coreWorkflowItems.map((item) => {
+            {applyItems.map((item) => {
               const isActive = currentScreen === item.id;
               const Icon = item.icon;
               return (
@@ -333,14 +338,14 @@ export function AppSidebar({
             })}
           </div>
 
-          {/* AI Acceleration Suite */}
+          {/* Apply tools */}
           <div className="space-y-0.5 pt-1 border-t border-slate-100 dark:border-slate-800">
             <div className="px-2 pb-1.5 pt-3">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                AI Acceleration Suite
+                More ways to apply
               </span>
             </div>
-            {accelerationTools.map((item) => {
+            {applyTools.map((item) => {
               const isActive = currentScreen === item.id;
               const Icon = item.icon;
               return (
@@ -376,13 +381,49 @@ export function AppSidebar({
                   }`}>
                     {item.badge}
                   </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Prepare */}
+          <div className="space-y-0.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+            <div className="px-2 pb-1.5 pt-3">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">PREPARE</span>
+            </div>
+            {prepareTools.map((item) => {
+              const isActive = currentScreen === item.id;
+              const Icon = item.icon;
+              return (
+                <button key={item.id} type="button" onClick={() => { onSelectScreen(item.id); onCloseMobile?.(); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 group ${isActive ? "bg-indigo-50 dark:bg-indigo-950/40 border-l-2 border-indigo-600 dark:border-indigo-500" : "hover:bg-slate-100 dark:hover:bg-slate-800/80 border-l-2 border-transparent"}`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isActive ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:text-indigo-600"}`}><Icon className="w-4 h-4" /></div>
+                  <div className="min-w-0 flex-1"><span className={`text-xs font-semibold block truncate ${isActive ? "text-indigo-700 dark:text-indigo-300" : "text-slate-700 dark:text-slate-300"}`}>{item.label}</span><span className="text-[10px] block truncate font-medium text-slate-400 dark:text-slate-500">{item.description}</span></div>
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md shrink-0 bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700">{item.badge}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Grow */}
+          <div className="space-y-0.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+            <div className="px-2 pb-1.5 pt-3">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">GROW</span>
+            </div>
+            {growTools.map((item) => {
+              const isActive = currentScreen === item.id;
+              const Icon = item.icon;
+              return (
+                <button key={item.id} type="button" onClick={() => { onSelectScreen(item.id); onCloseMobile?.(); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 group ${isActive ? "bg-indigo-50 dark:bg-indigo-950/40 border-l-2 border-indigo-600 dark:border-indigo-500" : "hover:bg-slate-100 dark:hover:bg-slate-800/80 border-l-2 border-transparent"}`}>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isActive ? "bg-indigo-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:text-indigo-600"}`}><Icon className="w-4 h-4" /></div>
+                  <div className="min-w-0 flex-1"><span className={`text-xs font-semibold block truncate ${isActive ? "text-indigo-700 dark:text-indigo-300" : "text-slate-700 dark:text-slate-300"}`}>{item.label}</span><span className="text-[10px] block truncate font-medium text-slate-400 dark:text-slate-500">{item.description}</span></div>
+                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md shrink-0 bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700">{item.badge}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* ── Bottom: Copilot + ATS + Quick Tools ───────────── */}
+        {/* ── Bottom: Copilot + alignment + quick tools ─────── */}
         <div className="p-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5 bg-slate-50/60 dark:bg-slate-900/60">
           {/* AI Copilot button */}
           {onOpenCopilot && (
@@ -400,18 +441,18 @@ export function AppSidebar({
             </button>
           )}
 
-          {/* ATS mini card */}
+          {/* Alignment mini card */}
           <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">Target ATS Match</span>
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">Résumé–JD Alignment</span>
               </div>
               <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{matchScore}%</span>
             </div>
             <div className="space-y-1.5">
               {[
-                { label: "Google XYZ Impact", value: impactScore, color: "bg-emerald-500" },
+                { label: "Evidence impact", value: impactScore, color: "bg-emerald-500" },
                 { label: "Keywords Coverage", value: keywordScore, color: "bg-indigo-600" },
               ].map((bar) => (
                 <div key={bar.label}>

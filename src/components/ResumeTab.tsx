@@ -65,7 +65,7 @@ export function ResumeTab({
     // Feature gating check: Free Trial credit exhaustion
     if (!canTailorResume()) {
       onOpenProModal?.();
-      setError("You've used your 1 free tailored resume! Upgrade to OfferCraft Pro to tailor unlimited applications.");
+      setError("This local beta has reached its tailoring allowance. Pricing is preview-only and no payment is enabled.");
       return;
     }
 
@@ -262,7 +262,7 @@ export function ResumeTab({
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                      Target Role & JD
+                      Target job
                     </h3>
                     <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${hasJd ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
                       {hasJd ? "✓ Analyzed" : "Step 1"}
@@ -293,7 +293,7 @@ export function ResumeTab({
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                      Candidate Profile
+                      Your experience
                     </h3>
                     <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${hasProfile ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
                       {hasProfile ? "✓ Loaded" : "Step 2"}
@@ -374,7 +374,7 @@ export function ResumeTab({
                     🎓
                   </div>
                   <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 transition-colors">
-                    OfferCraft Academy
+                    Build new skills
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
@@ -391,7 +391,7 @@ export function ResumeTab({
                     📊
                   </div>
                   <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
-                    ATS Resume Checker
+                    Résumé–JD alignment
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
@@ -448,7 +448,7 @@ export function ResumeTab({
                 Your 1st Free AI-Tailored Resume is Ready!
               </div>
               <p className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">
-                Review your Google XYZ bullet improvements below and download your tailored PDF. Upgrade to Pro when you are ready to tailor unlimited jobs!
+                  Review your evidence-grounded improvements below and download your tailored PDF. Pricing is currently preview-only.
               </p>
             </div>
           </div>
@@ -606,7 +606,7 @@ export function ResumeTab({
                       <span>AI Audit Checklist & 1-Click Auto-Fix</span>
                     </h3>
                     <span className="text-xs font-bold text-slate-500 px-2.5 py-0.5 rounded-full bg-slate-100">
-                      Google XYZ
+                      Evidence review
                     </span>
                   </div>
 

@@ -48,7 +48,7 @@ export function GenAILearningHubTab() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-black tracking-tight text-white">
-                OfferCraft Academy — The Real AI Learning Hub
+                Grow — GenAI learning hub
               </h2>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
                 12 Modules
