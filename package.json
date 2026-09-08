@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:grounded": "node --import tsx --test tests/groundedEvidence.test.ts",
+    "test:phase-d": "node --import tsx --test tests/groundedEvidence.test.ts tests/phaseDReadiness.test.ts",
     "tailor": "tsx scripts/tailor-cli.ts"
   },
   "dependencies": {
